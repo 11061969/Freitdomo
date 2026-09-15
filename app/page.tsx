@@ -1,19 +1,9 @@
-import type { Metadata } from "next"
-import "./globals.css"
-
-export const metadata: Metadata = {
-  title: "Freitdomo",
-  description: "Simulateur de recettes de crèmes glacées, sorbets et vegan",
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Home() {
   return (
-    <html lang="fr">
-      <body>{children}</body>
-    </html>
+    <main style={{ padding: "40px", fontFamily: "sans-serif" }}>
+      <h1>Freitdomo</h1>
+      <p>Application de formulation de crèmes glacées, sorbets et vegan.</p>
+      <p>Version de démarrage</p>
+    </main>
   )
 }
