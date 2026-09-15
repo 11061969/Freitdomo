@@ -1,9 +1,17 @@
-export default function Home() {
-  return (
-    <main style={{ padding: "40px", fontFamily: "sans-serif" }}>
-      <h1>Freitdomo</h1>
-      <p>Application de formulation de crèmes glacées, sorbets et vegan.</p>
-      <p>Version de démarrage</p>
-    </main>
-  )
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
