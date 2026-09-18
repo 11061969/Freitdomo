@@ -7,19 +7,34 @@ import { supabase } from "@/lib/supabaseClient"
 export default function DashboardPage() {
   const router = useRouter()
   const [email, setEmail] = useState<string | null>(null)
+  const [companyName, setCompanyName] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function checkUser() {
+    async function loadData() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         router.push("/login")
         return
       }
+
       setEmail(user.email || null)
+
+      // Récupérer les infos utilisateur + client
+      const { data: userData } = await supabase
+        .from("users")
+        .select("full_name, client_id, clients(name)")
+        .eq("id", user.id)
+        .single()
+
+      if (userData && (userData as any).clients) {
+        setCompanyName((userData as any).clients.name)
+      }
+
       setLoading(false)
     }
-    checkUser()
+
+    loadData()
   }, [router])
 
   async function handleLogout() {
@@ -34,8 +49,12 @@ export default function DashboardPage() {
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
       <h1>Tableau de bord – Freitdomo</h1>
-      <p style={{ marginTop: 16 }}>Connecté en tant que : <strong>{email}</strong></p>
       
+      <div style={{ marginTop: 20, padding: 16, background: "#f5f5f5", borderRadius: 8 }}>
+        <p><strong>Entreprise :</strong> {companyName || "Non définie"}</p>
+        <p><strong>Email :</strong> {email}</p>
+      </div>
+
       <div style={{ marginTop: 32, display: "flex", gap: 16, flexWrap: "wrap" }}>
         <button style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
           Nouvelle recette
