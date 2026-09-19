@@ -20,7 +20,6 @@ export default function DashboardPage() {
 
       setEmail(user.email || null)
 
-      // Récupérer les infos utilisateur + client
       const { data: userData } = await supabase
         .from("users")
         .select("full_name, client_id, clients(name)")
@@ -62,9 +61,12 @@ export default function DashboardPage() {
         <button style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
           Mes recettes
         </button>
-        <button style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
+        <a 
+          href="/ingredients"
+          style={{ padding: "12px 20px", fontSize: 16, background: "#111", color: "white", borderRadius: 6, textDecoration: "none" }}
+        >
           Base d’ingrédients
-        </button>
+        </a>
       </div>
 
       <button 
