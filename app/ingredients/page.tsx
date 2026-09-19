@@ -13,9 +13,9 @@ type Ingredient = {
   protein: number
   sugar: number
   fiber: number
-  stabilizer: number
-  creaminess: number
-  cost: number
+  minerals: number
+  sodium: number
+  calcium: number
 }
 
 export default function IngredientsPage() {
@@ -48,7 +48,7 @@ export default function IngredientsPage() {
 
       const { data, error } = await supabase
         .from("ingredients")
-        .select("id, name, category, fat, protein, sugar, fiber, stabilizer, creaminess, cost")
+        .select("id, name, category, fat, protein, sugar, fiber, minerals, sodium, calcium")
         .eq("client_id", userData.client_id)
         .eq("is_active", true)
         .order("name")
@@ -66,7 +66,6 @@ export default function IngredientsPage() {
     load()
   }, [router])
 
-  // Filtre de recherche
   useEffect(() => {
     const q = search.toLowerCase().trim()
     if (!q) {
@@ -126,26 +125,30 @@ export default function IngredientsPage() {
                 <th style={{ padding: "10px 8px" }}>Nom</th>
                 <th style={{ padding: "10px 8px" }}>Catégorie</th>
                 <th style={{ padding: "10px 8px" }}>MG %</th>
-                <th style={{ padding: "10px 8px" }}>Prot. %</th>
-                <th style={{ padding: "10px 8px" }}>Sucres %</th>
+                <th style={{ padding: "10px 8px" }}>Protéines %</th>
+                <th style={{ padding: "10px 8px" }}>Glucides %</th>
                 <th style={{ padding: "10px 8px" }}>Fibres %</th>
-                <th style={{ padding: "10px 8px" }}>Stabi %</th>
-                <th style={{ padding: "10px 8px" }}>Onctuosité</th>
-                <th style={{ padding: "10px 8px" }}>Coût</th>
+                <th style={{ padding: "10px 8px" }}>Sels minéraux %</th>
+                <th style={{ padding: "10px 8px" }}>Sodium</th>
+                <th style={{ padding: "10px 8px" }}>Calcium</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((ing) => (
-                <tr key={ing.id} style={{ borderBottom: "1px solid #eee" }}>
+                <tr 
+                  key={ing.id} 
+                  style={{ borderBottom: "1px solid #eee", cursor: "pointer" }}
+                  onClick={() => router.push(`/ingredients/${ing.id}`)}
+                >
                   <td style={{ padding: "10px 8px", fontWeight: 500 }}>{ing.name}</td>
                   <td style={{ padding: "10px 8px" }}>{ing.category || "—"}</td>
                   <td style={{ padding: "10px 8px" }}>{ing.fat}</td>
                   <td style={{ padding: "10px 8px" }}>{ing.protein}</td>
                   <td style={{ padding: "10px 8px" }}>{ing.sugar}</td>
                   <td style={{ padding: "10px 8px" }}>{ing.fiber}</td>
-                  <td style={{ padding: "10px 8px" }}>{ing.stabilizer}</td>
-                  <td style={{ padding: "10px 8px" }}>{ing.creaminess}</td>
-                  <td style={{ padding: "10px 8px" }}>{ing.cost}</td>
+                  <td style={{ padding: "10px 8px" }}>{ing.minerals}</td>
+                  <td style={{ padding: "10px 8px" }}>{ing.sodium}</td>
+                  <td style={{ padding: "10px 8px" }}>{ing.calcium}</td>
                 </tr>
               ))}
             </tbody>
