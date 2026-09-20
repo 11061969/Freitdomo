@@ -63,17 +63,47 @@ type CalcResults = {
 
 type Limit = { min: number; max: number }
 
-// Limites par défaut (extraites de notre cahier des charges)
-function getDefaultLimits(
-  category: string,
-  temp: "soft" | "gelato" | "hard"
-): Record<string, Limit> {
-  // Structure - valeurs de base hard (-18)
-  const structureHard: Record<string, Limit> = {
+function getLimits(category: string, temp: "soft" | "gelato" | "hard"): Record<string, Limit> {
+  // --- Composition ---
+  let composition: Record<string, Limit> = {
+    fat: { min: 6, max: 14 },
+    saturatedFat: { min: 3, max: 8 },
+    protein: { min: 2, max: 7 },
+    sugar: { min: 20, max: 26 },
+    fiber: { min: 0, max: 3 },
+    stabilizer: { min: 0.15, max: 0.25 },
+    sodium: { min: 0, max: 100 },
+    calcium: { min: 50, max: 200 },
+  }
+
+  if (category === "sorbet") {
+    composition = {
+      fat: { min: 0, max: 1 },
+      protein: { min: 0, max: 1 },
+      sugar: { min: 23, max: 33 },
+      fiber: { min: 0, max: 3 },
+      stabilizer: { min: 0.15, max: 0.3 },
+      sodium: { min: 0, max: 100 },
+    }
+  }
+
+  if (temp === "soft" && category !== "sorbet") {
+    composition.fat = { min: 4, max: 8 }
+    composition.saturatedFat = { min: 2, max: 6 }
+    composition.sugar = { min: 18, max: 24 }
+    composition.stabilizer = { min: 0.15, max: 0.3 }
+    composition.sodium = { min: 30, max: 100 }
+    if (category === "vegan") {
+      composition.protein = { min: 2, max: 3 }
+      composition.sugar = { min: 20, max: 30 }
+    }
+  }
+
+  // --- Structure ---
+  let structure: Record<string, Limit> = {
     totalSolids: { min: 34, max: 42 },
     density: { min: 1.08, max: 1.13 },
     creaminess: { min: 5, max: 8 },
-    saturatedFatSolid: { min: 45, max: 75 },
     emulsifierVsFat: { min: 1.25, max: 2.5 },
     molarMassStabi: { min: 170000, max: 210000 },
     esdl: { min: 6, max: 12 },
@@ -83,87 +113,54 @@ function getDefaultLimits(
   }
 
   if (category === "sorbet") {
-    return {
+    structure = {
       totalSolids: { min: 27, max: 33 },
       density: { min: 1.08, max: 1.13 },
       molarMassStabi: { min: 175000, max: 220000 },
       esdl: { min: 0, max: 5 },
       sweetness: { min: 20, max: 26 },
-      freezingPoint:
-        temp === "soft"
-          ? { min: -2.6, max: -1.9 }
-          : temp === "gelato"
-          ? { min: -2.8, max: -2.0 }
-          : { min: -3.3, max: -2.3 },
-      iceFraction:
-        temp === "soft"
-          ? { min: 74.5, max: 76.5 }
-          : temp === "gelato"
-          ? { min: 85, max: 86 }
-          : { min: 87.8, max: 88.1 },
-    }
-  }
-
-  // ice_cream & vegan - ajustements par température
-  const base = { ...structureHard }
-
-  if (category === "vegan") {
-    base.esdl = { min: 0, max: 0 } // non pertinent
-    base.sweetness = { min: 12, max: 22 }
-    if (temp === "hard") {
-      base.freezingPoint = { min: -3.5, max: -2.5 }
+      freezingPoint: { min: -3.3, max: -2.3 },
+      iceFraction: { min: 87.8, max: 88.1 },
     }
   }
 
   if (temp === "gelato") {
-    base.freezingPoint = category === "vegan"
-      ? { min: -3.1, max: -2.3 }
-      : { min: -2.8, max: -2.0 }
-    base.iceFraction = { min: 85, max: 86 }
+    structure.freezingPoint = { min: -2.8, max: -2.0 }
+    structure.iceFraction = { min: 85, max: 86 }
     if (category === "vegan") {
-      base.totalSolids = { min: 34, max: 42 }
-      base.creaminess = { min: 5, max: 8 }
+      structure.freezingPoint = { min: -3.1, max: -2.3 }
     }
   }
 
   if (temp === "soft") {
-    base.totalSolids = { min: 30, max: 38 }
-    base.creaminess = { min: 2, max: 6 }
-    base.saturatedFatSolid = { min: 35, max: 65 }
-    base.sweetness = { min: 10, max: 20 }
-    base.freezingPoint = category === "vegan"
-      ? { min: -2.8, max: -2.1 }
-      : { min: -2.6, max: -1.9 }
-    base.iceFraction = { min: 74.5, max: 76.5 }
-    base.esdl = { min: 6, max: 14 }
+    structure.totalSolids = { min: 30, max: 38 }
+    structure.creaminess = { min: 2, max: 6 }
+    structure.sweetness = category === "sorbet" ? { min: 20, max: 26 } : { min: 10, max: 20 }
+    structure.freezingPoint = { min: -2.6, max: -1.9 }
+    structure.iceFraction = { min: 74.5, max: 76.5 }
+    if (category !== "sorbet") structure.esdl = { min: 6, max: 14 }
+    if (category === "vegan") {
+      structure.freezingPoint = { min: -2.8, max: -2.1 }
+    }
   }
 
-  return base
+  return { ...composition, ...structure }
 }
 
-function statusColor(value: number, limit?: Limit): string {
-  if (!limit) return "#666"
-  if (value >= limit.min && value <= limit.max) return "#1a7f37" // vert
-  // proche des bornes → orange
-  const margin = (limit.max - limit.min) * 0.15
-  if (value >= limit.min - margin && value <= limit.max + margin) return "#b86e00"
-  return "#c62828" // rouge
+function getStatus(value: number, limit?: Limit): "ok" | "warn" | "bad" | "none" {
+  if (!limit) return "none"
+  if (value >= limit.min && value <= limit.max) return "ok"
+  const range = limit.max - limit.min || 1
+  const margin = range * 0.2
+  if (value >= limit.min - margin && value <= limit.max + margin) return "warn"
+  return "bad"
 }
 
-function StatusDot({ value, limit }: { value: number; limit?: Limit }) {
-  const color = statusColor(value, limit)
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        width: 10,
-        height: 10,
-        borderRadius: "50%",
-        background: color,
-        marginRight: 8,
-      }}
-    />
-  )
+const statusStyles = {
+  ok: { bg: "#e8f5e9", border: "#a5d6a7", text: "#1b5e20" },
+  warn: { bg: "#fff8e1", border: "#ffe082", text: "#e65100" },
+  bad: { bg: "#ffebee", border: "#ef9a9a", text: "#b71c1c" },
+  none: { bg: "#f5f5f5", border: "#e0e0e0", text: "#333" },
 }
 
 export default function RecipeDetailPage() {
@@ -317,9 +314,6 @@ export default function RecipeDetailPage() {
       }
     }
 
-    const molarMassStabi = stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0
-    const emulsifierVsFat = fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0
-
     setCalcs({
       totalSolids,
       fat: fatPct,
@@ -338,8 +332,8 @@ export default function RecipeDetailPage() {
       esdl,
       freezingPoint,
       iceFraction,
-      molarMassStabi,
-      emulsifierVsFat,
+      molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
+      emulsifierVsFat: fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0,
     })
   }, [lines, servingTemp])
 
@@ -348,13 +342,9 @@ export default function RecipeDetailPage() {
     sorbet: "Sorbet",
     vegan: "Vegan",
   }
-
   const tempLabel = { soft: "Soft (-6°C)", gelato: "Gelato (-11°C)", hard: "Hard (-18°C)" }
 
-  if (loading) {
-    return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
-  }
-
+  if (loading) return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   if (error || !recipe) {
     return (
       <main style={{ padding: 40, fontFamily: "sans-serif" }}>
@@ -364,29 +354,32 @@ export default function RecipeDetailPage() {
     )
   }
 
-  const limits = getDefaultLimits(recipe.category, servingTemp)
+  const limits = getLimits(recipe.category, servingTemp)
 
-  const rows: { key: string; label: string; value: number; unit: string; limitKey?: string }[] = calcs
+  const cards: { label: string; value: number; unit: string; limitKey?: string; digits?: number }[] = calcs
     ? [
-        { key: "ts", label: "Solides totaux", value: calcs.totalSolids, unit: "%", limitKey: "totalSolids" },
-        { key: "dens", label: "Densité", value: calcs.density, unit: "", limitKey: "density" },
-        { key: "fat", label: "Matière grasse", value: calcs.fat, unit: "%" },
-        { key: "prot", label: "Protéines", value: calcs.protein, unit: "%" },
-        { key: "sugar", label: "Glucides", value: calcs.sugar, unit: "%" },
-        { key: "sweet", label: "Taux sucrant", value: calcs.sweetness, unit: "", limitKey: "sweetness" },
-        { key: "cream", label: "Onctuosité", value: calcs.creaminess, unit: "", limitKey: "creaminess" },
-        { key: "esdl", label: "ESDL", value: calcs.esdl, unit: "%", limitKey: "esdl" },
-        { key: "fp", label: "Point de congélation", value: calcs.freezingPoint, unit: "°C", limitKey: "freezingPoint" },
-        { key: "ice", label: "Fraction de glace", value: calcs.iceFraction, unit: "%", limitKey: "iceFraction" },
-        { key: "mm", label: "Masse molaire stabi", value: calcs.molarMassStabi, unit: "", limitKey: "molarMassStabi" },
-        { key: "emf", label: "Émulsifiant vs MG", value: calcs.emulsifierVsFat, unit: "%", limitKey: "emulsifierVsFat" },
-        { key: "stabi", label: "Stabilisant", value: calcs.stabilizer, unit: "%" },
-        { key: "cost", label: "Coût / unité", value: calcs.cost, unit: "" },
+        { label: "Solides totaux", value: calcs.totalSolids, unit: "%", limitKey: "totalSolids" },
+        { label: "Densité", value: calcs.density, unit: "", limitKey: "density", digits: 3 },
+        { label: "Matière grasse", value: calcs.fat, unit: "%", limitKey: "fat" },
+        { label: "Protéines", value: calcs.protein, unit: "%", limitKey: "protein" },
+        { label: "Glucides", value: calcs.sugar, unit: "%", limitKey: "sugar" },
+        { label: "Fibres", value: calcs.fiber, unit: "%", limitKey: "fiber" },
+        { label: "Stabilisant", value: calcs.stabilizer, unit: "%", limitKey: "stabilizer", digits: 3 },
+        { label: "Taux sucrant", value: calcs.sweetness, unit: "", limitKey: "sweetness" },
+        { label: "Onctuosité", value: calcs.creaminess, unit: "", limitKey: "creaminess" },
+        { label: "ESDL", value: calcs.esdl, unit: "%", limitKey: "esdl" },
+        { label: "Point de congélation", value: calcs.freezingPoint, unit: "°C", limitKey: "freezingPoint" },
+        { label: "Fraction de glace", value: calcs.iceFraction, unit: "%", limitKey: "iceFraction" },
+        { label: "Masse molaire stabi", value: calcs.molarMassStabi, unit: "", limitKey: "molarMassStabi", digits: 0 },
+        { label: "Émulsifiant vs MG", value: calcs.emulsifierVsFat, unit: "%", limitKey: "emulsifierVsFat" },
+        { label: "Sodium", value: calcs.sodium, unit: "mg", limitKey: "sodium", digits: 1 },
+        { label: "Calcium", value: calcs.calcium, unit: "mg", limitKey: "calcium", digits: 1 },
+        { label: "Coût / unité", value: calcs.cost, unit: "", digits: 4 },
       ]
     : []
 
   return (
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1000, margin: "0 auto" }}>
+    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
       <p style={{ marginBottom: 12 }}>
         <Link href="/dashboard">← Tableau de bord</Link>
         {" · "}
@@ -395,9 +388,7 @@ export default function RecipeDetailPage() {
 
       <h1>{recipe.name}</h1>
       <p style={{ color: "#555", marginTop: 8 }}>
-        {categoryLabel[recipe.category] || recipe.category}
-        {" · "}
-        {tempLabel[servingTemp]}
+        {categoryLabel[recipe.category] || recipe.category} · {tempLabel[servingTemp]}
       </p>
 
       <h3 style={{ marginTop: 28, marginBottom: 12 }}>Composition</h3>
@@ -424,45 +415,41 @@ export default function RecipeDetailPage() {
         <>
           <h3 style={{ marginBottom: 8 }}>Résultats & limites</h3>
           <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>
-            <StatusDot value={1} limit={{ min: 0, max: 2 }} /> Dans les limites
-            <span style={{ marginLeft: 16 }}><StatusDot value={10} limit={{ min: 0, max: 2 }} /> Hors limites</span>
+            <span style={{ color: "#1b5e20" }}>● Vert</span> = dans les limites &nbsp;&nbsp;
+            <span style={{ color: "#e65100" }}>● Orange</span> = proche &nbsp;&nbsp;
+            <span style={{ color: "#b71c1c" }}>● Rouge</span> = hors limites
           </p>
 
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left", background: "#fafafa" }}>
-                <th style={{ padding: 10 }}>Paramètre</th>
-                <th style={{ padding: 10 }}>Valeur</th>
-                <th style={{ padding: 10 }}>Min</th>
-                <th style={{ padding: 10 }}>Max</th>
-                <th style={{ padding: 10 }}>Statut</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => {
-                const limit = row.limitKey ? limits[row.limitKey] : undefined
-                const color = statusColor(row.value, limit)
-                return (
-                  <tr key={row.key} style={{ borderBottom: "1px solid #eee" }}>
-                    <td style={{ padding: 10 }}>{row.label}</td>
-                    <td style={{ padding: 10, fontWeight: 600, color }}>
-                      {row.value.toFixed(row.unit === "°C" || row.key === "dens" ? 2 : 2)}
-                      {row.unit ? ` ${row.unit}` : ""}
-                    </td>
-                    <td style={{ padding: 10, color: "#666" }}>
-                      {limit ? limit.min : "—"}
-                    </td>
-                    <td style={{ padding: 10, color: "#666" }}>
-                      {limit ? limit.max : "—"}
-                    </td>
-                    <td style={{ padding: 10 }}>
-                      {limit ? <StatusDot value={row.value} limit={limit} /> : "—"}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+            {cards.map((card) => {
+              const limit = card.limitKey ? limits[card.limitKey] : undefined
+              const status = getStatus(card.value, limit)
+              const style = statusStyles[status]
+              const digits = card.digits ?? 2
+              return (
+                <div
+                  key={card.label}
+                  style={{
+                    padding: 14,
+                    background: style.bg,
+                    border: `1px solid ${style.border}`,
+                    borderRadius: 10,
+                  }}
+                >
+                  <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{card.label}</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
+                    {card.value.toFixed(digits)}
+                    {card.unit ? ` ${card.unit}` : ""}
+                  </div>
+                  {limit && (
+                    <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
+                      Min {limit.min} → Max {limit.max}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </>
       )}
     </main>
