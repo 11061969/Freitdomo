@@ -45,31 +45,31 @@ export default function DashboardPage() {
     return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   }
 
+  const btnStyle = {
+    padding: "12px 20px",
+    fontSize: 16,
+    background: "#111",
+    color: "white",
+    borderRadius: 6,
+    textDecoration: "none" as const,
+  }
+
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
       <h1>Tableau de bord – Freitdomo</h1>
-      
+
       <div style={{ marginTop: 20, padding: 16, background: "#f5f5f5", borderRadius: 8 }}>
         <p><strong>Entreprise :</strong> {companyName || "Non définie"}</p>
         <p><strong>Email :</strong> {email}</p>
       </div>
 
       <div style={{ marginTop: 32, display: "flex", gap: 16, flexWrap: "wrap" }}>
-        <button style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
-          Nouvelle recette
-        </button>
-        <button style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
-          Mes recettes
-        </button>
-        <a 
-          href="/ingredients"
-          style={{ padding: "12px 20px", fontSize: 16, background: "#111", color: "white", borderRadius: 6, textDecoration: "none" }}
-        >
-          Base d’ingrédients
-        </a>
+        <a href="/recipes/new" style={btnStyle}>Nouvelle recette</a>
+        <a href="/recipes" style={btnStyle}>Mes recettes</a>
+        <a href="/ingredients" style={btnStyle}>Base d’ingrédients</a>
       </div>
 
-      <button 
+      <button
         onClick={handleLogout}
         style={{ marginTop: 40, padding: "10px 16px", cursor: "pointer", background: "#eee" }}
       >
