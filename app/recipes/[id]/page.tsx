@@ -40,27 +40,130 @@ type Recipe = {
 }
 
 type CalcResults = {
-  totalQty: number
+  totalSolids: number
   fat: number
   protein: number
   sugar: number
   fiber: number
   minerals: number
-  alcohol: number
   stabilizer: number
   saturatedFat: number
   sodium: number
   calcium: number
   cost: number
-  totalSolids: number
   sweetness: number
   creaminess: number
   density: number
-  waterFraction: number
   esdl: number
   freezingPoint: number
   iceFraction: number
   molarMassStabi: number
+  emulsifierVsFat: number
+}
+
+type Limit = { min: number; max: number }
+
+// Limites par défaut (extraites de notre cahier des charges)
+function getDefaultLimits(
+  category: string,
+  temp: "soft" | "gelato" | "hard"
+): Record<string, Limit> {
+  // Structure - valeurs de base hard (-18)
+  const structureHard: Record<string, Limit> = {
+    totalSolids: { min: 34, max: 42 },
+    density: { min: 1.08, max: 1.13 },
+    creaminess: { min: 5, max: 8 },
+    saturatedFatSolid: { min: 45, max: 75 },
+    emulsifierVsFat: { min: 1.25, max: 2.5 },
+    molarMassStabi: { min: 170000, max: 210000 },
+    esdl: { min: 6, max: 12 },
+    sweetness: { min: 12, max: 22 },
+    freezingPoint: { min: -3.3, max: -2.3 },
+    iceFraction: { min: 87.7, max: 88.1 },
+  }
+
+  if (category === "sorbet") {
+    return {
+      totalSolids: { min: 27, max: 33 },
+      density: { min: 1.08, max: 1.13 },
+      molarMassStabi: { min: 175000, max: 220000 },
+      esdl: { min: 0, max: 5 },
+      sweetness: { min: 20, max: 26 },
+      freezingPoint:
+        temp === "soft"
+          ? { min: -2.6, max: -1.9 }
+          : temp === "gelato"
+          ? { min: -2.8, max: -2.0 }
+          : { min: -3.3, max: -2.3 },
+      iceFraction:
+        temp === "soft"
+          ? { min: 74.5, max: 76.5 }
+          : temp === "gelato"
+          ? { min: 85, max: 86 }
+          : { min: 87.8, max: 88.1 },
+    }
+  }
+
+  // ice_cream & vegan - ajustements par température
+  const base = { ...structureHard }
+
+  if (category === "vegan") {
+    base.esdl = { min: 0, max: 0 } // non pertinent
+    base.sweetness = { min: 12, max: 22 }
+    if (temp === "hard") {
+      base.freezingPoint = { min: -3.5, max: -2.5 }
+    }
+  }
+
+  if (temp === "gelato") {
+    base.freezingPoint = category === "vegan"
+      ? { min: -3.1, max: -2.3 }
+      : { min: -2.8, max: -2.0 }
+    base.iceFraction = { min: 85, max: 86 }
+    if (category === "vegan") {
+      base.totalSolids = { min: 34, max: 42 }
+      base.creaminess = { min: 5, max: 8 }
+    }
+  }
+
+  if (temp === "soft") {
+    base.totalSolids = { min: 30, max: 38 }
+    base.creaminess = { min: 2, max: 6 }
+    base.saturatedFatSolid = { min: 35, max: 65 }
+    base.sweetness = { min: 10, max: 20 }
+    base.freezingPoint = category === "vegan"
+      ? { min: -2.8, max: -2.1 }
+      : { min: -2.6, max: -1.9 }
+    base.iceFraction = { min: 74.5, max: 76.5 }
+    base.esdl = { min: 6, max: 14 }
+  }
+
+  return base
+}
+
+function statusColor(value: number, limit?: Limit): string {
+  if (!limit) return "#666"
+  if (value >= limit.min && value <= limit.max) return "#1a7f37" // vert
+  // proche des bornes → orange
+  const margin = (limit.max - limit.min) * 0.15
+  if (value >= limit.min - margin && value <= limit.max + margin) return "#b86e00"
+  return "#c62828" // rouge
+}
+
+function StatusDot({ value, limit }: { value: number; limit?: Limit }) {
+  const color = statusColor(value, limit)
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        width: 10,
+        height: 10,
+        borderRadius: "50%",
+        background: color,
+        marginRight: 8,
+      }}
+    />
+  )
 }
 
 export default function RecipeDetailPage() {
@@ -83,7 +186,6 @@ export default function RecipeDetailPage() {
         return
       }
 
-      // Température de service du client
       const { data: userData } = await supabase
         .from("users")
         .select("client_id, clients(serving_temperature)")
@@ -127,7 +229,6 @@ export default function RecipeDetailPage() {
     load()
   }, [id, router])
 
-  // Calculs dès que les lignes sont chargées
   useEffect(() => {
     if (lines.length === 0) {
       setCalcs(null)
@@ -177,7 +278,6 @@ export default function RecipeDetailPage() {
       return
     }
 
-    // Pourcentages
     const fatPct = (fat / totalQty) * 100
     const proteinPct = (protein / totalQty) * 100
     const sugarPct = (sugar / totalQty) * 100
@@ -185,26 +285,21 @@ export default function RecipeDetailPage() {
     const mineralsPct = (minerals / totalQty) * 100
     const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
     const waterFraction = 100 - totalSolids
+    const stabilizerPct = (stabilizer / totalQty) * 100
+    const saturatedFatPct = (saturatedFat / totalQty) * 100
 
-    // Densité (formule Excel)
     const density = 1 / (
       (fatPct / 100) * 1.07527 +
       ((totalSolids / 100) - (fatPct / 100)) * 0.6329 +
       (1 - totalSolids / 100)
     )
 
-    // ESDL simplifié (protéines + lactose approximé via sucre laitier — pour l'instant protéines + part sucres)
-    // Version simple : protéines laitières approx = protéines (affiné plus tard)
     const esdl = proteinPct
-
-    // Point de congélation — approche molalité simplifiée
-    // PAC total approximé, puis FP = - (molalité effective) * 1.86
     const pacTotal = (pacCarbSum + pacSaltsSum) / totalQty
     const waterKg = waterFraction / 100
     const molality = waterKg > 0 ? pacTotal / waterKg : 0
     const freezingPoint = -(molality * 1.86)
 
-    // Fraction de glace — formule logarithmique simplifiée selon température de service
     const tempMap = { soft: -6, gelato: -11, hard: -18 }
     const T = tempMap[servingTemp]
     let iceFraction = 0
@@ -223,29 +318,28 @@ export default function RecipeDetailPage() {
     }
 
     const molarMassStabi = stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0
+    const emulsifierVsFat = fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0
 
     setCalcs({
-      totalQty,
+      totalSolids,
       fat: fatPct,
       protein: proteinPct,
       sugar: sugarPct,
       fiber: fiberPct,
       minerals: mineralsPct,
-      alcohol: (alcohol / totalQty) * 100,
-      stabilizer: (stabilizer / totalQty) * 100,
-      saturatedFat: (saturatedFat / totalQty) * 100,
+      stabilizer: stabilizerPct,
+      saturatedFat: saturatedFatPct,
       sodium: sodium / totalQty,
       calcium: calcium / totalQty,
       cost: cost / totalQty,
-      totalSolids,
       sweetness: (sweetness / totalQty) * 100,
       creaminess: (creaminess / totalQty) * 100,
       density,
-      waterFraction,
       esdl,
       freezingPoint,
       iceFraction,
       molarMassStabi,
+      emulsifierVsFat,
     })
   }, [lines, servingTemp])
 
@@ -270,6 +364,27 @@ export default function RecipeDetailPage() {
     )
   }
 
+  const limits = getDefaultLimits(recipe.category, servingTemp)
+
+  const rows: { key: string; label: string; value: number; unit: string; limitKey?: string }[] = calcs
+    ? [
+        { key: "ts", label: "Solides totaux", value: calcs.totalSolids, unit: "%", limitKey: "totalSolids" },
+        { key: "dens", label: "Densité", value: calcs.density, unit: "", limitKey: "density" },
+        { key: "fat", label: "Matière grasse", value: calcs.fat, unit: "%" },
+        { key: "prot", label: "Protéines", value: calcs.protein, unit: "%" },
+        { key: "sugar", label: "Glucides", value: calcs.sugar, unit: "%" },
+        { key: "sweet", label: "Taux sucrant", value: calcs.sweetness, unit: "", limitKey: "sweetness" },
+        { key: "cream", label: "Onctuosité", value: calcs.creaminess, unit: "", limitKey: "creaminess" },
+        { key: "esdl", label: "ESDL", value: calcs.esdl, unit: "%", limitKey: "esdl" },
+        { key: "fp", label: "Point de congélation", value: calcs.freezingPoint, unit: "°C", limitKey: "freezingPoint" },
+        { key: "ice", label: "Fraction de glace", value: calcs.iceFraction, unit: "%", limitKey: "iceFraction" },
+        { key: "mm", label: "Masse molaire stabi", value: calcs.molarMassStabi, unit: "", limitKey: "molarMassStabi" },
+        { key: "emf", label: "Émulsifiant vs MG", value: calcs.emulsifierVsFat, unit: "%", limitKey: "emulsifierVsFat" },
+        { key: "stabi", label: "Stabilisant", value: calcs.stabilizer, unit: "%" },
+        { key: "cost", label: "Coût / unité", value: calcs.cost, unit: "" },
+      ]
+    : []
+
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1000, margin: "0 auto" }}>
       <p style={{ marginBottom: 12 }}>
@@ -282,11 +397,11 @@ export default function RecipeDetailPage() {
       <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
         {" · "}
-        Température de service : {tempLabel[servingTemp]}
+        {tempLabel[servingTemp]}
       </p>
 
-      <h3 style={{ marginTop: 32, marginBottom: 12 }}>Composition</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 32 }}>
+      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Composition</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 28 }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
             <th style={{ padding: 8 }}>Ingrédient</th>
@@ -307,31 +422,47 @@ export default function RecipeDetailPage() {
 
       {calcs && (
         <>
-          <h3 style={{ marginBottom: 12 }}>Résultats de calcul</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
-            {[
-              ["Solides totaux", `${calcs.totalSolids.toFixed(2)} %`],
-              ["Matière grasse", `${calcs.fat.toFixed(2)} %`],
-              ["Protéines", `${calcs.protein.toFixed(2)} %`],
-              ["Glucides", `${calcs.sugar.toFixed(2)} %`],
-              ["Fibres", `${calcs.fiber.toFixed(2)} %`],
-              ["Sels minéraux", `${calcs.minerals.toFixed(2)} %`],
-              ["Taux sucrant", `${calcs.sweetness.toFixed(2)}`],
-              ["Densité", calcs.density.toFixed(4)],
-              ["ESDL (approx.)", `${calcs.esdl.toFixed(2)} %`],
-              ["Point de congélation", `${calcs.freezingPoint.toFixed(2)} °C`],
-              ["Fraction de glace", `${calcs.iceFraction.toFixed(2)} %`],
-              ["Onctuosité", `${calcs.creaminess.toFixed(2)}`],
-              ["Masse molaire stabi", calcs.molarMassStabi > 0 ? calcs.molarMassStabi.toFixed(0) : "—"],
-              ["Stabilisant", `${calcs.stabilizer.toFixed(3)} %`],
-              ["Coût / unité", calcs.cost.toFixed(4)],
-            ].map(([label, value]) => (
-              <div key={label as string} style={{ padding: 12, background: "#f8f8f8", borderRadius: 8 }}>
-                <div style={{ fontSize: 12, color: "#666" }}>{label}</div>
-                <div style={{ fontSize: 18, fontWeight: 600, marginTop: 4 }}>{value}</div>
-              </div>
-            ))}
-          </div>
+          <h3 style={{ marginBottom: 8 }}>Résultats & limites</h3>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>
+            <StatusDot value={1} limit={{ min: 0, max: 2 }} /> Dans les limites
+            <span style={{ marginLeft: 16 }}><StatusDot value={10} limit={{ min: 0, max: 2 }} /> Hors limites</span>
+          </p>
+
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left", background: "#fafafa" }}>
+                <th style={{ padding: 10 }}>Paramètre</th>
+                <th style={{ padding: 10 }}>Valeur</th>
+                <th style={{ padding: 10 }}>Min</th>
+                <th style={{ padding: 10 }}>Max</th>
+                <th style={{ padding: 10 }}>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => {
+                const limit = row.limitKey ? limits[row.limitKey] : undefined
+                const color = statusColor(row.value, limit)
+                return (
+                  <tr key={row.key} style={{ borderBottom: "1px solid #eee" }}>
+                    <td style={{ padding: 10 }}>{row.label}</td>
+                    <td style={{ padding: 10, fontWeight: 600, color }}>
+                      {row.value.toFixed(row.unit === "°C" || row.key === "dens" ? 2 : 2)}
+                      {row.unit ? ` ${row.unit}` : ""}
+                    </td>
+                    <td style={{ padding: 10, color: "#666" }}>
+                      {limit ? limit.min : "—"}
+                    </td>
+                    <td style={{ padding: 10, color: "#666" }}>
+                      {limit ? limit.max : "—"}
+                    </td>
+                    <td style={{ padding: 10 }}>
+                      {limit ? <StatusDot value={row.value} limit={limit} /> : "—"}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </>
       )}
     </main>
