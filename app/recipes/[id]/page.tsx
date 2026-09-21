@@ -426,12 +426,14 @@ export default function RecipeDetailPage() {
     : []
 
   // Masquer certains axes selon catégorie
-  const filteredStructure =
-    recipe.category === "sorbet"
-      ? structureCards.filter((c) => !["Onctuosité", "Émulsifiant vs MG"].includes(c.label))
-      : recipe.category === "vegan"
-      ? structureCards.filter((c) => c.label !== "ESDL")
-      : structureCards
+let filteredStructure = structureCards
+if (recipe.category === "sorbet") {
+  filteredStructure = structureCards.filter(
+    (c) => c.label !== "Onctuosité" && c.label !== "Émulsifiant vs MG"
+  )
+} else if (recipe.category === "vegan") {
+  filteredStructure = structureCards.filter((c) => c.label !== "ESDL")
+}
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
