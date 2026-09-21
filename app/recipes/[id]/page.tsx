@@ -13,6 +13,7 @@ type IngredientData = {
   sugar: number
   fiber: number
   minerals: number
+  alcohol: number
   stabilizer: number
   sweetness_factor: number
   molar_mass: number | null
@@ -23,6 +24,7 @@ type IngredientData = {
   sodium: number
   calcium: number
   cost: number
+  solubility: number
 }
 
 type RecipeLine = {
@@ -40,7 +42,9 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     fiber: { min: 0, max: 3 },
     stabilizer: { min: 0.15, max: 0.25 },
     sodium: { min: 0, max: 100 },
-    calcium: { min: 50, max: 200 },
+    saturatedFat: { min: 3, max: 8 },
+    minerals: { min: 0, max: 2 },
+    alcohol: { min: 0, max: 3 },
   }
 
   if (category === "sorbet") {
@@ -54,6 +58,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     composition.fat = { min: 4, max: 8 }
     composition.sugar = { min: 18, max: 24 }
     composition.stabilizer = { min: 0.15, max: 0.3 }
+    composition.saturatedFat = { min: 2, max: 6 }
   }
 
   const structure: Record<string, Limit> = {
@@ -61,16 +66,16 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     density: { min: 1.08, max: 1.13 },
     creaminess: { min: 5, max: 8 },
     esdl: { min: 6, max: 12 },
-    sweetness: { min: 12, max: 22 },
     freezingPoint: { min: -3.3, max: -2.3 },
     iceFraction: { min: 87.7, max: 88.1 },
     molarMassStabi: { min: 170000, max: 210000 },
     emulsifierVsFat: { min: 1.25, max: 2.5 },
+    mgSolide: { min: 45, max: 75 },
+    saturation: { min: 50, max: 100 },
   }
 
   if (category === "sorbet") {
     structure.totalSolids = { min: 27, max: 33 }
-    structure.sweetness = { min: 20, max: 26 }
     structure.iceFraction = { min: 87.8, max: 88.1 }
     structure.molarMassStabi = { min: 175000, max: 220000 }
   }
@@ -83,9 +88,9 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
   if (temp === "soft") {
     structure.totalSolids = { min: 30, max: 38 }
     structure.creaminess = { min: 2, max: 6 }
-    structure.sweetness = { min: 10, max: 20 }
     structure.freezingPoint = { min: -2.6, max: -1.9 }
     structure.iceFraction = { min: 74.5, max: 76.5 }
+    structure.mgSolide = { min: 35, max: 65 }
   }
 
   return { ...composition, ...structure }
@@ -149,7 +154,7 @@ export default function RecipeDetailPage() {
 
       const { data: linesData } = await supabase
         .from("recipe_ingredients")
-        .select("quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, stabilizer, sweetness_factor, molar_mass, pac_carb, pac_salts, creaminess, saturated_fat, sodium, calcium, cost)")
+        .select("quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, pac_carb, pac_salts, creaminess, saturated_fat, sodium, calcium, cost, solubility)")
         .eq("recipe_id", id)
 
       setLines((linesData as any) || [])
@@ -165,22 +170,13 @@ export default function RecipeDetailPage() {
     }
 
     let totalQty = 0
-    let fat = 0
-    let protein = 0
-    let sugar = 0
-    let fiber = 0
-    let minerals = 0
-    let stabilizer = 0
-    let saturatedFat = 0
-    let sodium = 0
-    let calcium = 0
-    let cost = 0
-    let sweetness = 0
-    let creaminess = 0
-    let stabiMassSum = 0
-    let stabiQtySum = 0
-    let pacCarbSum = 0
-    let pacSaltsSum = 0
+    let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
+    let alcohol = 0, stabilizer = 0, saturatedFat = 0
+    let sodium = 0, calcium = 0, cost = 0
+    let sweetness = 0, creaminess = 0
+    let stabiMassSum = 0, stabiQtySum = 0
+    let pacCarbSum = 0, pacSaltsSum = 0
+    let solubilitySum = 0
 
     for (const line of lines) {
       const q = line.quantity || 0
@@ -193,6 +189,7 @@ export default function RecipeDetailPage() {
       sugar += (q * (ing.sugar || 0)) / 100
       fiber += (q * (ing.fiber || 0)) / 100
       minerals += (q * (ing.minerals || 0)) / 100
+      alcohol += (q * (ing.alcohol || 0)) / 100
       stabilizer += (q * (ing.stabilizer || 0)) / 100
       saturatedFat += (q * (ing.saturated_fat || 0)) / 100
       sodium += (q * (ing.sodium || 0)) / 100
@@ -200,6 +197,7 @@ export default function RecipeDetailPage() {
       cost += q * (ing.cost || 0)
       sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
       creaminess += (q * (ing.creaminess || 0)) / 100
+      solubilitySum += q * (ing.solubility || 0)
 
       const stabiPart = (q * (ing.stabilizer || 0)) / 100
       if (stabiPart > 0 && ing.molar_mass) {
@@ -221,9 +219,11 @@ export default function RecipeDetailPage() {
     const sugarPct = (sugar / totalQty) * 100
     const fiberPct = (fiber / totalQty) * 100
     const mineralsPct = (minerals / totalQty) * 100
+    const alcoholPct = (alcohol / totalQty) * 100
     const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
     const waterFraction = 100 - totalSolids
     const stabilizerPct = (stabilizer / totalQty) * 100
+    const creaminessPct = (creaminess / totalQty) * 100
 
     const density =
       1 /
@@ -252,6 +252,12 @@ export default function RecipeDetailPage() {
       }
     }
 
+    // MG solide approx = onctuosité relative à la MG
+    const mgSolide = fatPct > 0 ? (creaminessPct / fatPct) * 100 : 0
+
+    // Saturation simplifiée
+    const saturation = waterKg > 0 ? (sugarPct / waterFraction) * 100 : 0
+
     setCalcs({
       totalSolids,
       fat: fatPct,
@@ -259,19 +265,22 @@ export default function RecipeDetailPage() {
       sugar: sugarPct,
       fiber: fiberPct,
       minerals: mineralsPct,
+      alcohol: alcoholPct,
       stabilizer: stabilizerPct,
       saturatedFat: (saturatedFat / totalQty) * 100,
       sodium: sodium / totalQty,
       calcium: calcium / totalQty,
       cost: cost / totalQty,
       sweetness: (sweetness / totalQty) * 100,
-      creaminess: (creaminess / totalQty) * 100,
+      creaminess: creaminessPct,
       density,
       esdl: proteinPct,
       freezingPoint,
       iceFraction,
       molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
       emulsifierVsFat: fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0,
+      mgSolide,
+      saturation,
     })
   }, [lines, servingTemp])
 
@@ -374,33 +383,43 @@ export default function RecipeDetailPage() {
           <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
             Composition
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12, marginBottom: 40 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
             {renderCard("Matière grasse", calcs.fat, "%", "fat")}
-            {renderCard("Protéines", calcs.protein, "%", "protein")}
             {renderCard("Glucides", calcs.sugar, "%", "sugar")}
-            {renderCard("Fibres", calcs.fiber, "%", "fiber")}
+            {renderCard("Protéines", calcs.protein, "%", "protein")}
             {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 3)}
+            {renderCard("Alcool", calcs.alcohol, "%", "alcohol")}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
+            {renderCard("MG saturée", calcs.saturatedFat, "%", "saturatedFat")}
+            {renderCard("Fibres", calcs.fiber, "%", "fiber")}
+            {renderCard("Sels minéraux", calcs.minerals, "%", "minerals")}
             {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
-            {renderCard("Calcium", calcs.calcium, "mg", "calcium", 1)}
             {renderCard("Coût / unité", calcs.cost, "", undefined, 4)}
           </div>
 
           <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
             Structure & Texture
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
-            {renderCard("Densité", calcs.density, "", "density", 3)}
             {recipe.category !== "sorbet" && renderCard("Onctuosité", calcs.creaminess, "", "creaminess")}
             {recipe.category !== "sorbet" && renderCard("Émulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
-            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
             {recipe.category !== "vegan" && renderCard("ESDL", calcs.esdl, "%", "esdl")}
-            {renderCard("Taux sucrant", calcs.sweetness, "", "sweetness")}
-            {renderCard("Point de congélation", calcs.freezingPoint, "°C", "freezingPoint")}
             {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+            {renderCard("Densité", calcs.density, "", "density", 3)}
+            {recipe.category !== "sorbet" && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide")}
+            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
+            {renderCard("Saturation solution", calcs.saturation, "%", "saturation")}
+            {renderCard("Point de congélation", calcs.freezingPoint, "°C", "freezingPoint")}
           </div>
         </div>
       )}
+    </main>
+  )
+}
     </main>
   )
 }
