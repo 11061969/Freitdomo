@@ -64,7 +64,6 @@ type CalcResults = {
 type Limit = { min: number; max: number }
 
 function getLimits(category: string, temp: "soft" | "gelato" | "hard"): Record<string, Limit> {
-  // --- Composition ---
   let composition: Record<string, Limit> = {
     fat: { min: 6, max: 14 },
     saturatedFat: { min: 3, max: 8 },
@@ -99,7 +98,6 @@ function getLimits(category: string, temp: "soft" | "gelato" | "hard"): Record<s
     }
   }
 
-  // --- Structure ---
   let structure: Record<string, Limit> = {
     totalSolids: { min: 34, max: 42 },
     density: { min: 1.08, max: 1.13 },
@@ -161,6 +159,49 @@ const statusStyles = {
   warn: { bg: "#fff8e1", border: "#ffe082", text: "#e65100" },
   bad: { bg: "#ffebee", border: "#ef9a9a", text: "#b71c1c" },
   none: { bg: "#f5f5f5", border: "#e0e0e0", text: "#333" },
+}
+
+type Card = {
+  label: string
+  value: number
+  unit: string
+  limitKey?: string
+  digits?: number
+}
+
+function CardsGrid({ cards, limits }: { cards: Card[]; limits: Record<string, Limit> }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+      {cards.map((card) => {
+        const limit = card.limitKey ? limits[card.limitKey] : undefined
+        const status = getStatus(card.value, limit)
+        const style = statusStyles[status]
+        const digits = card.digits ?? 2
+        return (
+          <div
+            key={card.label}
+            style={{
+              padding: 14,
+              background: style.bg,
+              border: `1px solid ${style.border}`,
+              borderRadius: 10,
+            }}
+          >
+            <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{card.label}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
+              {card.value.toFixed(digits)}
+              {card.unit ? ` ${card.unit}` : ""}
+            </div>
+            {limit && (
+              <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
+                Min {limit.min} → Max {limit.max}
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function RecipeDetailPage() {
@@ -356,27 +397,41 @@ export default function RecipeDetailPage() {
 
   const limits = getLimits(recipe.category, servingTemp)
 
-  const cards: { label: string; value: number; unit: string; limitKey?: string; digits?: number }[] = calcs
+  const compositionCards: Card[] = calcs
     ? [
-        { label: "Solides totaux", value: calcs.totalSolids, unit: "%", limitKey: "totalSolids" },
-        { label: "Densité", value: calcs.density, unit: "", limitKey: "density", digits: 3 },
         { label: "Matière grasse", value: calcs.fat, unit: "%", limitKey: "fat" },
+        { label: "MG saturée", value: calcs.saturatedFat, unit: "%", limitKey: "saturatedFat" },
         { label: "Protéines", value: calcs.protein, unit: "%", limitKey: "protein" },
         { label: "Glucides", value: calcs.sugar, unit: "%", limitKey: "sugar" },
         { label: "Fibres", value: calcs.fiber, unit: "%", limitKey: "fiber" },
         { label: "Stabilisant", value: calcs.stabilizer, unit: "%", limitKey: "stabilizer", digits: 3 },
-        { label: "Taux sucrant", value: calcs.sweetness, unit: "", limitKey: "sweetness" },
-        { label: "Onctuosité", value: calcs.creaminess, unit: "", limitKey: "creaminess" },
-        { label: "ESDL", value: calcs.esdl, unit: "%", limitKey: "esdl" },
-        { label: "Point de congélation", value: calcs.freezingPoint, unit: "°C", limitKey: "freezingPoint" },
-        { label: "Fraction de glace", value: calcs.iceFraction, unit: "%", limitKey: "iceFraction" },
-        { label: "Masse molaire stabi", value: calcs.molarMassStabi, unit: "", limitKey: "molarMassStabi", digits: 0 },
-        { label: "Émulsifiant vs MG", value: calcs.emulsifierVsFat, unit: "%", limitKey: "emulsifierVsFat" },
         { label: "Sodium", value: calcs.sodium, unit: "mg", limitKey: "sodium", digits: 1 },
         { label: "Calcium", value: calcs.calcium, unit: "mg", limitKey: "calcium", digits: 1 },
         { label: "Coût / unité", value: calcs.cost, unit: "", digits: 4 },
       ]
     : []
+
+  const structureCards: Card[] = calcs
+    ? [
+        { label: "Solides totaux", value: calcs.totalSolids, unit: "%", limitKey: "totalSolids" },
+        { label: "Densité", value: calcs.density, unit: "", limitKey: "density", digits: 3 },
+        { label: "Onctuosité", value: calcs.creaminess, unit: "", limitKey: "creaminess" },
+        { label: "Émulsifiant vs MG", value: calcs.emulsifierVsFat, unit: "%", limitKey: "emulsifierVsFat" },
+        { label: "Masse molaire stabi", value: calcs.molarMassStabi, unit: "", limitKey: "molarMassStabi", digits: 0 },
+        { label: "ESDL", value: calcs.esdl, unit: "%", limitKey: "esdl" },
+        { label: "Taux sucrant", value: calcs.sweetness, unit: "", limitKey: "sweetness" },
+        { label: "Point de congélation", value: calcs.freezingPoint, unit: "°C", limitKey: "freezingPoint" },
+        { label: "Fraction de glace", value: calcs.iceFraction, unit: "%", limitKey: "iceFraction" },
+      ]
+    : []
+
+  // Masquer certains axes selon catégorie
+  const filteredStructure =
+    recipe.category === "sorbet"
+      ? structureCards.filter((c) => !["Onctuosité", "Émulsifiant vs MG"].includes(c.label))
+      : recipe.category === "vegan"
+      ? structureCards.filter((c) => c.label !== "ESDL")
+      : structureCards
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
@@ -391,8 +446,8 @@ export default function RecipeDetailPage() {
         {categoryLabel[recipe.category] || recipe.category} · {tempLabel[servingTemp]}
       </p>
 
-      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Composition</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 28 }}>
+      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingrédients de la recette</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
             <th style={{ padding: 8 }}>Ingrédient</th>
@@ -407,51 +462,3 @@ export default function RecipeDetailPage() {
               <td style={{ padding: 8 }}>{line.ingredients?.category || "—"}</td>
               <td style={{ padding: 8 }}>{line.quantity}</td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {calcs && (
-        <>
-          <h3 style={{ marginBottom: 8 }}>Résultats & limites</h3>
-          <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>
-            <span style={{ color: "#1b5e20" }}>● Vert</span> = dans les limites &nbsp;&nbsp;
-            <span style={{ color: "#e65100" }}>● Orange</span> = proche &nbsp;&nbsp;
-            <span style={{ color: "#b71c1c" }}>● Rouge</span> = hors limites
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
-            {cards.map((card) => {
-              const limit = card.limitKey ? limits[card.limitKey] : undefined
-              const status = getStatus(card.value, limit)
-              const style = statusStyles[status]
-              const digits = card.digits ?? 2
-              return (
-                <div
-                  key={card.label}
-                  style={{
-                    padding: 14,
-                    background: style.bg,
-                    border: `1px solid ${style.border}`,
-                    borderRadius: 10,
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{card.label}</div>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
-                    {card.value.toFixed(digits)}
-                    {card.unit ? ` ${card.unit}` : ""}
-                  </div>
-                  {limit && (
-                    <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
-                      Min {limit.min} → Max {limit.max}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </>
-      )}
-    </main>
-  )
-}
