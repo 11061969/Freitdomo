@@ -5,120 +5,35 @@ import { useRouter, useParams } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 import Link from "next/link"
 
-type IngredientData = {
-  name: string
-  category: string | null
-  fat: number
-  protein: number
-  sugar: number
-  fiber: number
-  minerals: number
-  alcohol: number
-  stabilizer: number
-  sweetness_factor: number
-  molar_mass: number | null
-  pac_carb: number
-  pac_salts: number
-  creaminess: number
-  saturated_fat: number
-  sodium: number
-  calcium: number
-  cost: number
-  solubility: number
-}
-
-type RecipeLine = {
-  quantity: number
-  ingredients: IngredientData | null
-}
-
-type Limit = { min: number; max: number }
-
-function getLimits(category: string, temp: string): Record<string, Limit> {
-  const composition: Record<string, Limit> = {
-    fat: { min: 6, max: 14 },
-    protein: { min: 2, max: 7 },
-    sugar: { min: 20, max: 26 },
-    fiber: { min: 0, max: 3 },
-    stabilizer: { min: 0.15, max: 0.25 },
-    sodium: { min: 0, max: 100 },
-    saturatedFat: { min: 3, max: 8 },
-    minerals: { min: 0, max: 2 },
-    alcohol: { min: 0, max: 3 },
-  }
-
-  if (category === "sorbet") {
-    composition.fat = { min: 0, max: 1 }
-    composition.protein = { min: 0, max: 1 }
-    composition.sugar = { min: 23, max: 33 }
-    composition.stabilizer = { min: 0.15, max: 0.3 }
-  }
-
-  if (temp === "soft" && category !== "sorbet") {
-    composition.fat = { min: 4, max: 8 }
-    composition.sugar = { min: 18, max: 24 }
-    composition.stabilizer = { min: 0.15, max: 0.3 }
-    composition.saturatedFat = { min: 2, max: 6 }
-  }
-
-  const structure: Record<string, Limit> = {
-    totalSolids: { min: 34, max: 42 },
-    density: { min: 1.08, max: 1.13 },
-    creaminess: { min: 5, max: 8 },
-    esdl: { min: 6, max: 12 },
-    freezingPoint: { min: -3.3, max: -2.3 },
-    iceFraction: { min: 87.7, max: 88.1 },
-    molarMassStabi: { min: 170000, max: 210000 },
-    emulsifierVsFat: { min: 1.25, max: 2.5 },
-    mgSolide: { min: 45, max: 75 },
-    saturation: { min: 50, max: 100 },
-  }
-
-  if (category === "sorbet") {
-    structure.totalSolids = { min: 27, max: 33 }
-    structure.iceFraction = { min: 87.8, max: 88.1 }
-    structure.molarMassStabi = { min: 175000, max: 220000 }
-  }
-
-  if (temp === "gelato") {
-    structure.freezingPoint = { min: -2.8, max: -2.0 }
-    structure.iceFraction = { min: 85, max: 86 }
-  }
-
-  if (temp === "soft") {
-    structure.totalSolids = { min: 30, max: 38 }
-    structure.creaminess = { min: 2, max: 6 }
-    structure.freezingPoint = { min: -2.6, max: -1.9 }
-    structure.iceFraction = { min: 74.5, max: 76.5 }
-    structure.mgSolide = { min: 35, max: 65 }
-  }
-
-  return { ...composition, ...structure }
-}
-
-function getStatus(value: number, limit?: Limit) {
-  if (!limit) return "none"
-  if (value >= limit.min && value <= limit.max) return "ok"
-  return "bad"
-}
-
-const colors: Record<string, { bg: string; border: string; text: string }> = {
-  ok: { bg: "#e8f5e9", border: "#a5d6a7", text: "#1b5e20" },
-  bad: { bg: "#ffebee", border: "#ef9a9a", text: "#b71c1c" },
-  none: { bg: "#f5f5f5", border: "#e0e0e0", text: "#333" },
-}
-
-export default function RecipeDetailPage() {
+export default function IngredientDetailPage() {
   const router = useRouter()
   const params = useParams()
   const id = params.id as string
 
-  const [recipe, setRecipe] = useState<any>(null)
-  const [lines, setLines] = useState<RecipeLine[]>([])
-  const [servingTemp, setServingTemp] = useState("hard")
-  const [calcs, setCalcs] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+
+  const [name, setName] = useState("")
+  const [category, setCategory] = useState("")
+  const [fat, setFat] = useState("0")
+  const [protein, setProtein] = useState("0")
+  const [sugar, setSugar] = useState("0")
+  const [fiber, setFiber] = useState("0")
+  const [minerals, setMinerals] = useState("0")
+  const [alcohol, setAlcohol] = useState("0")
+  const [stabilizer, setStabilizer] = useState("0")
+  const [sweetnessFactor, setSweetnessFactor] = useState("0")
+  const [molarMass, setMolarMass] = useState("")
+  const [pacCarb, setPacCarb] = useState("0")
+  const [pacSalts, setPacSalts] = useState("0")
+  const [solubility, setSolubility] = useState("0")
+  const [creaminess, setCreaminess] = useState("0")
+  const [saturatedFat, setSaturatedFat] = useState("0")
+  const [sodium, setSodium] = useState("0")
+  const [calcium, setCalcium] = useState("0")
+  const [cost, setCost] = useState("0")
 
   useEffect(() => {
     async function load() {
@@ -128,296 +43,144 @@ export default function RecipeDetailPage() {
         return
       }
 
-      const { data: userData } = await supabase
-        .from("users")
-        .select("client_id, clients(serving_temperature)")
-        .eq("id", user.id)
-        .single()
-
-      if (userData && (userData as any).clients?.serving_temperature) {
-        setServingTemp((userData as any).clients.serving_temperature)
-      }
-
-      const { data: recipeData, error: recipeError } = await supabase
-        .from("recipes")
-        .select("id, name, category, total_quantity")
+      const { data, error } = await supabase
+        .from("ingredients")
+        .select("*")
         .eq("id", id)
         .single()
 
-      if (recipeError || !recipeData) {
-        setError("Recette non trouvée")
+      if (error || !data) {
+        setError("Ingrédient non trouvé")
         setLoading(false)
         return
       }
 
-      setRecipe(recipeData)
-
-      const { data: linesData } = await supabase
-        .from("recipe_ingredients")
-        .select("quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, pac_carb, pac_salts, creaminess, saturated_fat, sodium, calcium, cost, solubility)")
-        .eq("recipe_id", id)
-
-      setLines((linesData as any) || [])
+      setName(data.name || "")
+      setCategory(data.category || "")
+      setFat(String(data.fat ?? 0))
+      setProtein(String(data.protein ?? 0))
+      setSugar(String(data.sugar ?? 0))
+      setFiber(String(data.fiber ?? 0))
+      setMinerals(String(data.minerals ?? 0))
+      setAlcohol(String(data.alcohol ?? 0))
+      setStabilizer(String(data.stabilizer ?? 0))
+      setSweetnessFactor(String(data.sweetness_factor ?? 0))
+      setMolarMass(data.molar_mass != null ? String(data.molar_mass) : "")
+      setPacCarb(String(data.pac_carb ?? 0))
+      setPacSalts(String(data.pac_salts ?? 0))
+      setSolubility(String(data.solubility ?? 0))
+      setCreaminess(String(data.creaminess ?? 0))
+      setSaturatedFat(String(data.saturated_fat ?? 0))
+      setSodium(String(data.sodium ?? 0))
+      setCalcium(String(data.calcium ?? 0))
+      setCost(String(data.cost ?? 0))
       setLoading(false)
     }
+
     load()
   }, [id, router])
 
-  useEffect(() => {
-    if (lines.length === 0) {
-      setCalcs(null)
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault()
+    setSaving(true)
+    setError("")
+    setSuccess(false)
+
+    const { error } = await supabase
+      .from("ingredients")
+      .update({
+        name,
+        category: category || null,
+        fat: parseFloat(fat) || 0,
+        protein: parseFloat(protein) || 0,
+        sugar: parseFloat(sugar) || 0,
+        fiber: parseFloat(fiber) || 0,
+        minerals: parseFloat(minerals) || 0,
+        alcohol: parseFloat(alcohol) || 0,
+        stabilizer: parseFloat(stabilizer) || 0,
+        sweetness_factor: parseFloat(sweetnessFactor) || 0,
+        molar_mass: molarMass ? parseFloat(molarMass) : null,
+        pac_carb: parseFloat(pacCarb) || 0,
+        pac_salts: parseFloat(pacSalts) || 0,
+        solubility: parseFloat(solubility) || 0,
+        creaminess: parseFloat(creaminess) || 0,
+        saturated_fat: parseFloat(saturatedFat) || 0,
+        sodium: parseFloat(sodium) || 0,
+        calcium: parseFloat(calcium) || 0,
+        cost: parseFloat(cost) || 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+
+    if (error) {
+      setError(error.message)
+      setSaving(false)
       return
     }
 
-    let totalQty = 0
-    let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
-    let alcohol = 0, stabilizer = 0, saturatedFat = 0
-    let sodium = 0, calcium = 0, cost = 0
-    let sweetness = 0, creaminess = 0
-    let stabiMassSum = 0, stabiQtySum = 0
-    let pacCarbSum = 0, pacSaltsSum = 0
-    let solubilitySum = 0
+    setSuccess(true)
+    setSaving(false)
+  }
 
-    for (const line of lines) {
-      const q = line.quantity || 0
-      const ing = line.ingredients
-      if (!ing || q <= 0) continue
+  async function handleDelete() {
+    if (!confirm("Supprimer cet ingrédient ?")) return
 
-      totalQty += q
-      fat += (q * (ing.fat || 0)) / 100
-      protein += (q * (ing.protein || 0)) / 100
-      sugar += (q * (ing.sugar || 0)) / 100
-      fiber += (q * (ing.fiber || 0)) / 100
-      minerals += (q * (ing.minerals || 0)) / 100
-      alcohol += (q * (ing.alcohol || 0)) / 100
-      stabilizer += (q * (ing.stabilizer || 0)) / 100
-      saturatedFat += (q * (ing.saturated_fat || 0)) / 100
-      sodium += (q * (ing.sodium || 0)) / 100
-      calcium += (q * (ing.calcium || 0)) / 100
-      cost += q * (ing.cost || 0)
-      sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
-      creaminess += (q * (ing.creaminess || 0)) / 100
-      solubilitySum += q * (ing.solubility || 0)
+    const { error } = await supabase
+      .from("ingredients")
+      .update({ is_active: false })
+      .eq("id", id)
 
-      const stabiPart = (q * (ing.stabilizer || 0)) / 100
-      if (stabiPart > 0 && ing.molar_mass) {
-        stabiMassSum += stabiPart * ing.molar_mass
-        stabiQtySum += stabiPart
-      }
-
-      pacCarbSum += q * (ing.pac_carb || 0)
-      pacSaltsSum += q * (ing.pac_salts || 0)
-    }
-
-    if (totalQty <= 0) {
-      setCalcs(null)
+    if (error) {
+      setError(error.message)
       return
     }
 
-    const fatPct = (fat / totalQty) * 100
-    const proteinPct = (protein / totalQty) * 100
-    const sugarPct = (sugar / totalQty) * 100
-    const fiberPct = (fiber / totalQty) * 100
-    const mineralsPct = (minerals / totalQty) * 100
-    const alcoholPct = (alcohol / totalQty) * 100
-    const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
-    const waterFraction = 100 - totalSolids
-    const stabilizerPct = (stabilizer / totalQty) * 100
-    const creaminessPct = (creaminess / totalQty) * 100
+    router.push("/ingredients")
+  }
 
-    const density =
-      1 /
-      ((fatPct / 100) * 1.07527 +
-        (totalSolids / 100 - fatPct / 100) * 0.6329 +
-        (1 - totalSolids / 100))
-
-    const pacTotal = (pacCarbSum + pacSaltsSum) / totalQty
-    const waterKg = waterFraction / 100
-    const molality = waterKg > 0 ? pacTotal / waterKg : 0
-    const freezingPoint = -(molality * 1.86)
-
-    const tempMap: Record<string, number> = { soft: -6, gelato: -11, hard: -18 }
-    const T = tempMap[servingTemp] || -18
-    let iceFraction = 0
-    if (waterKg > 0 && freezingPoint < 0) {
-      const numerateur = 1.105 * waterKg * 100
-      const denomTemp = freezingPoint - T + 1
-      if (denomTemp > 0) {
-        const lnVal = Math.log(denomTemp)
-        if (lnVal !== 0) {
-          const facteur = 0.7138 / lnVal
-          const iceQty = numerateur / (1 + facteur)
-          iceFraction = (iceQty / (waterKg * 100)) * 100
-        }
-      }
-    }
-
-    // MG solide approx = onctuosité relative à la MG
-    const mgSolide = fatPct > 0 ? (creaminessPct / fatPct) * 100 : 0
-
-    // Saturation simplifiée
-    const saturation = waterKg > 0 ? (sugarPct / waterFraction) * 100 : 0
-
-    setCalcs({
-      totalSolids,
-      fat: fatPct,
-      protein: proteinPct,
-      sugar: sugarPct,
-      fiber: fiberPct,
-      minerals: mineralsPct,
-      alcohol: alcoholPct,
-      stabilizer: stabilizerPct,
-      saturatedFat: (saturatedFat / totalQty) * 100,
-      sodium: sodium / totalQty,
-      calcium: calcium / totalQty,
-      cost: cost / totalQty,
-      sweetness: (sweetness / totalQty) * 100,
-      creaminess: creaminessPct,
-      density,
-      esdl: proteinPct,
-      freezingPoint,
-      iceFraction,
-      molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
-      emulsifierVsFat: fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0,
-      mgSolide,
-      saturation,
-    })
-  }, [lines, servingTemp])
+  const inputStyle = { padding: 10, fontSize: 15, width: "100%" }
+  const labelStyle = { fontSize: 13, color: "#555", marginBottom: 4, display: "block" as const }
 
   if (loading) {
     return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   }
 
-  if (error || !recipe) {
-    return (
-      <main style={{ padding: 40, fontFamily: "sans-serif" }}>
-        <p style={{ color: "red" }}>{error || "Erreur"}</p>
-        <Link href="/dashboard">Retour</Link>
-      </main>
-    )
-  }
-
-  const limits = getLimits(recipe.category, servingTemp)
-
-  const categoryLabel: Record<string, string> = {
-    ice_cream: "Crème glacée",
-    sorbet: "Sorbet",
-    vegan: "Vegan",
-  }
-
-  const tempLabel: Record<string, string> = {
-    soft: "Soft (-6°C)",
-    gelato: "Gelato (-11°C)",
-    hard: "Hard (-18°C)",
-  }
-
-  function renderCard(label: string, value: number, unit: string, limitKey?: string, digits = 2) {
-    const limit = limitKey ? limits[limitKey] : undefined
-    const status = getStatus(value, limit)
-    const style = colors[status]
-    return (
-      <div
-        key={label}
-        style={{
-          padding: 14,
-          background: style.bg,
-          border: "1px solid " + style.border,
-          borderRadius: 10,
-        }}
-      >
-        <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
-          {value.toFixed(digits)}
-          {unit ? " " + unit : ""}
-        </div>
-        {limit && (
-          <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
-            Min {limit.min} → Max {limit.max}
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
-      <p style={{ marginBottom: 12 }}>
-        <Link href="/dashboard">Tableau de bord</Link>
-        {" · "}
-        <Link href="/recipes">Mes recettes</Link>
+    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 700, margin: "0 auto" }}>
+      <h1>Détail de l’ingrédient</h1>
+      <p style={{ margin: "12px 0 24px" }}>
+        <Link href="/ingredients">Retour à la liste</Link>
       </p>
 
-      <h1>{recipe.name}</h1>
-      <p style={{ color: "#555", marginTop: 8 }}>
-        {categoryLabel[recipe.category] || recipe.category}
-        {" · "}
-        {tempLabel[servingTemp] || servingTemp}
-      </p>
-
-      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingrédients de la recette</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
-        <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-            <th style={{ padding: 8 }}>Ingrédient</th>
-            <th style={{ padding: 8 }}>Catégorie</th>
-            <th style={{ padding: 8 }}>Quantité</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lines.map((line, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
-              <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
-              <td style={{ padding: 8 }}>{line.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {calcs && (
+      <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         <div>
-          <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
-            Vert = dans les limites · Rouge = hors limites
-          </p>
-
-          <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
-            Composition
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
-            {renderCard("Matière grasse", calcs.fat, "%", "fat")}
-            {renderCard("Glucides", calcs.sugar, "%", "sugar")}
-            {renderCard("Protéines", calcs.protein, "%", "protein")}
-            {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 3)}
-            {renderCard("Alcool", calcs.alcohol, "%", "alcohol")}
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
-            {renderCard("MG saturée", calcs.saturatedFat, "%", "saturatedFat")}
-            {renderCard("Fibres", calcs.fiber, "%", "fiber")}
-            {renderCard("Sels minéraux", calcs.minerals, "%", "minerals")}
-            {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
-            {renderCard("Coût / unité", calcs.cost, "", undefined, 4)}
-          </div>
-
-          <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
-            Structure & Texture
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
-            {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
-            {recipe.category !== "sorbet" && renderCard("Onctuosité", calcs.creaminess, "", "creaminess")}
-            {recipe.category !== "sorbet" && renderCard("Émulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
-            {recipe.category !== "vegan" && renderCard("ESDL", calcs.esdl, "%", "esdl")}
-            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
-            {renderCard("Densité", calcs.density, "", "density", 3)}
-            {recipe.category !== "sorbet" && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide")}
-            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
-            {renderCard("Saturation solution", calcs.saturation, "%", "saturation")}
-            {renderCard("Point de congélation", calcs.freezingPoint, "°C", "freezingPoint")}
-          </div>
+          <label style={labelStyle}>Nom *</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={inputStyle} />
         </div>
-      )}
-    </main>
-  )
-}
+
+        <div>
+          <label style={labelStyle}>Catégorie</label>
+          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle} />
+        </div>
+
+        <h3 style={{ marginTop: 12, marginBottom: 4 }}>Composition</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div>
+            <label style={labelStyle}>Matière grasse</label>
+            <input type="number" step="0.01" value={fat} onChange={(e) => setFat(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>MG saturée</label>
+            <input type="number" step="0.01" value={saturatedFat} onChange={(e) => setSaturatedFat(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Glucides / Sucres</label>
+            <input type="number" step="0.01" value={sugar} onChange={(e) => setSugar(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Fibres</label>
+            <input type="number" step="0.01" value={fiber} onChange={(e) => setFiber(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label 
 
