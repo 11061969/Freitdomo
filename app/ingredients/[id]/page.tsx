@@ -144,9 +144,9 @@ export default function IngredientDetailPage() {
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 700, margin: "0 auto" }}>
-      <h1>Détail de l’ingrédient</h1>
+      <h1>Detail de l ingredient</h1>
       <p style={{ margin: "12px 0 24px" }}>
-        <Link href="/ingredients">Retour à la liste</Link>
+        <Link href="/ingredients">Retour a la liste</Link>
       </p>
 
       <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -156,18 +156,18 @@ export default function IngredientDetailPage() {
         </div>
 
         <div>
-          <label style={labelStyle}>Catégorie</label>
+          <label style={labelStyle}>Categorie</label>
           <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle} />
         </div>
 
         <h3 style={{ marginTop: 12, marginBottom: 4 }}>Composition</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           <div>
-            <label style={labelStyle}>Matière grasse</label>
+            <label style={labelStyle}>Matiere grasse</label>
             <input type="number" step="0.01" value={fat} onChange={(e) => setFat(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>MG saturée</label>
+            <label style={labelStyle}>MG saturee</label>
             <input type="number" step="0.01" value={saturatedFat} onChange={(e) => setSaturatedFat(e.target.value)} style={inputStyle} />
           </div>
           <div>
@@ -179,11 +179,11 @@ export default function IngredientDetailPage() {
             <input type="number" step="0.01" value={fiber} onChange={(e) => setFiber(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Protéines</label>
+            <label style={labelStyle}>Proteines</label>
             <input type="number" step="0.01" value={protein} onChange={(e) => setProtein(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Sels minéraux</label>
+            <label style={labelStyle}>Sels mineraux</label>
             <input type="number" step="0.01" value={minerals} onChange={(e) => setMinerals(e.target.value)} style={inputStyle} />
           </div>
           <div>
@@ -199,31 +199,31 @@ export default function IngredientDetailPage() {
             <input type="number" step="0.01" value={alcohol} onChange={(e) => setAlcohol(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Coût</label>
+            <label style={labelStyle}>Cout</label>
             <input type="number" step="0.01" value={cost} onChange={(e) => setCost(e.target.value)} style={inputStyle} />
           </div>
         </div>
 
-        <h3 style={{ marginTop: 12, marginBottom: 4 }}>Paramètres techniques</h3>
+        <h3 style={{ marginTop: 12, marginBottom: 4 }}>Parametres techniques</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           <div>
             <label style={labelStyle}>Taux sucrant</label>
             <input type="number" step="0.01" value={sweetnessFactor} onChange={(e) => setSweetnessFactor(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Masse molaire {showMolarMass ? "" : "(fixe selon catégorie)"}</label>
+            <label style={labelStyle}>Masse molaire</label>
             <input
               type="number"
               step="1"
               value={molarMass}
               onChange={(e) => setMolarMass(e.target.value)}
               disabled={!showMolarMass}
-              placeholder={showMolarMass ? "" : "342 / 58 / 46"}
+              placeholder={showMolarMass ? "" : "fixe"}
               style={{ ...inputStyle, opacity: showMolarMass ? 1 : 0.5 }}
             />
           </div>
           <div>
-            <label style={labelStyle}>Solubilité</label>
+            <label style={labelStyle}>Solubilite</label>
             <input type="number" step="0.01" value={solubility} onChange={(e) => setSolubility(e.target.value)} style={inputStyle} />
           </div>
           <div>
@@ -233,4 +233,17 @@ export default function IngredientDetailPage() {
         </div>
 
         <div style={{ display: "flex", gap: 12, marginTop: 16, flexWrap: "wrap" }}>
-          <button type="submit" 
+          <button type="submit" disabled={saving} style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer" }}>
+            {saving ? "Enregistrement..." : "Enregistrer"}
+          </button>
+          <button type="button" onClick={handleDelete} style={{ padding: "12px 20px", fontSize: 16, cursor: "pointer", background: "#fee", color: "#900" }}>
+            Supprimer
+          </button>
+        </div>
+      </form>
+
+      {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
+      {success && <p style={{ color: "green", marginTop: 12 }}>Modifications enregistrees</p>}
+    </main>
+  )
+}
