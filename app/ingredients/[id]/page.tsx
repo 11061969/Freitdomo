@@ -160,6 +160,252 @@ export default function RecipeDetailPage() {
     load()
   }, [id, router])
 
-  // PLACEHOLDER_CALCS
-  // PLACEHOLDER_RENDER
-}
+  useEffect(() => {
+    if (lines.length === 0) {
+      setCalcs(null)
+      return
+    }
+
+    let totalQty = 0
+    let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
+    let alcohol = 0, stabilizer = 0, saturatedFat = 0
+    let sodium = 0, calcium = 0, cost = 0
+    let sweetness = 0
+    let stabiMassSum = 0, stabiQtySum = 0
+    let moles = 0
+
+    for (const line of lines) {
+      const q = line.quantity || 0
+      const ing = line.ingredients
+      if (!ing || q <= 0) continue
+
+      totalQty += q
+      fat += (q * (ing.fat || 0)) / 100
+      protein += (q * (ing.protein || 0)) / 100
+      sugar += (q * (ing.sugar || 0)) / 100
+      fiber += (q * (ing.fiber || 0)) / 100
+      minerals += (q * (ing.minerals || 0)) / 100
+      alcohol += (q * (ing.alcohol || 0)) / 100
+      stabilizer += (q * (ing.stabilizer || 0)) / 100
+      saturatedFat += (q * (ing.saturated_fat || 0)) / 100
+      sodium += (q * (ing.sodium || 0)) / 100
+      calcium += (q * (ing.calcium || 0)) / 100
+      cost += q * (ing.cost || 0)
+      sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
+
+      const stabiPart = (q * (ing.stabilizer || 0)) / 100
+      if (stabiPart > 0 && ing.molar_mass) {
+        stabiMassSum += stabiPart * ing.molar_mass
+        stabiQtySum += stabiPart
+      }
+
+      const cat = (ing.category || "").toLowerCase()
+      const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
+      const sugarMass = (q * (ing.sugar || 0)) / 100
+      const saltMass = (q * (ing.minerals || 0)) / 100
+      const alcoholMass = (q * (ing.alcohol || 0)) / 100
+      if (mCarb > 0) moles += sugarMass / mCarb
+      moles += saltMass / 58
+      moles += alcoholMass / 46
+    }
+
+    if (totalQty <= 0) {
+      setCalcs(null)
+      return
+    }
+
+    const fatPct = (fat / totalQty) * 100
+    const proteinPct = (protein / totalQty) * 100
+    const sugarPct = (sugar / totalQty) * 100
+    const fiberPct = (fiber / totalQty) * 100
+    const mineralsPct = (minerals / totalQty) * 100
+    const alcoholPct = (alcohol / totalQty) * 100
+    const saturatedFatPct = (saturatedFat / totalQty) * 100
+    const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
+    const waterFraction = Math.max(0, 100 - totalSolids)
+    const stabilizerPct = (stabilizer / totalQty) * 100
+
+    const density =
+      1 /
+      ((fatPct / 100) * 1.07527 +
+        (totalSolids / 100 - fatPct / 100) * 0.6329 +
+        (1 - totalSolids / 100))
+
+    const onctuosite = saturatedFatPct
+    const mgSolide = fatPct > 0 ? (saturatedFatPct / fatPct) * 100 : 0
+
+    const waterFraction01 = waterFraction / 100
+    const molality = waterFraction01 > 0 ? moles / (totalQty * waterFraction01) : 0
+    const freezingPoint = -(molality * 1.86)
+
+    const tempMap: Record<string, number> = { soft: -6, gelato: -11, hard: -18 }
+    const T = tempMap[servingTemp] || -18
+    let iceFraction = 0
+    if (waterFraction01 > 0 && freezingPoint < 0) {
+      const numerateur = 1.105 * waterFraction01 * 100
+      const denomTemp = freezingPoint - T + 1
+      if (denomTemp > 0) {
+        const lnVal = Math.log(denomTemp)
+        if (lnVal !== 0) {
+          const facteur = 0.7138 / lnVal
+          const iceQty = numerateur / (1 + facteur)
+          iceFraction = (iceQty / (waterFraction01 * 100)) * 100
+        }
+      }
+    }
+
+    const saturation = waterFraction > 0 ? (sugarPct / waterFraction) * 100 : 0
+
+    setCalcs({
+      totalSolids,
+      fat: fatPct,
+      protein: proteinPct,
+      sugar: sugarPct,
+      fiber: fiberPct,
+      minerals: mineralsPct,
+      alcohol: alcoholPct,
+      stabilizer: stabilizerPct,
+      saturatedFat: saturatedFatPct,
+      sodium: sodium / totalQty,
+      calcium: calcium / totalQty,
+      cost: cost / totalQty,
+      sweetness: (sweetness / totalQty) * 100,
+      creaminess: onctuosite,
+      density,
+      esdl: proteinPct,
+      freezingPoint,
+      iceFraction,
+      molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
+      emulsifierVsFat: fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0,
+      mgSolide,
+      saturation,
+    })
+  }, [lines, servingTemp])
+
+  if (loading) {
+    return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
+  }
+
+  if (error || !recipe) {
+    return (
+      <main style={{ padding: 40, fontFamily: "sans-serif" }}>
+        <p style={{ color: "red" }}>{error || "Erreur"}</p>
+        <Link href="/dashboard">Retour</Link>
+      </main>
+    )
+  }
+
+  const limits = getLimits(recipe.category, servingTemp)
+
+  const categoryLabel: Record<string, string> = {
+    ice_cream: "Creme glacee",
+    sorbet: "Sorbet",
+    vegan: "Vegan",
+  }
+
+  const tempLabel: Record<string, string> = {
+    soft: "Soft (-6C)",
+    gelato: "Gelato (-11C)",
+    hard: "Hard (-18C)",
+  }
+
+  function renderCard(label: string, value: number, unit: string, limitKey?: string, digits = 2) {
+    const limit = limitKey ? limits[limitKey] : undefined
+    const status = getStatus(value, limit)
+    const style = colors[status]
+    return (
+      <div
+        key={label}
+        style={{
+          padding: 14,
+          background: style.bg,
+          border: "1px solid " + style.border,
+          borderRadius: 10,
+        }}
+      >
+        <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
+          {value.toFixed(digits)}
+          {unit ? " " + unit : ""}
+        </div>
+        {limit && (
+          <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
+            Min {limit.min} - Max {limit.max}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
+      <p style={{ marginBottom: 12 }}>
+        <Link href="/dashboard">Tableau de bord</Link>
+        {" · "}
+        <Link href="/recipes">Mes recettes</Link>
+      </p>
+
+      <h1>{recipe.name}</h1>
+      <p style={{ color: "#555", marginTop: 8 }}>
+        {categoryLabel[recipe.category] || recipe.category}
+        {" · "}
+        {tempLabel[servingTemp] || servingTemp}
+      </p>
+
+      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingredients de la recette</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
+            <th style={{ padding: 8 }}>Ingredient</th>
+            <th style={{ padding: 8 }}>Categorie</th>
+            <th style={{ padding: 8 }}>Quantite</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lines.map((line, i) => (
+            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+              <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
+              <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
+              <td style={{ padding: 8 }}>{line.quantity}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {calcs && (
+        <div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
+            Vert = dans les limites · Rouge = hors limites
+          </p>
+
+          <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
+            Composition
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
+            {renderCard("Matiere grasse", calcs.fat, "%", "fat")}
+            {renderCard("Glucides", calcs.sugar, "%", "sugar")}
+            {renderCard("Proteines", calcs.protein, "%", "protein")}
+            {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 3)}
+            {renderCard("Alcool", calcs.alcohol, "%", "alcohol")}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
+            {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat")}
+            {renderCard("Fibres", calcs.fiber, "%", "fiber")}
+            {renderCard("Sels mineraux", calcs.minerals, "%", "minerals")}
+            {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
+            {renderCard("Cout / unite", calcs.cost, "", undefined, 4)}
+          </div>
+
+          <h2 style={{ fontSize: 20, marginBottom: 12, borderBottom: "2px solid #ddd", paddingBottom: 8 }}>
+            Structure et Texture
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
+            {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
+            {recipe.category !== "sorbet" && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
+            {recipe.category !== "sorbet" && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
+            {recipe.category !== "vegan" && renderCard("ESDL", calcs.esdl, "%", "esdl")}
+            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+            {renderCard("Densite", calcs.density, "", "density", 3)}
+            {recipe.category 
