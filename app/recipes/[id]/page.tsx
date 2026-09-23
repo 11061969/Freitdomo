@@ -400,7 +400,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Alcool", calcs.alcohol, "%", "alcohol")}
                 {renderCard("Kcal / 100g", calcs.kcal, "", undefined, 0)}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, alignItems: "start" }}>
                 {renderCard("Fibres", calcs.fiber, "%", "fiber")}
                 {renderCard("Sels mineraux", calcs.minerals, "%", "minerals")}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
