@@ -428,15 +428,15 @@ export default function RecipeDetailPage() {
           )}
 
           <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
+               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
             {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
             {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
             {!isSorbet && !isVegan && renderCard("ESDL", calcs.esdl, "%", "esdl")}
             {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
-            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
             {renderCard("Densite", calcs.density, "", "density", 3)}
             {!isSorbet && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide")}
             {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
