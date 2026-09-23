@@ -136,11 +136,7 @@ export default function IngredientDetailPage() {
   const labelStyle = { fontSize: 13, color: "#555", marginBottom: 4, display: "block" as const }
 
   if (loading) {
-    return (
-      <main style={{ padding: 40, fontFamily: "sans-serif" }}>
-        Chargement...
-      </main>
-    )
+    return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   }
 
   return (
@@ -162,9 +158,9 @@ export default function IngredientDetailPage() {
         </div>
 
         <h3>Composition</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
           <div>
-            <label style={labelStyle}>MG</label>
+            <label style={labelStyle}>Matiere grasse</label>
             <input type="number" step="0.01" value={fat} onChange={(e) => setFat(e.target.value)} style={inputStyle} />
           </div>
           <div>
@@ -172,7 +168,7 @@ export default function IngredientDetailPage() {
             <input type="number" step="0.01" value={saturatedFat} onChange={(e) => setSaturatedFat(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Glucides</label>
+            <label style={labelStyle}>Glucides / Sucres</label>
             <input type="number" step="0.01" value={sugar} onChange={(e) => setSugar(e.target.value)} style={inputStyle} />
           </div>
           <div>
@@ -192,12 +188,16 @@ export default function IngredientDetailPage() {
             <input type="number" step="0.01" value={stabilizer} onChange={(e) => setStabilizer(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Sodium</label>
+            <label style={labelStyle}>Sodium (mg)</label>
             <input type="number" step="0.1" value={sodium} onChange={(e) => setSodium(e.target.value)} style={inputStyle} />
           </div>
           <div>
             <label style={labelStyle}>Alcool</label>
             <input type="number" step="0.01" value={alcohol} onChange={(e) => setAlcohol(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Calcium (mg)</label>
+            <input type="number" step="0.1" value={calcium} onChange={(e) => setCalcium(e.target.value)} style={inputStyle} />
           </div>
           <div>
             <label style={labelStyle}>Cout</label>
@@ -225,10 +225,6 @@ export default function IngredientDetailPage() {
           <div>
             <label style={labelStyle}>Solubilite</label>
             <input type="number" step="0.01" value={solubility} onChange={(e) => setSolubility(e.target.value)} style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>Calcium</label>
-            <input type="number" step="0.1" value={calcium} onChange={(e) => setCalcium(e.target.value)} style={inputStyle} />
           </div>
         </div>
 
