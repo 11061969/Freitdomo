@@ -390,7 +390,7 @@ export default function RecipeDetailPage() {
             Vert = dans les limites · Rouge = hors limites
           </p>
 
-          <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
+                   <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
           {isSorbet ? (
             <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
@@ -400,7 +400,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Alcool", calcs.alcohol, "%", "alcohol")}
                 {renderCard("Kcal / 100g", calcs.kcal, "", undefined, 0)}
               </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, alignItems: "start" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
                 {renderCard("Fibres", calcs.fiber, "%", "fiber")}
                 {renderCard("Sels mineraux", calcs.minerals, "%", "minerals")}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
@@ -427,8 +427,7 @@ export default function RecipeDetailPage() {
             </>
           )}
 
-                    <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
-
+          <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
           <div
             style={{
               display: "grid",
@@ -447,7 +446,6 @@ export default function RecipeDetailPage() {
               {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
             </div>
           </div>
-
           <div
             style={{
               display: "grid",
@@ -462,7 +460,11 @@ export default function RecipeDetailPage() {
             {renderCard("Saturation", calcs.saturation, "%", "saturation")}
             <div />
           </div>
+        </div>
       )}
+    </main>
+  )
+}
     </main>
   )
 }
