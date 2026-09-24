@@ -427,24 +427,38 @@ export default function RecipeDetailPage() {
             </>
           )}
 
-          <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
+               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+              display: "flex",
+              flexWrap: "wrap",
               gap: 12,
-              alignItems: "start",
+              alignItems: "flex-start",
               marginBottom: 12,
             }}
           >
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
-            {!isSorbet ? renderCard("Onctuosite", calcs.creaminess, "%", "creaminess") : <div />}
-            {!isSorbet ? renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat") : <div />}
-            {!isSorbet && !isVegan ? renderCard("ESDL", calcs.esdl, "%", "esdl") : <div />}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
+            {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
+            {!isSorbet && !isVegan && renderCard("ESDL", calcs.esdl, "%", "esdl")}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 180 }}>
               {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
               {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
             </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              alignItems: "flex-start",
+            }}
+          >
+            {renderCard("Densite", calcs.density, "", "density", 3)}
+            {!isSorbet && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide")}
+            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
+            {renderCard("Saturation", calcs.saturation, "%", "saturation")}
+          </div>
           </div>
           <div
             style={{
