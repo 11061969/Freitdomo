@@ -206,9 +206,8 @@ export default function RecipeDetailPage() {
       stabilizer += stabiMass
       emulsifier += emulsMass
 
-      if (stabiMass > 0 && ing.molar_mass) {
+           if (stabiMass > 0 && ing.molar_mass) {
         stabiMassSum += stabiMass * ing.molar_mass
-        stabiQtySum += stabiMass
       }
 
       const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
@@ -294,7 +293,7 @@ export default function RecipeDetailPage() {
       esdl: proteinPct,
       freezingPoint,
       iceFraction,
-      molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
+      molarMassStabi: stabiQtySum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
       saturation,
