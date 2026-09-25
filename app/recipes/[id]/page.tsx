@@ -251,9 +251,9 @@ export default function RecipeDetailPage() {
     // Point de congélation (molalité)
     const waterKg = (waterFraction / 100) * (totalQty / 1000) // approx si quantités en g → kg
     // Si quantités sont en %, totalQty ~ 100 ; on travaille en fraction
-    const waterFraction01 = waterFraction / 100
-    const molality = waterFraction01 > 0 ? moles / (totalQty * waterFraction01) : 0
-    // moles sont en "g / M" = mol pour quantités en g ; si totalQty est une base 100, c'est cohérent en relatif
+        const waterFraction01 = waterFraction / 100
+    const waterG = totalQty * waterFraction01
+    const molality = waterG > 0 ? (moles * 1000) / waterG : 0
     const freezingPoint = -(molality * 1.86)
 
     const tempMap: Record<string, number> = { soft: -6, gelato: -11, hard: -18 }
