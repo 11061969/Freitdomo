@@ -193,12 +193,25 @@ export default function RecipeDetailPage() {
       cost += q * (ing.cost || 0)
       sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
 
-      // Masse molaire stabilisant (pondérée)
-      const stabiPart = (q * (ing.stabilizer || 0)) / 100
-      if (stabiPart > 0 && ing.molar_mass) {
-        stabiMassSum += stabiPart * ing.molar_mass
-        stabiQtySum += stabiPart
+      // Stabilisant & emulsifiant (via categorie + fibres / MG)
+      const cat = (ing.category || "").toLowerCase()
+      const isEmulStabi =
+        cat.includes("stabil") || cat.includes("emuls")
+
+      let stabiMass = 0
+      let emulsMass = 0
+      if (isEmulStabi) {
+        stabiMass = (q * (ing.fiber || 0)) / 100
+        emulsMass = (q * (ing.fat || 0)) / 100
       }
+      stabilizer += stabiMass
+      emulsifier += emulsMass
+
+      if (stabiMass > 0 && ing.molar_mass) {
+        stabiMassSum += stabiMass * ing.molar_mass
+        stabiQtySum += stabiMass
+      }
+      // on accumule emulsifiant dans une nouvelle variable
 
       // Molalité : glucides / sels / alcool
       const cat = (ing.category || "").toLowerCase()
@@ -226,7 +239,8 @@ export default function RecipeDetailPage() {
     const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
     const waterFraction = Math.max(0, 100 - totalSolids)
     const stabilizerPct = (stabilizer / totalQty) * 100
-
+    const emulsifierPct = (emulsifier / totalQty) * 100
+    
     const density =
       1 /
       ((fatPct / 100) * 1.07527 +
@@ -285,7 +299,7 @@ export default function RecipeDetailPage() {
       freezingPoint,
       iceFraction,
       molarMassStabi: stabiQtySum > 0 ? stabiMassSum / stabiQtySum : 0,
-      emulsifierVsFat: fatPct > 0 ? (stabilizerPct / fatPct) * 100 : 0,
+      emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
       saturation,
       kcal: 9 * fatPct + 4 * proteinPct + 4 * sugarPct + 7 * alcoholPct,
