@@ -195,9 +195,8 @@ export default function RecipeDetailPage() {
 
       // Stabilisant & emulsifiant (via categorie + fibres / MG)
       const cat = (ing.category || "").toLowerCase()
-      const isEmulStabi =
-        cat.includes("stabil") || cat.includes("emuls")
 
+      const isEmulStabi = cat.includes("stabil") || cat.includes("emuls")
       let stabiMass = 0
       let emulsMass = 0
       if (isEmulStabi) {
@@ -211,10 +210,7 @@ export default function RecipeDetailPage() {
         stabiMassSum += stabiMass * ing.molar_mass
         stabiQtySum += stabiMass
       }
-      // on accumule emulsifiant dans une nouvelle variable
 
-      // Molalité : glucides / sels / alcool
-      const cat = (ing.category || "").toLowerCase()
       const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
       const sugarMass = (q * (ing.sugar || 0)) / 100
       const saltMass = (q * (ing.minerals || 0)) / 100
