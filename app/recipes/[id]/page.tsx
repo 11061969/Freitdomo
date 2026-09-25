@@ -293,7 +293,7 @@ export default function RecipeDetailPage() {
       esdl: proteinPct,
       freezingPoint,
       iceFraction,
-      molarMassStabi: stabiQtySum,
+            molarMassStabi: stabiMassSum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
       saturation,
