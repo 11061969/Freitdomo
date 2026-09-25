@@ -187,7 +187,7 @@ export default function RecipeDetailPage() {
       minerals += (q * (ing.minerals || 0)) / 100
       alcohol += (q * (ing.alcohol || 0)) / 100
       stabilizer += (q * (ing.stabilizer || 0)) / 100
-      saturatedFat += (q * (ing.saturated_fat || 0)) / 100
+      saturatedFat += (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
       sodium += (q * (ing.sodium || 0)) / 100
       calcium += (q * (ing.calcium || 0)) / 100
       cost += q * (ing.cost || 0)
