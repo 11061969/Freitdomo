@@ -168,7 +168,7 @@ export default function RecipeDetailPage() {
 
     let totalQty = 0
     let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
-    let alcohol = 0, stabilizer = 0, saturatedFat = 0
+    let alcohol = 0, stabilizer = 0, emulsifier = 0, saturatedFat = 0
     let sodium = 0, calcium = 0, cost = 0
     let sweetness = 0
     let stabiMassSum = 0, stabiQtySum = 0
