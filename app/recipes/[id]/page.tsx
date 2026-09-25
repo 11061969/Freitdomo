@@ -427,13 +427,13 @@ export default function RecipeDetailPage() {
             </>
           )}
 
-                        <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
+                         <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
           <div
             style={{
               display: "flex",
               flexWrap: "wrap",
               gap: 12,
-              alignItems: "flex-start",
+              alignItems: "stretch",
               marginBottom: 12,
             }}
           >
@@ -441,10 +441,22 @@ export default function RecipeDetailPage() {
             {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
             {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
             {!isSorbet && !isVegan && renderCard("ESDL", calcs.esdl, "%", "esdl")}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 180 }}>
-              {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
-              {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
-            </div>
+            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
+            {renderCard("Densite", calcs.density, "", "density", 3)}
+            {!isSorbet && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide")}
+            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
+            {renderCard("Saturation", calcs.saturation, "%", "saturation")}
+            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint")}
+          </div>
           </div>
           <div
             style={{
