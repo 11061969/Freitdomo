@@ -427,7 +427,7 @@ export default function RecipeDetailPage() {
             </>
           )}
 
-               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
+                        <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
           <div
             style={{
               display: "flex",
@@ -459,24 +459,8 @@ export default function RecipeDetailPage() {
             {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
             {renderCard("Saturation", calcs.saturation, "%", "saturation")}
           </div>
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-              gap: 12,
-              alignItems: "start",
-            }}
-          >
-            {renderCard("Densite", calcs.density, "", "density", 3)}
-            {!isSorbet ? renderCard("MG solide", calcs.mgSolide, "%", "mgSolide") : <div />}
-            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
-            {renderCard("Saturation", calcs.saturation, "%", "saturation")}
-            <div />
-          </div>
         </div>
       )}
     </main>
   )
 }
-
