@@ -281,11 +281,9 @@ export default function RecipeDetailPage() {
     const saturation = waterFraction > 0 ? (sugarPct / waterFraction) * 100 : 0
 
     setCalcs({
-      totalSolids,
+         totalSolids,
       fat: fatPct,
-      protein : proteinPct
-      esdl: (esdlMass / totalQty) * 100,
-      esdlOptimized: (17 * (100 - totalSolids)) / 117,
+      protein: proteinPct,
       sugar: sugarPct,
       fiber: fiberPct,
       minerals: mineralsPct,
@@ -298,6 +296,8 @@ export default function RecipeDetailPage() {
       sweetness: (sweetness / totalQty) * 100,
       creaminess: onctuosite,
       density,
+      esdl: (esdlMass / totalQty) * 100,
+      esdlOptimized: (17 * (100 - totalSolids)) / 117,
       freezingPoint,
       iceFraction,
       molarMassStabi: stabiMassSum,
