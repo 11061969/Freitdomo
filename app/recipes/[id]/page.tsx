@@ -166,6 +166,7 @@ export default function RecipeDetailPage() {
       return
     }
 
+    let esdlMass = 0
     let totalQty = 0
     let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
     let alcohol = 0, stabilizer = 0, emulsifier = 0, saturatedFat = 0
@@ -183,6 +184,11 @@ export default function RecipeDetailPage() {
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
       sugar += (q * (ing.sugar || 0)) / 100
+            // ESDL : proteines + lactose des laitiers uniquement
+      if (cat.includes("lait")) {
+        esdlMass += (q * (ing.protein || 0)) / 100
+        esdlMass += (q * (ing.sugar || 0)) / 100
+      }
       fiber += (q * (ing.fiber || 0)) / 100
       minerals += (q * (ing.minerals || 0)) / 100
       alcohol += (q * (ing.alcohol || 0)) / 100
@@ -277,7 +283,8 @@ export default function RecipeDetailPage() {
     setCalcs({
       totalSolids,
       fat: fatPct,
-      protein: proteinPct,
+      esdl: (esdlMass / totalQty) * 100,
+      esdlOptimized: (17 * (100 - totalSolids)) / 117,
       sugar: sugarPct,
       fiber: fiberPct,
       minerals: mineralsPct,
@@ -293,7 +300,7 @@ export default function RecipeDetailPage() {
       esdl: proteinPct,
       freezingPoint,
       iceFraction,
-            molarMassStabi: stabiMassSum,
+      molarMassStabi: stabiMassSum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
       saturation,
@@ -450,6 +457,7 @@ export default function RecipeDetailPage() {
             {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
             {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
             {!isSorbet && !isVegan && renderCard("ESDL", calcs.esdl, "%", "esdl")}
+             {!isSorbet && !isVegan && renderCard("ESDL optimise", calcs.esdlOptimized, "%", undefined, 2)}
             {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
           </div>
           <div
