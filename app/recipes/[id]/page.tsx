@@ -295,9 +295,6 @@ export default function RecipeDetailPage() {
 
     const fatPct = (fat / totalQty) * 100
     const proteinPct = (protein / totalQty) * 100
-    // ... le reste inchangé
-    const fatPct = (fat / totalQty) * 100
-    const proteinPct = (protein / totalQty) * 100
     const sugarPct = (sugar / totalQty) * 100
     const fiberPct = (fiber / totalQty) * 100
     const mineralsPct = (minerals / totalQty) * 100
