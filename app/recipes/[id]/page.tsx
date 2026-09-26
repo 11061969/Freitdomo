@@ -165,7 +165,8 @@ export default function RecipeDetailPage() {
       setCalcs(null)
       return
     }
-
+    let solventNeeded = 0
+    let waterForSaturation = 0
     let esdlMass = 0
     let totalQty = 0
     let fat = 0, protein = 0, sugar = 0, fiber = 0, minerals = 0
@@ -188,6 +189,22 @@ export default function RecipeDetailPage() {
 
       // Stabilisant & emulsifiant (via categorie + fibres / MG)
       const cat = (ing.category || "").toLowerCase()
+            // Saturation : solvant necessaire / eau
+      const sol = ing.solubility || 0
+      if (sol > 0) {
+        if (cat.includes("sucre")) {
+          solventNeeded += q / sol
+        } else if (cat.includes("stabil") || cat.includes("emuls")) {
+          const stabiPart = (q * (ing.fiber || 0)) / 100
+          if (stabiPart > 0) solventNeeded += stabiPart / sol
+        } else if (cat.includes("lait")) {
+          // laitiers en poudre = solubilite renseignee
+          solventNeeded += q / sol
+        }
+      }
+      if (cat.includes("autre") && (ing.name || "").toLowerCase().includes("eau")) {
+        waterForSaturation += q
+      }
      // ESDL : proteines + lactose des laitiers uniquement
       if (cat.includes("lait")) {
         esdlMass += (q * (ing.protein || 0)) / 100
@@ -303,8 +320,10 @@ export default function RecipeDetailPage() {
       molarMassStabi: stabiMassSum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
-      saturation,
-      kcal: 9 * fatPct + 4 * proteinPct + 4 * sugarPct + 7 * alcoholPct,
+      saturation:
+        waterForSaturation > 0
+          ? (solventNeeded / waterForSaturation) * 100
+          : 0,
     })
   }, [lines, servingTemp])
 
