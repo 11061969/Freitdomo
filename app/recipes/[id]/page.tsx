@@ -283,6 +283,7 @@ export default function RecipeDetailPage() {
     setCalcs({
       totalSolids,
       fat: fatPct,
+      protein += (q * (ing.protein || 0)) / 100
       esdl: (esdlMass / totalQty) * 100,
       esdlOptimized: (17 * (100 - totalSolids)) / 117,
       sugar: sugarPct,
@@ -457,8 +458,10 @@ export default function RecipeDetailPage() {
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
             {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
             {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
-             {!isSorbet && !isVegan && calcs.esdlOptimized != null &&
-              renderCard("ESDL optimise", calcs.esdlOptimized, "%", undefined, 2)}
+                        {!isSorbet && !isVegan &&
+              renderCard("ESDL", calcs.esdl ?? 0, "%", "esdl")}
+            {!isSorbet && !isVegan &&
+              renderCard("ESDL optimise", calcs.esdlOptimized ?? 0, "%", undefined, 2)}
             {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction")}
           </div>
           <div
