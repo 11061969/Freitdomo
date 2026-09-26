@@ -351,8 +351,10 @@ export default function RecipeDetailPage() {
         }}
       >
         <div style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
-          {value.toFixed(digits)}
+                <div style={{ fontSize: 20, fontWeight: 700, color: style.text }}>
+          {value != null && !Number.isNaN(Number(value))
+            ? Number(value).toFixed(digits)
+            : "-"}
           {unit ? " " + unit : ""}
         </div>
         {limit && (
