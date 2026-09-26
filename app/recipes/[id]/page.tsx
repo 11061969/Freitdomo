@@ -184,7 +184,11 @@ export default function RecipeDetailPage() {
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
       sugar += (q * (ing.sugar || 0)) / 100
-            // ESDL : proteines + lactose des laitiers uniquement
+           
+
+      // Stabilisant & emulsifiant (via categorie + fibres / MG)
+      const cat = (ing.category || "").toLowerCase()
+     // ESDL : proteines + lactose des laitiers uniquement
       if (cat.includes("lait")) {
         esdlMass += (q * (ing.protein || 0)) / 100
         esdlMass += (q * (ing.sugar || 0)) / 100
@@ -198,10 +202,6 @@ export default function RecipeDetailPage() {
       calcium += (q * (ing.calcium || 0)) / 100
       cost += q * (ing.cost || 0)
       sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
-
-      // Stabilisant & emulsifiant (via categorie + fibres / MG)
-      const cat = (ing.category || "").toLowerCase()
-
       const isEmulStabi = cat.includes("stabil") || cat.includes("emuls")
       let stabiMass = 0
       let emulsMass = 0
