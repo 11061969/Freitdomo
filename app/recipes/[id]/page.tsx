@@ -297,7 +297,6 @@ export default function RecipeDetailPage() {
       sweetness: (sweetness / totalQty) * 100,
       creaminess: onctuosite,
       density,
-      esdl: proteinPct,
       freezingPoint,
       iceFraction,
       molarMassStabi: stabiMassSum,
