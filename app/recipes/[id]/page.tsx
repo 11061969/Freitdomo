@@ -283,7 +283,7 @@ export default function RecipeDetailPage() {
     setCalcs({
       totalSolids,
       fat: fatPct,
-      protein += (q * (ing.protein || 0)) / 100
+      protein : proteinPct
       esdl: (esdlMass / totalQty) * 100,
       esdlOptimized: (17 * (100 - totalSolids)) / 117,
       sugar: sugarPct,
