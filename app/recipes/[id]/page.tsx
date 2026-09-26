@@ -165,6 +165,8 @@ export default function RecipeDetailPage() {
       setCalcs(null)
       return
     }
+    let dairyLiquidMass = 0
+    let plantMilkMass = 0
     let solventNeeded = 0
     let waterForSaturation = 0
     let esdlMass = 0
@@ -187,9 +189,7 @@ export default function RecipeDetailPage() {
       sugar += (q * (ing.sugar || 0)) / 100
            
 
-      // Stabilisant & emulsifiant (via categorie + fibres / MG)
-      const cat = (ing.category || "").toLowerCase()
-            // Saturation : solvant necessaire / eau
+        // Saturation — numerateur (solvant necessaire)
       const sol = ing.solubility || 0
       if (sol > 0) {
         if (cat.includes("sucre")) {
@@ -198,9 +198,32 @@ export default function RecipeDetailPage() {
           const stabiPart = (q * (ing.fiber || 0)) / 100
           if (stabiPart > 0) solventNeeded += stabiPart / sol
         } else if (cat.includes("lait")) {
-          // laitiers en poudre = solubilite renseignee
           solventNeeded += q / sol
         }
+      }
+
+      // Saturation — denominateur (selon type de recette)
+      const nameLow = (ing.name || "").toLowerCase()
+      const isEau = cat.includes("autre") && nameLow.includes("eau")
+      const isLaitLiquide =
+        cat.includes("lait") && sol === 0 && !nameLow.includes("poudre")
+      const isLaitVegetal =
+        cat.includes("vegan") ||
+        cat.includes("vegetal") ||
+        nameLow.includes("amande") ||
+        nameLow.includes("soja") ||
+        nameLow.includes("avoine") ||
+        nameLow.includes("coco")
+
+      if (isEau) {
+        waterForSaturation += q
+      }
+      // lait liquide et vegetal : ajoutes apres la boucle selon recipe.category
+      if (isLaitLiquide) {
+        dairyLiquidMass += q
+      }
+      if (isLaitVegetal && !isEau) {
+        plantMilkMass += q
       }
       if (cat.includes("autre") && (ing.name || "").toLowerCase().includes("eau")) {
         waterForSaturation += q
@@ -246,7 +269,33 @@ export default function RecipeDetailPage() {
       setCalcs(null)
       return
     }
+    if (totalQty <= 0) {
+      setCalcs(null)
+      return
+    }
 
+    // --- DENOMINATEUR SATURATION (selon type de recette) ---
+    const catRecipe = (recipe?.category || "").toLowerCase()
+    let solventAvailable = waterForSaturation
+    if (
+      catRecipe.includes("ice") ||
+      catRecipe.includes("cream") ||
+      catRecipe === "ice_cream"
+    ) {
+      solventAvailable = waterForSaturation + dairyLiquidMass
+    } else if (catRecipe.includes("vegan")) {
+      solventAvailable = waterForSaturation + plantMilkMass
+    } else {
+      solventAvailable = waterForSaturation
+    }
+
+    const saturationPct =
+      solventAvailable > 0 ? (solventNeeded / solventAvailable) * 100 : 0
+    // --- FIN SATURATION ---
+
+    const fatPct = (fat / totalQty) * 100
+    const proteinPct = (protein / totalQty) * 100
+    // ... le reste inchangé
     const fatPct = (fat / totalQty) * 100
     const proteinPct = (protein / totalQty) * 100
     const sugarPct = (sugar / totalQty) * 100
@@ -307,6 +356,7 @@ export default function RecipeDetailPage() {
       alcohol: alcoholPct,
       stabilizer: stabilizerPct,
       saturatedFat: saturatedFatPct,
+      saturation: saturationPct,
       sodium: sodium / totalQty,
       calcium: calcium / totalQty,
       cost: cost / totalQty,
