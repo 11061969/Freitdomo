@@ -183,13 +183,8 @@ export default function RecipeDetailPage() {
       const ing = line.ingredients
       if (!ing || q <= 0) continue
 
-      totalQty += q
-      fat += (q * (ing.fat || 0)) / 100
-      protein += (q * (ing.protein || 0)) / 100
-      sugar += (q * (ing.sugar || 0)) / 100
-           
-
-        // Saturation — numerateur (solvant necessaire)
+    const cat = (ing.category || "").toLowerCase()
+     // Saturation — numerateur (solvant necessaire)
       const sol = ing.solubility || 0
       if (sol > 0) {
         if (cat.includes("sucre")) {
@@ -225,6 +220,13 @@ export default function RecipeDetailPage() {
       if (isLaitVegetal && !isEau) {
         plantMilkMass += q
       }
+      totalQty += q
+      fat += (q * (ing.fat || 0)) / 100
+      protein += (q * (ing.protein || 0)) / 100
+      sugar += (q * (ing.sugar || 0)) / 100
+           
+
+       
       if (cat.includes("autre") && (ing.name || "").toLowerCase().includes("eau")) {
         waterForSaturation += q
       }
