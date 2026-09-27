@@ -197,27 +197,38 @@ export default function RecipeDetailPage() {
         }
       }
 
-      // Saturation — denominateur (selon type de recette)
-      const nameLow = (ing.name || "").toLowerCase()
-      const isEau = cat.includes("autre") && nameLow.includes("eau")
-      const isLaitLiquide =
-        cat.includes("lait") && sol === 0 && !nameLow.includes("poudre")
-      const isLaitVegetal =
-        cat.includes("vegan") ||
-        cat.includes("vegetal") ||
-        nameLow.includes("amande") ||
-        nameLow.includes("soja") ||
-        nameLow.includes("avoine") ||
-        nameLow.includes("coco")
+        const nameLow = (ing.name || "").toLowerCase()
+      const isPoudre = nameLow.includes("poudre") || nameLow.includes("powder")
+      const isEau =
+        nameLow.includes("eau") ||
+        (cat.includes("autre") && nameLow.trim() === "eau")
 
-      if (isEau) {
-        waterForSaturation += q
+      // Numerateur : sucres, stabi (fibres), laitiers EN POUDRE uniquement
+      const sol = Number(ing.solubility) || 0
+      if (sol > 0) {
+        if (cat.includes("sucre")) {
+          solventNeeded += q / sol
+        } else if (cat.includes("stabil") || cat.includes("emuls")) {
+          const stabiPart = (q * (ing.fiber || 0)) / 100
+          if (stabiPart > 0) solventNeeded += stabiPart / sol
+        } else if (cat.includes("lait") && isPoudre) {
+          solventNeeded += q / sol
+        }
       }
-      // lait liquide et vegetal : ajoutes apres la boucle selon recipe.category
-      if (isLaitLiquide) {
-        dairyLiquidMass += q
-      }
-      if (isLaitVegetal && !isEau) {
+
+      // Denominateur : flags
+      if (isEau) waterForSaturation += q
+      if (cat.includes("lait") && !isPoudre) dairyLiquidMass += q
+      if (
+        !isEau &&
+        (cat.includes("vegan") ||
+          cat.includes("vegetal") ||
+          nameLow.includes("amande") ||
+          nameLow.includes("soja") ||
+          nameLow.includes("avoine") ||
+          nameLow.includes("riz") ||
+          nameLow.includes("coco"))
+      ) {
         plantMilkMass += q
       }
       totalQty += q
