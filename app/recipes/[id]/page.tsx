@@ -183,37 +183,55 @@ export default function RecipeDetailPage() {
       const ing = line.ingredients
       if (!ing || q <= 0) continue
 
-    const cat = (ing.category || "").toLowerCase()
-     // Saturation — numerateur (solvant necessaire)
-   
-        if (cat.includes("sucre")) {
-          solventNeeded += q / sol
-        } else if (cat.includes("stabil") || cat.includes("emuls")) {
-          const stabiPart = (q * (ing.fiber || 0)) / 100
-          if (stabiPart > 0) solventNeeded += stabiPart / sol
-        } else if (cat.includes("lait")) {
-          solventNeeded += q / sol
-        }
-      }
       const cat = (ing.category || "").toLowerCase()
       const nameLow = (ing.name || "").toLowerCase()
-      const isPoudre = nameLow.includes("poudre") || nameLow.includes("powder")
-      const isEau =
-        nameLow.includes("eau") ||
-        (cat.includes("autre") && nameLow.includes("eau"))
 
+      totalQty += q
+      fat += (q * (ing.fat || 0)) / 100
+      protein += (q * (ing.protein || 0)) / 100
+      sugar += (q * (ing.sugar || 0)) / 100
+      fiber += (q * (ing.fiber || 0)) / 100
+      minerals += (q * (ing.minerals || 0)) / 100
+      alcohol += (q * (ing.alcohol || 0)) / 100
+      saturatedFat += (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
+      sodium += (q * (ing.sodium || 0)) / 100
+      calcium += (q * (ing.calcium || 0)) / 100
+      cost += q * (ing.cost || 0)
+      sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
+
+      // ESDL : laitiers uniquement
+      if (cat.includes("lait")) {
+        esdlMass += (q * (ing.protein || 0)) / 100
+        esdlMass += (q * (ing.sugar || 0)) / 100
+      }
+
+      // Stabilisant / emulsifiant
+      const isEmulStabi = cat.includes("stabil") || cat.includes("emuls")
+      let stabiMass = 0
+      let emulsMass = 0
+      if (isEmulStabi) {
+        stabiMass = (q * (ing.fiber || 0)) / 100
+        emulsMass = (q * (ing.fat || 0)) / 100
+      }
+      stabilizer += stabiMass
+      emulsifier += emulsMass
+      if (stabiMass > 0 && ing.molar_mass) {
+        stabiMassSum += stabiMass * ing.molar_mass
+      }
+
+      // Saturation
+      const isPoudre = nameLow.includes("poudre") || nameLow.includes("powder")
+      const isEau = nameLow.includes("eau")
       const sol = Number(ing.solubility) || 0
       if (sol > 0) {
         if (cat.includes("sucre")) {
           solventNeeded += q / sol
-        } else if (cat.includes("stabil") || cat.includes("emuls")) {
-          const stabiPart = (q * (ing.fiber || 0)) / 100
-          if (stabiPart > 0) solventNeeded += stabiPart / sol
+        } else if (isEmulStabi) {
+          if (stabiMass > 0) solventNeeded += stabiMass / sol
         } else if (cat.includes("lait") && isPoudre) {
           solventNeeded += q / sol
         }
       }
-
       if (isEau) waterForSaturation += q
       if (cat.includes("lait") && !isPoudre) dairyLiquidMass += q
       if (
@@ -228,44 +246,8 @@ export default function RecipeDetailPage() {
       ) {
         plantMilkMass += q
       }
-      totalQty += q
-      fat += (q * (ing.fat || 0)) / 100
-      protein += (q * (ing.protein || 0)) / 100
-      sugar += (q * (ing.sugar || 0)) / 100
-           
 
-       
-      if (cat.includes("autre") && (ing.name || "").toLowerCase().includes("eau")) {
-        waterForSaturation += q
-      }
-     // ESDL : proteines + lactose des laitiers uniquement
-      if (cat.includes("lait")) {
-        esdlMass += (q * (ing.protein || 0)) / 100
-        esdlMass += (q * (ing.sugar || 0)) / 100
-      }
-      fiber += (q * (ing.fiber || 0)) / 100
-      minerals += (q * (ing.minerals || 0)) / 100
-      alcohol += (q * (ing.alcohol || 0)) / 100
-      stabilizer += (q * (ing.stabilizer || 0)) / 100
-      saturatedFat += (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
-      sodium += (q * (ing.sodium || 0)) / 100
-      calcium += (q * (ing.calcium || 0)) / 100
-      cost += q * (ing.cost || 0)
-      sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
-      const isEmulStabi = cat.includes("stabil") || cat.includes("emuls")
-      let stabiMass = 0
-      let emulsMass = 0
-      if (isEmulStabi) {
-        stabiMass = (q * (ing.fiber || 0)) / 100
-        emulsMass = (q * (ing.fat || 0)) / 100
-      }
-      stabilizer += stabiMass
-      emulsifier += emulsMass
-
-           if (stabiMass > 0 && ing.molar_mass) {
-        stabiMassSum += stabiMass * ing.molar_mass
-      }
-
+      // Molalite
       const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
       const sugarMass = (q * (ing.sugar || 0)) / 100
       const saltMass = (q * (ing.minerals || 0)) / 100
@@ -279,12 +261,7 @@ export default function RecipeDetailPage() {
       setCalcs(null)
       return
     }
-    if (totalQty <= 0) {
-      setCalcs(null)
-      return
-    }
 
-    // --- DENOMINATEUR SATURATION (selon type de recette) ---
     const catRecipe = (recipe?.category || "").toLowerCase()
     let solventAvailable = waterForSaturation
     if (
@@ -301,7 +278,6 @@ export default function RecipeDetailPage() {
 
     const saturationPct =
       solventAvailable > 0 ? (solventNeeded / solventAvailable) * 100 : 0
-    // --- FIN SATURATION ---
 
     const fatPct = (fat / totalQty) * 100
     const proteinPct = (protein / totalQty) * 100
