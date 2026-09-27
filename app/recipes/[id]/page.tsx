@@ -369,10 +369,7 @@ export default function RecipeDetailPage() {
       molarMassStabi: stabiMassSum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
-      saturation:
-        waterForSaturation > 0
-          ? (solventNeeded / waterForSaturation) * 100
-          : 0,
+     
     })
   }, [lines, servingTemp])
 
