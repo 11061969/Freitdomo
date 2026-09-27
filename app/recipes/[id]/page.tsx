@@ -196,14 +196,13 @@ export default function RecipeDetailPage() {
           solventNeeded += q / sol
         }
       }
-
-        const nameLow = (ing.name || "").toLowerCase()
+      const cat = (ing.category || "").toLowerCase()
+      const nameLow = (ing.name || "").toLowerCase()
       const isPoudre = nameLow.includes("poudre") || nameLow.includes("powder")
       const isEau =
         nameLow.includes("eau") ||
-        (cat.includes("autre") && nameLow.trim() === "eau")
+        (cat.includes("autre") && nameLow.includes("eau"))
 
-      // Numerateur : sucres, stabi (fibres), laitiers EN POUDRE uniquement
       const sol = Number(ing.solubility) || 0
       if (sol > 0) {
         if (cat.includes("sucre")) {
@@ -216,7 +215,6 @@ export default function RecipeDetailPage() {
         }
       }
 
-      // Denominateur : flags
       if (isEau) waterForSaturation += q
       if (cat.includes("lait") && !isPoudre) dairyLiquidMass += q
       if (
