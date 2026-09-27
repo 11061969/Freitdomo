@@ -185,8 +185,7 @@ export default function RecipeDetailPage() {
 
     const cat = (ing.category || "").toLowerCase()
      // Saturation — numerateur (solvant necessaire)
-      const sol = ing.solubility || 0
-      if (sol > 0) {
+   
         if (cat.includes("sucre")) {
           solventNeeded += q / sol
         } else if (cat.includes("stabil") || cat.includes("emuls")) {
