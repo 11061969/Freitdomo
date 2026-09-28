@@ -340,8 +340,8 @@ export default function RecipeDetailPage() {
       stabilizer: stabilizerPct,
       saturatedFat: saturatedFatPct,
       saturation: saturationPct,
-      sodium: sodium / totalQty,
-      calcium: calcium / totalQty,
+      sodium: (sodium / totalQty) * 100,
+      calcium: (calcium / totalQty) * 100,
       cost: cost / totalQty,
       sweetness: (sweetness / totalQty) * 100,
       creaminess: onctuosite,
@@ -471,6 +471,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Fibres", calcs.fiber, "%", "fiber")}
                 {renderCard("Sels mineraux", calcs.minerals, "%", "minerals")}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
+                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 1)}
                 {renderCard("Cout", calcs.cost, "", undefined, 4)}
               </div>
             </>
@@ -505,6 +506,7 @@ export default function RecipeDetailPage() {
             }}
           >
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids")}
+            {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 2)}
             {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess")}
             {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat")}
                         {!isSorbet && !isVegan &&
