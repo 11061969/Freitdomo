@@ -295,11 +295,11 @@ export default function RecipeDetailPage() {
     const sugarPct = (sugar / totalQty) * 100
     const fiberPct = (fiber / totalQty) * 100
     const fiberSolidsPct = (fiberForSolids / totalQty) * 100
-    const totalSolids = fatPct + proteinPct + sugarPct + fiberPct + mineralsPct
     const mineralsPct = (minerals / totalQty) * 100
     const alcoholPct = (alcohol / totalQty) * 100
     const saturatedFatPct = (saturatedFat / totalQty) * 100
-    
+    const totalSolids =
+      fatPct + proteinPct + sugarPct + fiberSolidsPct + mineralsPct
     const waterFraction = Math.max(0, 100 - totalSolids)
     const stabilizerPct = (stabilizer / totalQty) * 100
     const emulsifierPct = (emulsifier / totalQty) * 100
