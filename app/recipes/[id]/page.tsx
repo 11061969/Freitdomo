@@ -165,6 +165,7 @@ export default function RecipeDetailPage() {
       setCalcs(null)
       return
     }
+    let fiberForSolids = 0
     let dairyLiquidMass = 0
     let plantMilkMass = 0
     let solventNeeded = 0
@@ -198,8 +199,9 @@ export default function RecipeDetailPage() {
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
       sugar += (q * (ing.sugar || 0)) / 100
-         if (!isInsolubleVegan) {
-        fiber += (q * (ing.fiber || 0)) / 100
+      fiber += (q * (ing.fiber || 0)) / 100
+      if (!isInsolubleVegan) {
+        fiberForSolids += (q * (ing.fiber || 0)) / 100
       }
       minerals += (q * (ing.minerals || 0)) / 100
       alcohol += (q * (ing.alcohol || 0)) / 100
@@ -258,14 +260,14 @@ export default function RecipeDetailPage() {
       }
 
       // Molalite
-         const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
+      const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
+      const alcoholMass = (q * (ing.alcohol || 0)) / 100
       if (!isInsolubleVegan) {
         const sugarMass = (q * (ing.sugar || 0)) / 100
         const saltMass = (q * (ing.minerals || 0)) / 100
         if (mCarb > 0) moles += sugarMass / mCarb
         moles += saltMass / 58
       }
-      const alcoholMass = (q * (ing.alcohol || 0)) / 100
       moles += alcoholMass / 46
     }
 
@@ -295,6 +297,8 @@ export default function RecipeDetailPage() {
     const proteinPct = (protein / totalQty) * 100
     const sugarPct = (sugar / totalQty) * 100
     const fiberPct = (fiber / totalQty) * 100
+    const fiberSolidsPct = (fiberForSolids / totalQty) * 100
+    const totalSolids = fatPct + proteinPct + sugarPct + fiberSolidsPct + mineralsPct
     const mineralsPct = (minerals / totalQty) * 100
     const alcoholPct = (alcohol / totalQty) * 100
     const saturatedFatPct = (saturatedFat / totalQty) * 100
