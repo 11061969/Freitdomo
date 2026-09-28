@@ -353,7 +353,7 @@ export default function RecipeDetailPage() {
       molarMassStabi: stabiMassSum,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
-     
+      kcal: 9 * fatPct + 4 * proteinPct + 4 * sugarPct + 7 * alcoholPct,
     })
   }, [lines, servingTemp])
 
