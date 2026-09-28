@@ -185,12 +185,22 @@ export default function RecipeDetailPage() {
 
       const cat = (ing.category || "").toLowerCase()
       const nameLow = (ing.name || "").toLowerCase()
-
+      const isInsolubleVegan =
+        nameLow.includes("chocolat") ||
+        nameLow.includes("cacao") ||
+        nameLow.includes("noisette") ||
+        nameLow.includes("noix") ||
+        nameLow.includes("amande") ||
+        nameLow.includes("pistache") ||
+        nameLow.includes("cajou") ||
+        nameLow.includes("pralin")
       totalQty += q
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
       sugar += (q * (ing.sugar || 0)) / 100
-      fiber += (q * (ing.fiber || 0)) / 100
+         if (!isInsolubleVegan) {
+        fiber += (q * (ing.fiber || 0)) / 100
+      }
       minerals += (q * (ing.minerals || 0)) / 100
       alcohol += (q * (ing.alcohol || 0)) / 100
       saturatedFat += (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
@@ -248,12 +258,14 @@ export default function RecipeDetailPage() {
       }
 
       // Molalite
-      const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
-      const sugarMass = (q * (ing.sugar || 0)) / 100
-      const saltMass = (q * (ing.minerals || 0)) / 100
+         const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
+      if (!isInsolubleVegan) {
+        const sugarMass = (q * (ing.sugar || 0)) / 100
+        const saltMass = (q * (ing.minerals || 0)) / 100
+        if (mCarb > 0) moles += sugarMass / mCarb
+        moles += saltMass / 58
+      }
       const alcoholMass = (q * (ing.alcohol || 0)) / 100
-      if (mCarb > 0) moles += sugarMass / mCarb
-      moles += saltMass / 58
       moles += alcoholMass / 46
     }
 
