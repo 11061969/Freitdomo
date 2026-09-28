@@ -489,6 +489,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Fibres", calcs.fiber, "%", "fiber")}
                 {renderCard("Sels mineraux", calcs.minerals, "%", "minerals")}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 1)}
+                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 1)}
                 {renderCard("Kcal / 100g", calcs.kcal, "", undefined, 0)}
                 {renderCard("Cout", calcs.cost, "", undefined, 4)}
               </div>
