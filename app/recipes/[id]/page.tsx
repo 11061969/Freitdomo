@@ -531,26 +531,15 @@ export default function RecipeDetailPage() {
               marginBottom: 12,
             }}
           >
-          {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-            {renderCard("Onctuosite", calcs.creaminess, "%", "creaminess", 0)}
-            {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
-            {renderCard("ESDL", calcs.esdl ?? 0, "%", "esdl", 1)}
-            {renderCard("ESDL vs solvant", calcs.esdlVsSolvent ?? 0, "%", undefined, 1)}
+              
+            {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
             {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 12,
-              alignItems: "stretch",
-            }}
-          >
-           {renderCard("Densite", calcs.density, "", "density", 3)}
-            {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
-            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
-            {renderCard("ESDL optimise", calcs.esdlOptimized ?? 0, "%", undefined, 1)}
             {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
+            {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            {renderCard("Densite", calcs.density, "", "density", 3)}
+            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
             {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
           </div>
         </div>
