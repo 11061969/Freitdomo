@@ -215,16 +215,24 @@ export default function RecipeDetailPage() {
       }
 
       // Stabilisant / emulsifiant
-         if (isEmulStabi && ing.molar_mass) {
+      const isEmulStabi = cat.includes("stabil") || cat.includes("emuls")
+      let stabiMass = 0
+      let emulsMass = 0
+      if (isEmulStabi) {
+        stabiMass = (q * (ing.fiber || 0)) / 100
+        emulsMass = (q * (ing.fat || 0)) / 100
+      }
+      stabilizer += stabiMass
+      emulsifier += emulsMass
+
+      if (isEmulStabi && ing.molar_mass) {
         if (stabiMass > 0) {
-          // stabi pur (fibres) + part fibres des mixes emuls/stabi
           stabiMassSum += stabiMass * ing.molar_mass
         } else if (
           nameLow.includes("stabi") &&
           !nameLow.includes("emuls") &&
           !nameLow.includes("mix")
         ) {
-          // stabi pur sans fibres renseignees sur la fiche
           stabiMassSum += q * ing.molar_mass
         }
       }
