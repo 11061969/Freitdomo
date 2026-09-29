@@ -310,6 +310,9 @@ export default function RecipeDetailPage() {
     const totalSolids =
       fatPct + proteinPct + sugarPct + fiberSolidsPct + mineralsPct
     const waterFraction = Math.max(0, 100 - totalSolids)
+    const esdlPct = (esdlMass / totalQty) * 100
+    const esdlVsSolvent =
+      waterFraction > 0 ? (esdlPct / waterFraction) * 100 : 0
     const stabilizerPct = (stabilizer / totalQty) * 100
     const emulsifierPct = (emulsifier / totalQty) * 100
     
@@ -368,7 +371,8 @@ export default function RecipeDetailPage() {
       sweetness: (sweetness / totalQty) * 100,
       creaminess: onctuosite,
       density,
-      esdl: (esdlMass / totalQty) * 100,
+      esdl: esdlPct,
+      esdlVsSolvent,
       esdlOptimized: (17 * (100 - totalSolids)) / 117,
       freezingPoint,
       iceFraction,
