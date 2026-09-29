@@ -385,7 +385,7 @@ export default function RecipeDetailPage() {
 
   if (loading) {
     return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
-  }
+  
 
   if (error || !recipe) {
     return (
