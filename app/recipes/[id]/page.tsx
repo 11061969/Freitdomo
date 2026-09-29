@@ -372,7 +372,7 @@ export default function RecipeDetailPage() {
       esdlOptimized: (17 * (100 - totalSolids)) / 117,
       freezingPoint,
       iceFraction,
-      molarMassStabi: stabiMassSum,
+      molarMassStabi: totalQty > 0 ? (stabiMassSum * 100) / totalQty : 0,
       emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
       mgSolide,
       kcal: 9 * fatPct + 4 * proteinPct + 4 * sugarPct + 7 * alcoholPct,
