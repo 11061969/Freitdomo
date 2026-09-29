@@ -501,6 +501,24 @@ export default function RecipeDetailPage() {
                 {renderCard("Cout", calcs.cost, "", undefined, 4)}
               </div>
             </>
+          ) : isVegan ? (
+      <>
+          <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+            {renderCard("Matiere grasse", calcs.fat, "%", "fat", 1)}
+            {renderCard("Glucides", calcs.sugar, "%", "sugar", 1)}
+            {renderCard("Proteines", calcs.protein, "%", "protein", 1)}
+            {renderCard("Sodium", calcs.sodium, "mg", "sodium", 0)}
+            {renderCard("Alcool", calcs.alcohol, "%", "alcohol", 1)}
+            {renderCard("Kcal / 100g", calcs.kcal ?? 0, "", undefined, 0)}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+            {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
+            {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
+            {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
+            {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
+            {renderCard("Cout", calcs.cost, "", undefined, 2)}
+          </div>
           ) : (
             <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
@@ -542,6 +560,21 @@ export default function RecipeDetailPage() {
             {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
             {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
           </div>
+        {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
+            {renderCard("Onctuosite", calcs.creaminess, "%", "creaminess", 0)}
+            {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
+            {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
+            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            {renderCard("Densite", calcs.density, "", "density", 3)}
+            {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
+            {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
+            {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
+          </div>
+      </>
+    ) : (
         </div>
       )}
     </main>
