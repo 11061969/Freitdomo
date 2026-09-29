@@ -574,9 +574,11 @@ export default function RecipeDetailPage() {
             {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
           </div>
       </>
-    ) : (
-        </div>
-      )}
-    </main>
+             </div>
+    )
+  }
+
+  return (
+    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
   )
 }
