@@ -533,9 +533,9 @@ export default function RecipeDetailPage() {
           >
               
             {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
             {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
             {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             {renderCard("Densite", calcs.density, "", "density", 3)}
