@@ -504,21 +504,20 @@ export default function RecipeDetailPage() {
           ) : (
             <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 16 }}>
-                {renderCard("Matiere grasse", calcs.fat, "%", "fat",1)}
-                {renderCard("Glucides", calcs.sugar, "%", "sugar",1)}
-                {renderCard("Proteines", calcs.protein, "%", "protein",1)}
-                {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
-                {renderCard("Alcool", calcs.alcohol, "%", "alcohol",1)}
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 40 }}>
-                {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat",1)}
-                {renderCard("Fibres", calcs.fiber, "%", "fiber",1)}
-                {renderCard("Sels mineraux", calcs.minerals, "%", "minerals",1)}
-                {renderCard("Sodium", calcs.sodium, "mg", "sodium", 0)}
-                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
-                {renderCard("Kcal / 100g", calcs.kcal, "", undefined, 0)}
-                {renderCard("Cout", calcs.cost, "", undefined, 2)}
-              </div>
+             {renderCard("Matiere grasse", calcs.fat, "%", "fat", 1)}
+            {renderCard("Glucides", calcs.sugar, "%", "sugar", 1)}
+            {renderCard("Proteines", calcs.protein, "%", "protein", 1)}
+            {renderCard("Sodium", calcs.sodium, "mg", "sodium", 0)}
+            {renderCard("Alcool", calcs.alcohol, "%", "alcohol", 1)}
+            {renderCard("Kcal / 100g", calcs.kcal ?? 0, "", undefined, 0)}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+            {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
+            {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
+            {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
+            {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
+            {renderCard("Cout", calcs.cost, "", undefined, 2)}
+          </div>
             </>
           )}
 
@@ -532,15 +531,12 @@ export default function RecipeDetailPage() {
               marginBottom: 12,
             }}
           >
-            {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids",1)}
-            {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
-            {!isSorbet && renderCard("Onctuosite", calcs.creaminess, "%", "creaminess",0)}
-            {!isSorbet && renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat",2)}
-                        {!isSorbet && !isVegan &&
-              renderCard("ESDL", calcs.esdl ?? 0, "%", "esdl",1)}
-            {!isSorbet && !isVegan &&
-              renderCard("ESDL optimise", calcs.esdlOptimized ?? 0, "%", undefined, 1)}
-            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction",2)}
+          {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
+            {renderCard("Onctuosite", calcs.creaminess, "%", "creaminess", 0)}
+            {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
+            {renderCard("ESDL", calcs.esdl ?? 0, "%", "esdl", 1)}
+            {renderCard("ESDL vs solvant", calcs.esdlVsSolvent ?? 0, "%", undefined, 1)}
+            {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
           </div>
           <div
             style={{
@@ -550,11 +546,12 @@ export default function RecipeDetailPage() {
               alignItems: "stretch",
             }}
           >
-            {renderCard("Densite", calcs.density, "", "density", 3)}
-            {!isSorbet && renderCard("MG solide", calcs.mgSolide, "%", "mgSolide",1)}
+           {renderCard("Densite", calcs.density, "", "density", 3)}
+            {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
             {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
-            {renderCard("Saturation", calcs.saturation, "%", "saturation",1)}
-            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint",2)}
+            {renderCard("ESDL optimise", calcs.esdlOptimized ?? 0, "%", undefined, 1)}
+            {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
+            {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
           </div>
         </div>
       )}
