@@ -25,6 +25,7 @@ type IngredientData = {
 }
 
 type RecipeLine = {
+  id: string
   quantity: number
   ingredients: IngredientData | null
 }
@@ -153,7 +154,9 @@ export default function RecipeDetailPage() {
 
       const { data: linesData } = await supabase
         .from("recipe_ingredients")
-        .select("quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)")
+        .select(
+  "id, quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)"
+)
         .eq("recipe_id", id)
 
       setLines((linesData as any) || [])
