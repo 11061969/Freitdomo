@@ -486,7 +486,7 @@ export default function RecipeDetailPage() {
       )
       .eq("recipe_id", recipe.id)
 
-    setLines(data || [])
+    setLines((data as unknown as RecipeLine[]) || [])
     setScaleTarget("")
     setScaling(false)
   }
