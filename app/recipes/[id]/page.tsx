@@ -116,6 +116,8 @@ export default function RecipeDetailPage() {
   const [calcs, setCalcs] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [scaleTarget, setScaleTarget] = useState("")
+  const [scaling, setScaling] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -447,7 +449,47 @@ export default function RecipeDetailPage() {
       </div>
     )
   }
+  const currentTotal = lines.reduce((s, l) => s + (l.quantity || 0), 0)
 
+  async function applyScale() {
+    const target = Number(scaleTarget)
+    if (!target || target <= 0 || currentTotal <= 0) {
+      alert("Indique un total desire valide.")
+      return
+    }
+    if (
+      !confirm(
+        `Passer la recette de ${currentTotal.toFixed(2)} a ${target} ?\nLes quantites seront enregistrees.`
+      )
+    ) {
+      return
+    }
+
+    setScaling(true)
+    const factor = target / currentTotal
+
+    for (const line of lines) {
+      const newQty = Math.round((line.quantity || 0) * factor * 10000) / 10000
+      await supabase
+        .from("recipe_ingredients")
+        .update({ quantity: newQty })
+        .eq("id", line.id)
+    }
+
+    const { data } = await supabase
+      .from("recipe_ingredients")
+      .select(
+        "id, quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)"
+      )
+      .eq("recipe_id", recipe.id)
+
+    setLines(data || [])
+    setScaleTarget("")
+    setScaling(false)
+  }
+
+  return (
+    <main ...>
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
       <p style={{ marginBottom: 12 }}>
@@ -488,6 +530,41 @@ export default function RecipeDetailPage() {
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
             Vert = dans les limites · Rouge = hors limites
           </p>
+                <div
+        style={{
+          marginTop: 20,
+          marginBottom: 24,
+          padding: 16,
+          background: "#f7f7f7",
+          borderRadius: 10,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 12,
+          alignItems: "center",
+        }}
+      >
+        <span>
+          Total actuel : <strong>{currentTotal.toFixed(2)}</strong>
+        </span>
+        <span>Mettre a l&apos;echelle →</span>
+        <input
+          type="number"
+          min="0.01"
+          step="0.01"
+          value={scaleTarget}
+          onChange={(e) => setScaleTarget(e.target.value)}
+          placeholder="ex. 10"
+          style={{ width: 100, padding: 8 }}
+        />
+        <button
+          type="button"
+          onClick={applyScale}
+          disabled={scaling}
+          style={{ padding: "8px 16px", cursor: "pointer" }}
+        >
+          {scaling ? "..." : "Appliquer"}
+        </button>
+      </div>
 
           {isSorbet ? (
             <>
