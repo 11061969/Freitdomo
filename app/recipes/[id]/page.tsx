@@ -186,15 +186,19 @@ export default function RecipeDetailPage() {
 
       const cat = (ing.category || "").toLowerCase()
       const nameLow = (ing.name || "").toLowerCase()
-      const isInsolubleVegan =
+         const isInsolubleVegan =
         nameLow.includes("chocolat") ||
         nameLow.includes("cacao") ||
         nameLow.includes("noisette") ||
         nameLow.includes("noix") ||
-        nameLow.includes("amande") ||
         nameLow.includes("pistache") ||
         nameLow.includes("cajou") ||
-        nameLow.includes("pralin")
+        nameLow.includes("pralin") ||
+        nameLow.includes("lait de soja") ||
+        nameLow.includes("lait d'amande") ||
+        nameLow.includes("lait d’amande") ||
+        nameLow.includes("lait amande") ||
+        nameLow.includes("lait soja")
       totalQty += q
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
@@ -505,9 +509,10 @@ export default function RecipeDetailPage() {
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-                {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
-                {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
                 {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+                {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
+                {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
+                
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
