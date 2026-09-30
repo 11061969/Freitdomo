@@ -488,8 +488,7 @@ export default function RecipeDetailPage() {
     setScaling(false)
   }
 
-  return (
-    <main ...>
+
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
       <p style={{ marginBottom: 12 }}>
