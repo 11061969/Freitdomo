@@ -543,21 +543,27 @@ export default function RecipeDetailPage() {
               max?: number
             }[] = []
 
-            axes.push({
+                       axes.push({
               key: "totalSolids",
               label: "Solides",
               value: calcs.totalSolids,
               min: L.totalSolids?.min,
               max: L.totalSolids?.max,
+              subLabel: "Densite",
+              subValue: calcs.density,
+              subUnit: "",
             })
 
             if (!isSorbet) {
-              axes.push({
+                          axes.push({
                 key: "creaminess",
                 label: "Onctuosite",
                 value: calcs.creaminess,
                 min: L.creaminess?.min,
                 max: L.creaminess?.max,
+                subLabel: "MG solide",
+                subValue: calcs.mgSolide,
+                subUnit: "%",
               })
               axes.push({
                 key: "emulsifierVsFat",
@@ -577,12 +583,16 @@ export default function RecipeDetailPage() {
             })
 
             if (!isSorbet && !isVegan) {
-              axes.push({
+                          axes.push({
                 key: "esdl",
                 label: "ESDL",
                 value: calcs.esdl ?? 0,
                 min: L.esdl?.min,
                 max: L.esdl?.max,
+                subLabel: "ESDL vs solvant",
+                subValue: calcs.esdlVsSolvent ?? 0,
+                subUnit: "%",
+              })
               })
             }
             if (isSorbet || isVegan) {
@@ -600,12 +610,15 @@ export default function RecipeDetailPage() {
               label: "Sucrant",
               value: calcs.sweetness ?? 0,
             })
-            axes.push({
+                      axes.push({
               key: "iceFraction",
               label: "Frac. glace",
               value: calcs.iceFraction,
               min: L.iceFraction?.min,
               max: L.iceFraction?.max,
+              subLabel: "Point de congelation",
+              subValue: calcs.freezingPoint,
+              subUnit: "C",
             })
 
             return (
