@@ -593,7 +593,7 @@ export default function RecipeDetailPage() {
                 subValue: calcs.esdlVsSolvent ?? 0,
                 subUnit: "%",
               })
-              })
+              
             }
             if (isSorbet || isVegan) {
               axes.push({
