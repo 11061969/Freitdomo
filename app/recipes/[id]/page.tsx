@@ -533,7 +533,88 @@ export default function RecipeDetailPage() {
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
             Vert = dans les limites · Rouge = hors limites
           </p>
+          {(() => {
+            const L = limits
+            const axes: {
+              key: string
+              label: string
+              value: number
+              min?: number
+              max?: number
+            }[] = []
 
+            axes.push({
+              key: "totalSolids",
+              label: "Solides",
+              value: calcs.totalSolids,
+              min: L.totalSolids?.min,
+              max: L.totalSolids?.max,
+            })
+
+            if (!isSorbet) {
+              axes.push({
+                key: "creaminess",
+                label: "Onctuosite",
+                value: calcs.creaminess,
+                min: L.creaminess?.min,
+                max: L.creaminess?.max,
+              })
+              axes.push({
+                key: "emulsifierVsFat",
+                label: "Emulsif/MG",
+                value: calcs.emulsifierVsFat,
+                min: L.emulsifierVsFat?.min,
+                max: L.emulsifierVsFat?.max,
+              })
+            }
+
+            axes.push({
+              key: "molarMassStabi",
+              label: "Viscosite",
+              value: calcs.molarMassStabi,
+              min: L.molarMassStabi?.min,
+              max: L.molarMassStabi?.max,
+            })
+
+            if (!isSorbet && !isVegan) {
+              axes.push({
+                key: "esdl",
+                label: "ESDL",
+                value: calcs.esdl ?? 0,
+                min: L.esdl?.min,
+                max: L.esdl?.max,
+              })
+            }
+            if (isSorbet || isVegan) {
+              axes.push({
+                key: "saturation",
+                label: "Saturation",
+                value: calcs.saturation,
+                min: L.saturation?.min,
+                max: L.saturation?.max,
+              })
+            }
+
+            axes.push({
+              key: "sweetness",
+              label: "Sucrant",
+              value: calcs.sweetness ?? 0,
+            })
+            axes.push({
+              key: "iceFraction",
+              label: "Frac. glace",
+              value: calcs.iceFraction,
+              min: L.iceFraction?.min,
+              max: L.iceFraction?.max,
+            })
+
+            return (
+              <>
+                <h2 style={{ fontSize: 20, marginBottom: 8 }}>Boule Structure</h2>
+                <ScoopChart axes={axes} />
+              </>
+            )
+          })()}
           {isSorbet ? (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
