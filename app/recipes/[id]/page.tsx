@@ -533,16 +533,7 @@ export default function RecipeDetailPage() {
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
             Vert = dans les limites · Rouge = hors limites
           </p>
-                    {(() => {
-            const L = limits
-            const axes = [] as {
-              key: string
-              label: string
-              value: number
-              min?: number
-              max?: number
-            }[]
-
+                          // 1. Solides totaux
             axes.push({
               key: "totalSolids",
               label: "Solides",
@@ -551,6 +542,7 @@ export default function RecipeDetailPage() {
               max: L.totalSolids?.max,
             })
 
+            // 2. Onctuosite
             if (!isSorbet) {
               axes.push({
                 key: "creaminess",
@@ -559,6 +551,7 @@ export default function RecipeDetailPage() {
                 min: L.creaminess?.min,
                 max: L.creaminess?.max,
               })
+              // 3. Emulsifiant vs MG
               axes.push({
                 key: "emulsifierVsFat",
                 label: "Emulsif/MG",
@@ -568,6 +561,16 @@ export default function RecipeDetailPage() {
               })
             }
 
+            // 4. Masse molaire stabi (indice)
+            axes.push({
+              key: "molarMassStabi",
+              label: "Viscosite",
+              value: calcs.molarMassStabi,
+              min: L.molarMassStabi?.min,
+              max: L.molarMassStabi?.max,
+            })
+
+            // 5. ESDL (creme) ou Saturation (sorbet / vegan)
             if (!isSorbet && !isVegan) {
               axes.push({
                 key: "esdl",
@@ -577,7 +580,6 @@ export default function RecipeDetailPage() {
                 max: L.esdl?.max,
               })
             }
-
             if (isSorbet || isVegan) {
               axes.push({
                 key: "saturation",
@@ -588,11 +590,14 @@ export default function RecipeDetailPage() {
               })
             }
 
+            // 6. Taux sucrant
             axes.push({
               key: "sweetness",
               label: "Sucrant",
               value: calcs.sweetness ?? 0,
             })
+
+            // 7. Fraction de glace
             axes.push({
               key: "iceFraction",
               label: "Frac. glace",
@@ -600,28 +605,6 @@ export default function RecipeDetailPage() {
               min: L.iceFraction?.min,
               max: L.iceFraction?.max,
             })
-            axes.push({
-              key: "density",
-              label: "Densite",
-              value: calcs.density,
-              min: L.density?.min,
-              max: L.density?.max,
-            })
-            axes.push({
-              key: "freezingPoint",
-              label: "Pt congel.",
-              value: calcs.freezingPoint,
-              min: L.freezingPoint?.min,
-              max: L.freezingPoint?.max,
-            })
-
-            return (
-              <>
-                <h2 style={{ fontSize: 20, marginBottom: 8 }}>Boule Structure</h2>
-                <ScoopChart axes={axes} />
-              </>
-            )
-          })()}
                 <div
         style={{
           marginTop: 20,
