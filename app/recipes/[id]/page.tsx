@@ -535,12 +535,15 @@ export default function RecipeDetailPage() {
           </p>
           {(() => {
             const L = limits
-            const axes: {
+                       const axes: {
               key: string
               label: string
               value: number
               min?: number
               max?: number
+              subLabel?: string
+              subValue?: number
+              subUnit?: string
             }[] = []
 
                        axes.push({
