@@ -528,118 +528,11 @@ export default function RecipeDetailPage() {
         </tbody>
       </table>
 
-          {calcs && (
+                   {calcs && (
         <div>
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
             Vert = dans les limites · Rouge = hors limites
           </p>
-                          // 1. Solides totaux
-            axes.push({
-              key: "totalSolids",
-              label: "Solides",
-              value: calcs.totalSolids,
-              min: L.totalSolids?.min,
-              max: L.totalSolids?.max,
-            })
-
-            // 2. Onctuosite
-            if (!isSorbet) {
-              axes.push({
-                key: "creaminess",
-                label: "Onctuosite",
-                value: calcs.creaminess,
-                min: L.creaminess?.min,
-                max: L.creaminess?.max,
-              })
-              // 3. Emulsifiant vs MG
-              axes.push({
-                key: "emulsifierVsFat",
-                label: "Emulsif/MG",
-                value: calcs.emulsifierVsFat,
-                min: L.emulsifierVsFat?.min,
-                max: L.emulsifierVsFat?.max,
-              })
-            }
-
-            // 4. Masse molaire stabi (indice)
-            axes.push({
-              key: "molarMassStabi",
-              label: "Viscosite",
-              value: calcs.molarMassStabi,
-              min: L.molarMassStabi?.min,
-              max: L.molarMassStabi?.max,
-            })
-
-            // 5. ESDL (creme) ou Saturation (sorbet / vegan)
-            if (!isSorbet && !isVegan) {
-              axes.push({
-                key: "esdl",
-                label: "ESDL",
-                value: calcs.esdl ?? 0,
-                min: L.esdl?.min,
-                max: L.esdl?.max,
-              })
-            }
-            if (isSorbet || isVegan) {
-              axes.push({
-                key: "saturation",
-                label: "Saturation",
-                value: calcs.saturation,
-                min: L.saturation?.min,
-                max: L.saturation?.max,
-              })
-            }
-
-            // 6. Taux sucrant
-            axes.push({
-              key: "sweetness",
-              label: "Sucrant",
-              value: calcs.sweetness ?? 0,
-            })
-
-            // 7. Fraction de glace
-            axes.push({
-              key: "iceFraction",
-              label: "Frac. glace",
-              value: calcs.iceFraction,
-              min: L.iceFraction?.min,
-              max: L.iceFraction?.max,
-            })
-                <div
-        style={{
-          marginTop: 20,
-          marginBottom: 24,
-          padding: 16,
-          background: "#f7f7f7",
-          borderRadius: 10,
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 12,
-          alignItems: "center",
-        }}
-      >
-        <span>
-          Total actuel : <strong>{currentTotal.toFixed(2)}</strong>
-        </span>
-        <span>Mettre a l&apos;echelle →</span>
-        <input
-          type="number"
-          min="0.01"
-          step="0.01"
-          value={scaleTarget}
-          onChange={(e) => setScaleTarget(e.target.value)}
-          placeholder="ex. 10"
-          style={{ width: 100, padding: 8 }}
-        />
-        <button
-          type="button"
-          onClick={applyScale}
-          disabled={scaling}
-          style={{ padding: "8px 16px", cursor: "pointer" }}
-        >
-          {scaling ? "..." : "Appliquer"}
-        </button>
-      </div>
 
           {isSorbet ? (
             <>
@@ -661,10 +554,9 @@ export default function RecipeDetailPage() {
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-                {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
-                {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
-                
+                {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", undefined, 1)}
+                {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
