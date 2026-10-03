@@ -130,11 +130,14 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               {/* Recette */}
               <Radar
                         
+                          
                 name="Recette"
                 dataKey="score"
                 stroke="#c45c6a"
-                fill="none"
-                strokeWidth={2.5}
+                strokeWidth={3}
+                fill="#e8919c"
+                fillOpacity={0}
+                dot={{ r: 3, fill: "#c45c6a", strokeWidth: 0 }}
                 style={{ cursor: "pointer" }}
                 onClick={(payload: any) => {
                   const label = payload?.payload?.axis
