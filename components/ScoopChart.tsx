@@ -27,12 +27,6 @@ function normalize(value: number, min?: number, max?: number) {
   }
   return 40 + ((v - min) / (max - min)) * 25
 }
-  if (v > max) {
-    const span = Math.abs(max) > 1e-9 ? Math.abs(max) : 1
-    return Math.max(75, Math.min(100, 75 + Math.min(1, (v - max) / span) * 25))
-  }
-  return 25 + ((v - min) / (max - min)) * 50
-}
 
 function polar(cx: number, cy: number, r: number, i: number, n: number) {
   const angle = (Math.PI * 2 * i) / n - Math.PI / 2
