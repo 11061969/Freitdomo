@@ -102,38 +102,38 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               {/* Zone max des limites */}
               {hasLimits && (
                 <Radar
-                  name="Max"
-                  dataKey="limitMax"
-                  stroke="#2e7d4f"
-                  strokeWidth={1.5}
-                  strokeDasharray="4 4"
-                  fill="#4caf7a"
-                  fillOpacity={0.08}
-                  isAnimationActive={false}
-                />
+                               
+                name="Max"
+                dataKey="limitMax"
+                stroke="#2e7d4f"
+                strokeWidth={1.5}
+                strokeDasharray="4 4"
+                fill="none"
+                isAnimationActive={false}
+              />
               )}
 
               {/* Zone min des limites */}
               {hasLimits && (
                 <Radar
-                  name="Min"
-                  dataKey="limitMin"
-                  stroke="#2e7d4f"
-                  strokeWidth={1.5}
-                  strokeDasharray="4 4"
-                  fill="#ffffff"
-                  fillOpacity={0.35}
-                  isAnimationActive={false}
-                />
+                          
+                name="Min"
+                dataKey="limitMin"
+                stroke="#2e7d4f"
+                strokeWidth={1.5}
+                strokeDasharray="4 4"
+                fill="none"
+                isAnimationActive={false}
+              />
               )}
 
               {/* Recette */}
               <Radar
+                        
                 name="Recette"
                 dataKey="score"
                 stroke="#c45c6a"
-                fill="#e8919c"
-                fillOpacity={0.5}
+                fill="none"
                 strokeWidth={2.5}
                 style={{ cursor: "pointer" }}
                 onClick={(payload: any) => {
