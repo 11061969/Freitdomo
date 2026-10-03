@@ -547,7 +547,17 @@ export default function RecipeDetailPage() {
               subValue?: number
               subUnit?: string
             }[] = []
-
+          
+            axes.push({
+              key: "totalSolids",
+              label: "Solides",
+              value: calcs.totalSolids,
+              min: L.totalSolids?.min,
+              max: L.totalSolids?.max,
+              subLabel: "Densite",
+              subValue: calcs.density,
+              subUnit: "",
+            })
                                axes.push({
               key: "sweetness",
               label: "Sucrant",
