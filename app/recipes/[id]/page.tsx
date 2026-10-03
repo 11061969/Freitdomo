@@ -71,7 +71,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     emulsifierVsFat: { min: 1.25, max: 2.5 },
     mgSolide: { min: 45, max: 75 },
     saturation: { min: 50, max: 100 },
-    structure.sweetness = { min: 12, max: 22 }
+    sweetness: { min: 12, max: 22 }
   }
 
   if (category === "sorbet") {
