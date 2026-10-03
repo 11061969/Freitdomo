@@ -1,15 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-  Legend,
-} from "recharts"
 
 type AxisItem = {
   key: string
@@ -28,128 +19,169 @@ function normalize(value: number, min?: number, max?: number) {
   if (min == null || max == null || max === min) return 50
   if (v < min) {
     const span = Math.abs(min) > 1e-9 ? Math.abs(min) : 1
-    const ratio = Math.max(0, 1 - (min - v) / span)
-    return Math.max(0, Math.min(25, ratio * 25))
+    return Math.max(0, Math.min(25, (1 - (min - v) / span) * 25))
   }
   if (v > max) {
     const span = Math.abs(max) > 1e-9 ? Math.abs(max) : 1
-    const ratio = Math.min(1, (v - max) / span)
-    return Math.max(75, Math.min(100, 75 + ratio * 25))
+    return Math.max(75, Math.min(100, 75 + Math.min(1, (v - max) / span) * 25))
   }
   return 25 + ((v - min) / (max - min)) * 50
 }
 
+function polar(cx: number, cy: number, r: number, i: number, n: number) {
+  const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+  return {
+    x: cx + r * Math.cos(angle),
+    y: cy + r * Math.sin(angle),
+  }
+}
+
+function ringPoints(cx: number, cy: number, r: number, n: number) {
+  return Array.from({ length: n }, (_, i) => {
+    const p = polar(cx, cy, r, i, n)
+    return `${p.x},${p.y}`
+  }).join(" ")
+}
+
 export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
   const [selected, setSelected] = useState<string | null>(null)
+  const n = axes.length
+  if (n === 0) return null
 
-  const data = axes.map((a) => {
-    const hasLim = a.min != null && a.max != null
-    return {
-      axis: a.label,
-      key: a.key,
-      score: normalize(a.value, a.min, a.max),
-      limitMin: hasLim ? 25 : 0,
-      limitMax: hasLim ? 75 : 100,
-    }
-  })
+  const size = 360
+  const cx = size / 2
+  const cy = size / 2
+  const maxR = size * 0.36
+
+  const recipePts = axes
+    .map((a, i) => {
+      const score = normalize(a.value, a.min, a.max) / 100
+      const p = polar(cx, cy, maxR * score, i, n)
+      return `${p.x},${p.y}`
+    })
+    .join(" ")
+
+  const minPts = ringPoints(cx, cy, maxR * 0.25, n)
+  const maxPts = ringPoints(cx, cy, maxR * 0.75, n)
+  const outerPts = ringPoints(cx, cy, maxR, n)
 
   const selectedAxis = axes.find((a) => a.key === selected)
-  const hasLimits = axes.some((a) => a.min != null && a.max != null)
 
   return (
     <div style={{ maxWidth: 440, margin: "28px auto 12px", textAlign: "center" }}>
-      <div style={{ position: "relative", width: "100%", height: 380, margin: "0 auto" }}>
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle at 35% 30%, #ffffff 0%, #ffe8ec 35%, #f7c4cc 70%, #e8a0ab 100%)",
-            boxShadow:
-              "inset -12px -18px 28px rgba(180, 70, 90, 0.12), 0 14px 28px rgba(160, 60, 80, 0.18)",
-            border: "1px solid rgba(220, 140, 150, 0.35)",
-          }}
-        />
-        <div style={{ position: "relative", width: "100%", height: "100%", padding: 18 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={data} cx="50%" cy="50%" outerRadius="68%">
-              <PolarGrid stroke="rgba(180, 90, 110, 0.25)" />
-              <PolarAngleAxis
-                dataKey="axis"
-                tick={{ fill: "#6b3a44", fontSize: 11, fontWeight: 600 }}
+      <div
+        style={{
+          position: "relative",
+          width: size,
+          height: size,
+          margin: "0 auto",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle at 35% 30%, #ffffff 0%, #ffe8ec 35%, #f7c4cc 70%, #e8a0ab 100%)",
+          boxShadow:
+            "inset -12px -18px 28px rgba(180, 70, 90, 0.12), 0 14px 28px rgba(160, 60, 80, 0.18)",
+          border: "1px solid rgba(220, 140, 150, 0.35)",
+        }}
+      >
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          {/* Grille */}
+          {[0.25, 0.5, 0.75, 1].map((f) => (
+            <polygon
+              key={f}
+              points={ringPoints(cx, cy, maxR * f, n)}
+              fill="none"
+              stroke="rgba(180,90,110,0.25)"
+              strokeWidth={1}
+            />
+          ))}
+          {/* Axes */}
+          {axes.map((_, i) => {
+            const p = polar(cx, cy, maxR, i, n)
+            return (
+              <line
+                key={i}
+                x1={cx}
+                y1={cy}
+                x2={p.x}
+                y2={p.y}
+                stroke="rgba(180,90,110,0.25)"
+                strokeWidth={1}
               />
-              <PolarRadiusAxis
-                angle={30}
-                domain={[0, 100]}
-                tick={false}
-                axisLine={false}
-              />
+            )
+          })}
 
-              {hasLimits && (
-                <Radar
-                  name="Max"
-                  dataKey="limitMax"
-                  stroke="#1b5e3a"
-                  strokeWidth={2}
-                  strokeDasharray="5 4"
-                  fill="#1b5e3a"
-                  fillOpacity={0}
-                  isAnimationActive={false}
-                />
-              )}
-              {hasLimits && (
-                <Radar
-                  name="Min"
-                  dataKey="limitMin"
-                  stroke="#1b5e3a"
-                  strokeWidth={2}
-                  strokeDasharray="5 4"
-                  fill="#1b5e3a"
-                  fillOpacity={0}
-                  isAnimationActive={false}
-                />
-              )}
+          {/* Limite max */}
+          <polygon
+            points={maxPts}
+            fill="none"
+            stroke="#1b5e3a"
+            strokeWidth={2}
+            strokeDasharray="6 4"
+          />
+          {/* Limite min */}
+          <polygon
+            points={minPts}
+            fill="none"
+            stroke="#1b5e3a"
+            strokeWidth={2}
+            strokeDasharray="6 4"
+          />
 
-              <Radar
-                name="Recette"
-                dataKey="score"
-                stroke="#9b1b33"
-                strokeWidth={3}
+          {/* Recette — ligne rouge */}
+          <polygon
+            points={recipePts}
+            fill="none"
+            stroke="#9b1b33"
+            strokeWidth={3}
+            strokeLinejoin="round"
+          />
+          {/* Points recette */}
+          {axes.map((a, i) => {
+            const score = normalize(a.value, a.min, a.max) / 100
+            const p = polar(cx, cy, maxR * score, i, n)
+            return (
+              <circle
+                key={a.key}
+                cx={p.x}
+                cy={p.y}
+                r={5}
                 fill="#9b1b33"
-                fillOpacity={0}
-                dot={{ r: 4, fill: "#9b1b33", stroke: "#fff", strokeWidth: 1 }}
-                isAnimationActive={false}
-                style={{ cursor: "pointer" }}
-                onClick={(payload: any) => {
-                  const label = payload?.payload?.axis
-                  const found = axes.find((a) => a.label === label)
-                  if (found) setSelected(found.key === selected ? null : found.key)
-                }}
-              />
-
-              <Legend
-                wrapperStyle={{ fontSize: 12 }}
-                formatter={(value) =>
-                  value === "Recette"
-                    ? "Recette"
-                    : value === "Max"
-                      ? "Limite max"
-                      : value === "Min"
-                        ? "Limite min"
-                        : String(value)
+                stroke="#fff"
+                strokeWidth={1.5}
+                style={{ cursor: a.subLabel ? "pointer" : "default" }}
+                onClick={() =>
+                  a.subLabel && setSelected(a.key === selected ? null : a.key)
                 }
               />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
+            )
+          })}
+
+          {/* Labels */}
+          {axes.map((a, i) => {
+            const p = polar(cx, cy, maxR + 22, i, n)
+            return (
+              <text
+                key={a.key + "-label"}
+                x={p.x}
+                y={p.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="#6b3a44"
+                fontSize={11}
+                fontWeight={600}
+              >
+                {a.label}
+              </text>
+            )
+          })}
+        </svg>
       </div>
 
       <div
         style={{
           width: 0,
           height: 0,
-          margin: "-6px auto 0",
+          margin: "4px auto 0",
           borderLeft: "28px solid transparent",
           borderRight: "28px solid transparent",
           borderTop: "36px solid #e8c39a",
