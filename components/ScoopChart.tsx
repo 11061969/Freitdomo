@@ -8,6 +8,7 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   ResponsiveContainer,
+  Legend,
 } from "recharts"
 
 type AxisItem = {
@@ -21,10 +22,23 @@ type AxisItem = {
   subUnit?: string
 }
 
+/** 0-25 sous min, 25-75 dans les limites, 75-100 au-dessus max */
 function normalize(value: number, min?: number, max?: number) {
   if (min == null || max == null || max === min) return 50
-  const n = ((value - min) / (max - min)) * 100
-  return Math.max(0, Math.min(100, n))
+  if (value < min) {
+    // sous le min : 0 → 25
+    const span = Math.abs(min) > 1e-9 ? Math.abs(min) : 1
+    const ratio = Math.max(0, 1 - (min - value) / span)
+    return Math.max(0, Math.min(25, ratio * 25))
+  }
+  if (value > max) {
+    // au-dessus du max : 75 → 100
+    const span = Math.abs(max) > 1e-9 ? Math.abs(max) : 1
+    const ratio = Math.min(1, (value - max) / span)
+    return Math.max(75, Math.min(100, 75 + ratio * 25))
+  }
+  // dans les limites : 25 → 75
+  return 25 + ((value - min) / (max - min)) * 50
 }
 
 export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
@@ -34,22 +48,17 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
     axis: a.label,
     key: a.key,
     score: normalize(a.value, a.min, a.max),
+    limitMin: a.min != null && a.max != null ? 25 : 0,
+    limitMax: a.min != null && a.max != null ? 75 : 100,
     fullMark: 100,
   }))
 
   const selectedAxis = axes.find((a) => a.key === selected)
+  const hasLimits = axes.some((a) => a.min != null && a.max != null)
 
   return (
     <div style={{ maxWidth: 440, margin: "28px auto 12px", textAlign: "center" }}>
-      {/* Boule */}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: 380,
-          margin: "0 auto",
-        }}
-      >
+      <div style={{ position: "relative", width: "100%", height: 380, margin: "0 auto" }}>
         <div
           style={{
             position: "absolute",
@@ -62,7 +71,6 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             border: "1px solid rgba(220, 140, 150, 0.35)",
           }}
         />
-        {/* Reflet */}
         <div
           style={{
             position: "absolute",
@@ -90,6 +98,36 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
                 tick={false}
                 axisLine={false}
               />
+
+              {/* Zone max des limites */}
+              {hasLimits && (
+                <Radar
+                  name="Max"
+                  dataKey="limitMax"
+                  stroke="#2e7d4f"
+                  strokeWidth={1.5}
+                  strokeDasharray="4 4"
+                  fill="#4caf7a"
+                  fillOpacity={0.08}
+                  isAnimationActive={false}
+                />
+              )}
+
+              {/* Zone min des limites */}
+              {hasLimits && (
+                <Radar
+                  name="Min"
+                  dataKey="limitMin"
+                  stroke="#2e7d4f"
+                  strokeWidth={1.5}
+                  strokeDasharray="4 4"
+                  fill="#ffffff"
+                  fillOpacity={0.35}
+                  isAnimationActive={false}
+                />
+              )}
+
+              {/* Recette */}
               <Radar
                 name="Recette"
                 dataKey="score"
@@ -104,12 +142,23 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
                   if (found) setSelected(found.key === selected ? null : found.key)
                 }}
               />
+              <Legend
+                wrapperStyle={{ fontSize: 12, paddingTop: 4 }}
+                formatter={(value) =>
+                  value === "Recette"
+                    ? "Recette"
+                    : value === "Max"
+                      ? "Limite max"
+                      : value === "Min"
+                        ? "Limite min"
+                        : value
+                }
+              />
             </RadarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Petit cone decoratif */}
       <div
         style={{
           width: 0,
@@ -122,14 +171,17 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
         }}
       />
 
-      {/* Boutons sous-axes */}
+      <p style={{ fontSize: 11, color: "#888", marginTop: 14 }}>
+        Couronne verte pointillee = zone Min–Max · Rose = ta recette
+      </p>
+
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           gap: 8,
           justifyContent: "center",
-          marginTop: 16,
+          marginTop: 12,
         }}
       >
         {axes
@@ -143,9 +195,7 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
                 padding: "6px 12px",
                 borderRadius: 20,
                 border:
-                  selected === a.key
-                    ? "2px solid #c45c6a"
-                    : "1px solid #e8b4bc",
+                  selected === a.key ? "2px solid #c45c6a" : "1px solid #e8b4bc",
                 background: selected === a.key ? "#ffe4e8" : "#fff",
                 cursor: "pointer",
                 fontSize: 12,
@@ -178,6 +228,11 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               : "-"}
             {selectedAxis.subUnit ? ` ${selectedAxis.subUnit}` : ""}
           </div>
+          {selectedAxis.min != null && selectedAxis.max != null && (
+            <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
+              Limites axe : {selectedAxis.min} – {selectedAxis.max}
+            </div>
+          )}
         </div>
       )}
     </div>
