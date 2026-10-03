@@ -71,12 +71,14 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     emulsifierVsFat: { min: 1.25, max: 2.5 },
     mgSolide: { min: 45, max: 75 },
     saturation: { min: 50, max: 100 },
+    structure.sweetness = { min: 12, max: 22 }
   }
 
   if (category === "sorbet") {
     structure.totalSolids = { min: 27, max: 33 }
     structure.iceFraction = { min: 87.8, max: 88.1 }
     structure.molarMassStabi = { min: 175000, max: 220000 }
+    structure.sweetness = { min: 20, max: 26 }
   }
 
   if (temp === "gelato") {
@@ -546,15 +548,12 @@ export default function RecipeDetailPage() {
               subUnit?: string
             }[] = []
 
-                       axes.push({
-              key: "totalSolids",
-              label: "Solides",
-              value: calcs.totalSolids,
-              min: L.totalSolids?.min,
-              max: L.totalSolids?.max,
-              subLabel: "Densite",
-              subValue: calcs.density,
-              subUnit: "",
+                               axes.push({
+              key: "sweetness",
+              label: "Sucrant",
+              value: calcs.sweetness ?? 0,
+              min: L.sweetness?.min,
+              max: L.sweetness?.max,
             })
 
             if (!isSorbet) {
