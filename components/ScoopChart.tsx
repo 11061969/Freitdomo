@@ -15,12 +15,18 @@ type AxisItem = {
 
 function normalize(value: number, min?: number, max?: number) {
   const v = Number(value)
-  if (!Number.isFinite(v)) return 50
-  if (min == null || max == null || max === min) return 50
+  if (!Number.isFinite(v)) return 52.5
+  if (min == null || max == null || max === min) return 52.5
   if (v < min) {
     const span = Math.abs(min) > 1e-9 ? Math.abs(min) : 1
-    return Math.max(0, Math.min(25, (1 - (min - v) / span) * 25))
+    return Math.max(0, Math.min(40, (1 - (min - v) / span) * 40))
   }
+  if (v > max) {
+    const span = Math.abs(max) > 1e-9 ? Math.abs(max) : 1
+    return Math.max(65, Math.min(100, 65 + Math.min(1, (v - max) / span) * 35))
+  }
+  return 40 + ((v - min) / (max - min)) * 25
+}
   if (v > max) {
     const span = Math.abs(max) > 1e-9 ? Math.abs(max) : 1
     return Math.max(75, Math.min(100, 75 + Math.min(1, (v - max) / span) * 25))
@@ -61,8 +67,8 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
     })
     .join(" ")
 
-  const minPts = ringPoints(cx, cy, maxR * 0.25, n)
-  const maxPts = ringPoints(cx, cy, maxR * 0.75, n)
+   const minPts = ringPoints(cx, cy, maxR * 0.4, n)
+  const maxPts = ringPoints(cx, cy, maxR * 0.65, n)
   const outerPts = ringPoints(cx, cy, maxR, n)
 
   const selectedAxis = axes.find((a) => a.key === selected)
