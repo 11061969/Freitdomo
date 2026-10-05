@@ -71,7 +71,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     molarMassStabi: { min: 170000, max: 210000 },
     emulsifierVsFat: { min: 1.25, max: 2.5 },
     mgSolide: { min: 45, max: 75 },
-    saturation: { min: 50, max: 100 },
+    saturation: { min: 0, max: 100 },
     sweetness: { min: 12, max: 22 }
   }
 
