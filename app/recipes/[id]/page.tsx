@@ -208,13 +208,9 @@ export default function RecipeDetailPage() {
         nameLow.includes("lait d’amande") ||
         nameLow.includes("lait amande") ||
         nameLow.includes("lait soja")
-            const isInfusion =
-
-        cat.includes("infusion") ||
-        nameLow.includes("infusion")
+           const isInfusion = cat.includes("infusion")
 
       if (isInfusion) {
-        // cout seulement — pas de poids dans le mix
         cost += q * (ing.cost || 0)
         continue
       }
