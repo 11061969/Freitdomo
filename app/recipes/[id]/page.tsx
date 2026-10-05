@@ -536,7 +536,7 @@ export default function RecipeDetailPage() {
             Vert = dans les limites · Rouge = hors limites
           </p>          {(() => {
             const L = limits
-            const axes: {
+                      const axes: {
               key: string
               label: string
               value: number
@@ -545,6 +545,8 @@ export default function RecipeDetailPage() {
               subLabel?: string
               subValue?: number
               subUnit?: string
+              subMin?: number
+              subMax?: number
             }[] = []
 
             axes.push({
@@ -553,9 +555,11 @@ export default function RecipeDetailPage() {
               value: calcs.totalSolids,
               min: L.totalSolids?.min,
               max: L.totalSolids?.max,
-              subLabel: "Densite",
+                            subLabel: "Densite",
               subValue: calcs.density,
               subUnit: "",
+              subMin: L.density?.min,
+              subMax: L.density?.max,
             })
 
             if (!isSorbet) {
@@ -565,9 +569,11 @@ export default function RecipeDetailPage() {
                 value: calcs.creaminess,
                 min: L.creaminess?.min,
                 max: L.creaminess?.max,
-                subLabel: "MG solide",
+                                subLabel: "MG solide",
                 subValue: calcs.mgSolide,
                 subUnit: "%",
+                subMin: L.mgSolide?.min,
+                subMax: L.mgSolide?.max,
               })
               axes.push({
                 key: "emulsifierVsFat",
@@ -593,9 +599,11 @@ export default function RecipeDetailPage() {
                 value: calcs.esdl ?? 0,
                 min: L.esdl?.min,
                 max: L.esdl?.max,
-                subLabel: "ESDL vs solvant",
+                               subLabel: "ESDL vs solvant",
                 subValue: calcs.esdlVsSolvent ?? 0,
                 subUnit: "%",
+                subMin: L.esdlVsSolvent?.min,
+                subMax: L.esdlVsSolvent?.max,
               })
             }
 
@@ -623,9 +631,11 @@ export default function RecipeDetailPage() {
               value: calcs.iceFraction,
               min: L.iceFraction?.min,
               max: L.iceFraction?.max,
-              subLabel: "Point de congelation",
+                            subLabel: "Point de congelation",
               subValue: calcs.freezingPoint,
               subUnit: "C",
+              subMin: L.freezingPoint?.min,
+              subMax: L.freezingPoint?.max,
             })
 
             return (
