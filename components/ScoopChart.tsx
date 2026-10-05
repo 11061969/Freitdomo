@@ -11,6 +11,8 @@ type AxisItem = {
   subLabel?: string
   subValue?: number
   subUnit?: string
+  subMin?: number
+  subMax?: number
 }
 
 function normalize(value: number, min?: number, max?: number) {
