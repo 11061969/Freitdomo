@@ -209,15 +209,10 @@ export default function RecipeDetailPage() {
         nameLow.includes("lait amande") ||
         nameLow.includes("lait soja")
            const isInfusion = cat.includes("infusion")
-
-      if (isInfusion) {
+        if (isInfusion) {
         cost += q * (ing.cost || 0)
         continue
       }
-
-      totalQty += q
-      fat += ...
-      // reste des cumuls inchangé
       totalQty += q
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
