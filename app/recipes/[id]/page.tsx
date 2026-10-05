@@ -630,7 +630,7 @@ export default function RecipeDetailPage() {
 
             return (
               <>
-                <h2 style={{ fontSize: 20, marginBottom: 8 }}>Boule Structure</h2>
+                <h2 style={{ fontSize: 20, marginBottom: 8 }}>Graphe de Structure & Texture</h2>
                 <ScoopChart axes={axes} />
               </>
             )
