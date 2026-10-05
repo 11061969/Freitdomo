@@ -65,6 +65,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     density: { min: 1.08, max: 1.13 },
     creaminess: { min: 5, max: 8 },
     esdl: { min: 6, max: 12 },
+        esdlVsSolvent: { min: 10, max: 17 },
     freezingPoint: { min: -3.3, max: -2.3 },
     iceFraction: { min: 87.7, max: 88.1 },
     molarMassStabi: { min: 170000, max: 210000 },
