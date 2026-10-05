@@ -558,12 +558,17 @@ export default function RecipeDetailPage() {
               subValue: calcs.density,
               subUnit: "",
             })
-                               axes.push({
+                      axes.push({
               key: "sweetness",
               label: "Sucrant",
               value: calcs.sweetness ?? 0,
               min: L.sweetness?.min,
               max: L.sweetness?.max,
+            })
+            axes.push({
+              key: "iceFraction",
+              label: "Frac. glace",
+              ...
             })
 
             if (!isSorbet) {
