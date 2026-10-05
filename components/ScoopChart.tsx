@@ -248,9 +248,14 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               : "-"}
             {selectedAxis.subUnit ? ` ${selectedAxis.subUnit}` : ""}
           </div>
-          {selectedAxis.min != null && selectedAxis.max != null && (
+                    {selectedAxis.subMin != null && selectedAxis.subMax != null ? (
             <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
-              Limites axe : {selectedAxis.min} – {selectedAxis.max}
+              Limites : {selectedAxis.subMin} – {selectedAxis.subMax}
+              {selectedAxis.subUnit ? ` ${selectedAxis.subUnit}` : ""}
+            </div>
+          ) : (
+            <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
+              (pas de limites definies pour ce sous-parametre)
             </div>
           )}
         </div>
