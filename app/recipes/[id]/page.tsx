@@ -372,8 +372,8 @@ export default function RecipeDetailPage() {
     
     const density =
       1 /
-      ((fatPct / 100) * 1.07527 +
-        (totalSolids / 100 - fatPct / 100) * 0.6329 +
+      ((fatPctStruct / 100) * 1.07527 +
+        (totalSolids / 100 - fatPctStruct / 100) * 0.6329 +
         (1 - totalSolids / 100))
 
     // Onctuosité = MG saturée (comme Excel V51)
