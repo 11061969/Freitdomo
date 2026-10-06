@@ -208,13 +208,15 @@ export default function RecipeDetailPage() {
         nameLow.includes("lait d’amande") ||
         nameLow.includes("lait amande") ||
         nameLow.includes("lait soja")
-           const isInfusion = cat.includes("infusion")
+          const isInfusion = cat.includes("infusion")
       const isInclusion = cat.includes("inclusion")
-        if (isInfusion) {
+
+      if (isInfusion) {
         cost += q * (ing.cost || 0)
         continue
-          if (isInclusion) {
-        // Cout + nutrition (pour Composition / Kcal) — pas de poids ni structure mix
+      }
+
+      if (isInclusion) {
         cost += q * (ing.cost || 0)
         fat += (q * (ing.fat || 0)) / 100
         protein += (q * (ing.protein || 0)) / 100
@@ -229,8 +231,8 @@ export default function RecipeDetailPage() {
         sweetness +=
           ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
         continue
-    
       }
+
       totalQty += q
       fat += (q * (ing.fat || 0)) / 100
       protein += (q * (ing.protein || 0)) / 100
