@@ -187,6 +187,10 @@ export default function RecipeDetailPage() {
     let sweetness = 0
     let stabiMassSum = 0, stabiQtySum = 0
     let moles = 0
+        let fatMix = 0, proteinMix = 0, sugarMix = 0, fiberMix = 0
+    let mineralsMix = 0, alcoholMix = 0, saturatedFatMix = 0
+    let fatIncl = 0, proteinIncl = 0, sugarIncl = 0, fiberIncl = 0
+    let mineralsIncl = 0, alcoholIncl = 0, saturatedFatIncl = 0
 
     for (const line of lines) {
       const q = line.quantity || 0
@@ -218,13 +222,13 @@ export default function RecipeDetailPage() {
 
       if (isInclusion) {
         cost += q * (ing.cost || 0)
-        fat += (q * (ing.fat || 0)) / 100
-        protein += (q * (ing.protein || 0)) / 100
-        sugar += (q * (ing.sugar || 0)) / 100
-        fiber += (q * (ing.fiber || 0)) / 100
-        minerals += (q * (ing.minerals || 0)) / 100
-        alcohol += (q * (ing.alcohol || 0)) / 100
-        saturatedFat +=
+        fatIncl += (q * (ing.fat || 0)) / 100
+        proteinIncl += (q * (ing.protein || 0)) / 100
+        sugarIncl += (q * (ing.sugar || 0)) / 100
+        fiberIncl += (q * (ing.fiber || 0)) / 100
+        mineralsIncl += (q * (ing.minerals || 0)) / 100
+        alcoholIncl += (q * (ing.alcohol || 0)) / 100
+        saturatedFatIncl +=
           (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
         sodium += (q * (ing.sodium || 0)) / 100
         calcium += (q * (ing.calcium || 0)) / 100
@@ -233,14 +237,15 @@ export default function RecipeDetailPage() {
         continue
       }
 
-      totalQty += q
-      fat += (q * (ing.fat || 0)) / 100
-      protein += (q * (ing.protein || 0)) / 100
-      sugar += (q * (ing.sugar || 0)) / 100
-      fiber += (q * (ing.fiber || 0)) / 100
-      minerals += (q * (ing.minerals || 0)) / 100
-      alcohol += (q * (ing.alcohol || 0)) / 100
-      saturatedFat += (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
+           totalQty += q
+      fatMix += (q * (ing.fat || 0)) / 100
+      proteinMix += (q * (ing.protein || 0)) / 100
+      sugarMix += (q * (ing.sugar || 0)) / 100
+      fiberMix += (q * (ing.fiber || 0)) / 100
+      mineralsMix += (q * (ing.minerals || 0)) / 100
+      alcoholMix += (q * (ing.alcohol || 0)) / 100
+      saturatedFatMix +=
+        (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
       sodium += (q * (ing.sodium || 0)) / 100
       calcium += (q * (ing.calcium || 0)) / 100
       cost += q * (ing.cost || 0)
@@ -337,16 +342,27 @@ export default function RecipeDetailPage() {
     const saturationPct =
       solventAvailable > 0 ? (solventNeeded / solventAvailable) * 100 : 0
 
-    const fatPct = (fat / totalQty) * 100
-    const proteinPct = (protein / totalQty) * 100
-    const sugarPct = (sugar / totalQty) * 100
-    const fiberPct = (fiber / totalQty) * 100
+        // Structure = mix seul
+    const fatPctStruct = (fatMix / totalQty) * 100
+    const proteinPctStruct = (proteinMix / totalQty) * 100
+    const sugarPctStruct = (sugarMix / totalQty) * 100
+    const fiberPctStruct = (fiberMix / totalQty) * 100
     const fiberSolidsPct = (fiberForSolids / totalQty) * 100
-    const mineralsPct = (minerals / totalQty) * 100
-    const alcoholPct = (alcohol / totalQty) * 100
-    const saturatedFatPct = (saturatedFat / totalQty) * 100
+    const mineralsPctStruct = (mineralsMix / totalQty) * 100
+    const saturatedFatPctStruct = (saturatedFatMix / totalQty) * 100
+    const alcoholPctStruct = (alcoholMix / totalQty) * 100
+
     const totalSolids =
-      fatPct + proteinPct + sugarPct + fiberSolidsPct + mineralsPct
+      fatPctStruct + proteinPctStruct + sugarPctStruct + fiberSolidsPct + mineralsPctStruct
+
+    // Composition = mix + inclusions
+    const fatPct = ((fatMix + fatIncl) / totalQty) * 100
+    const proteinPct = ((proteinMix + proteinIncl) / totalQty) * 100
+    const sugarPct = ((sugarMix + sugarIncl) / totalQty) * 100
+    const fiberPct = ((fiberMix + fiberIncl) / totalQty) * 100
+    const mineralsPct = ((mineralsMix + mineralsIncl) / totalQty) * 100
+    const alcoholPct = ((alcoholMix + alcoholIncl) / totalQty) * 100
+    const saturatedFatPct = ((saturatedFatMix + saturatedFatIncl) / totalQty) * 100
     const waterFraction = Math.max(0, 100 - totalSolids)
     const esdlPct = (esdlMass / totalQty) * 100
     const esdlVsSolvent =
