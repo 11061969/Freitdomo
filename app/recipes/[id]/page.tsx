@@ -377,12 +377,13 @@ export default function RecipeDetailPage() {
         (1 - totalSolids / 100))
 
     // Onctuosité = MG saturée (comme Excel V51)
-    const onctuosite = saturatedFatPct
-
+       const onctuosite = saturatedFatPctStruct
+    
     // MG solide = MG saturée / MG * 100
-    const mgSolide = fatPct > 0 ? (saturatedFatPct / fatPct) * 100 : 0
+    const mgSolide =
+      fatPctStruct > 0 ? (saturatedFatPctStruct / fatPctStruct) * 100 : 0
 
-    // Point de congélation (molalité)
+        // Point de congélation (molalité)
     const waterKg = (waterFraction / 100) * (totalQty / 1000) // approx si quantités en g → kg
     // Si quantités sont en %, totalQty ~ 100 ; on travaille en fraction
         const waterFraction01 = waterFraction / 100
@@ -431,7 +432,8 @@ export default function RecipeDetailPage() {
       freezingPoint,
       iceFraction,
       molarMassStabi: totalQty > 0 ? (stabiMassSum * 100) / totalQty : 0,
-      emulsifierVsFat: fatPct > 0 ? (emulsifierPct / fatPct) * 100 : 0,
+            emulsifierVsFat:
+        fatPctStruct > 0 ? (emulsifierPct / fatPctStruct) * 100 : 0,
       mgSolide,
       kcal: 9 * fatPct + 4 * proteinPct + 4 * sugarPct + 7 * alcoholPct,
     })
