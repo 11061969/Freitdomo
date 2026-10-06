@@ -140,6 +140,7 @@ function emulsifierVsFatLimits(fatPct: number) {
     min: ideal * 0.85,
     max: ideal * 1.15,
   }
+}
 export default function RecipeDetailPage() {
   const router = useRouter()
   const params = useParams()
