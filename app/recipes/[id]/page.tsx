@@ -657,13 +657,14 @@ export default function RecipeDetailPage() {
                 subMax: L.mgSolide?.max,
               })
                          const el = emulsifierVsFatLimits(calcs.fat)
-              axes.push({
+                    axes.push({
                 key: "emulsifierVsFat",
                 label: "Emulsif/MG",
                 value: calcs.emulsifierVsFat,
                 min: el.min,
                 max: el.max,
               })
+            }
 
             axes.push({
               key: "molarMassStabi",
