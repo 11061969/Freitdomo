@@ -835,4 +835,4 @@ export default function RecipeDetailPage() {
     </main>
   )
 }
-}
+
