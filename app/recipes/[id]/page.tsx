@@ -45,7 +45,37 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     minerals: { min: 0, max: 2 },
     alcohol: { min: 0, max: 3 },
   }
+function idealEmulsifierVsFat(fatPct: number): number {
+  const points = [
+    { fat: 4, ratio: 4 },
+    { fat: 6, ratio: 2.5 },
+    { fat: 8, ratio: 1.88 },
+    { fat: 9, ratio: 1.7 },
+    { fat: 10, ratio: 1.5 },
+    { fat: 12, ratio: 1.25 },
+    { fat: 14, ratio: 0.71 },
+    { fat: 16, ratio: 0 },
+  ]
+  if (fatPct <= points[0].fat) return points[0].ratio
+  if (fatPct >= points[points.length - 1].fat) return points[points.length - 1].ratio
+  for (let i = 0; i < points.length - 1; i++) {
+    const a = points[i]
+    const b = points[i + 1]
+    if (fatPct >= a.fat && fatPct <= b.fat) {
+      const t = (fatPct - a.fat) / (b.fat - a.fat)
+      return a.ratio + t * (b.ratio - a.ratio)
+    }
+  }
+  return 1.25
+}
 
+function emulsifierVsFatLimits(fatPct: number) {
+  const ideal = idealEmulsifierVsFat(fatPct)
+  return {
+    min: ideal * 0.85,
+    max: ideal * 1.15,
+  }
+}
   if (category === "sorbet") {
     composition.fat = { min: 0, max: 1 }
     composition.protein = { min: 0, max: 1 }
@@ -471,7 +501,12 @@ export default function RecipeDetailPage() {
   }
 
   function renderCard(label: string, value: number, unit: string, limitKey?: string, digits = 2) {
-    const limit = limitKey ? limits[limitKey] : undefined
+        const limit =
+      limitKey === "emulsifierVsFat" && calcs
+        ? emulsifierVsFatLimits(calcs.fat)
+        : limitKey
+          ? limits[limitKey]
+          : undefined
     const status = getStatus(value, limit)
     const style = colors[status]
     return (
@@ -619,14 +654,14 @@ export default function RecipeDetailPage() {
                 subMin: L.mgSolide?.min,
                 subMax: L.mgSolide?.max,
               })
+                         const el = emulsifierVsFatLimits(calcs.fat)
               axes.push({
                 key: "emulsifierVsFat",
                 label: "Emulsif/MG",
                 value: calcs.emulsifierVsFat,
-                min: L.emulsifierVsFat?.min,
-                max: L.emulsifierVsFat?.max,
+                min: el.min,
+                max: el.max,
               })
-            }
 
             axes.push({
               key: "molarMassStabi",
