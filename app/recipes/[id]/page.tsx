@@ -212,6 +212,23 @@ export default function RecipeDetailPage() {
         if (isInfusion) {
         cost += q * (ing.cost || 0)
         continue
+          if (isInclusion) {
+        // Cout + nutrition (pour Composition / Kcal) — pas de poids ni structure mix
+        cost += q * (ing.cost || 0)
+        fat += (q * (ing.fat || 0)) / 100
+        protein += (q * (ing.protein || 0)) / 100
+        sugar += (q * (ing.sugar || 0)) / 100
+        fiber += (q * (ing.fiber || 0)) / 100
+        minerals += (q * (ing.minerals || 0)) / 100
+        alcohol += (q * (ing.alcohol || 0)) / 100
+        saturatedFat +=
+          (q * (ing.fat || 0) / 100) * ((ing.saturated_fat || 0) / 100)
+        sodium += (q * (ing.sodium || 0)) / 100
+        calcium += (q * (ing.calcium || 0)) / 100
+        sweetness +=
+          ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
+        continue
+    
       }
       totalQty += q
       fat += (q * (ing.fat || 0)) / 100
