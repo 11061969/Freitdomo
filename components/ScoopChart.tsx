@@ -32,10 +32,7 @@ function normalize(value: number, min?: number, max?: number) {
 
 function polar(cx: number, cy: number, r: number, i: number, n: number) {
   const angle = (Math.PI * 2 * i) / n - Math.PI / 2
-  return {
-    x: cx + r * Math.cos(angle),
-    y: cy + r * Math.sin(angle),
-  }
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) }
 }
 
 function ringPoints(cx: number, cy: number, r: number, n: number) {
@@ -53,7 +50,7 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
   const size = 360
   const cx = size / 2
   const cy = size / 2
-  const maxR = size * 0.36
+  const maxR = size * 0.34
 
   const recipePts = axes
     .map((a, i) => {
@@ -63,10 +60,8 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
     })
     .join(" ")
 
-   const minPts = ringPoints(cx, cy, maxR * 0.4, n)
+  const minPts = ringPoints(cx, cy, maxR * 0.4, n)
   const maxPts = ringPoints(cx, cy, maxR * 0.65, n)
-  const outerPts = ringPoints(cx, cy, maxR, n)
-
   const selectedAxis = axes.find((a) => a.key === selected)
 
   return (
@@ -86,7 +81,6 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
         }}
       >
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          {/* Grille */}
           {[0.25, 0.5, 0.75, 1].map((f) => (
             <polygon
               key={f}
@@ -96,13 +90,12 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               strokeWidth={1}
             />
           ))}
-          {/* Axes */}
-               {/* Axes */}
+
           {axes.map((_, i) => {
             const p = polar(cx, cy, maxR, i, n)
             return (
               <line
-                key={i}
+                key={"axis-" + i}
                 x1={cx}
                 y1={cy}
                 x2={p.x}
@@ -113,7 +106,6 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             )
           })}
 
-          {/* Limite max */}
           <polygon
             points={maxPts}
             fill="none"
@@ -121,7 +113,6 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             strokeWidth={2}
             strokeDasharray="6 4"
           />
-          {/* Limite min */}
           <polygon
             points={minPts}
             fill="none"
@@ -130,7 +121,6 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             strokeDasharray="6 4"
           />
 
-          {/* Recette — ligne rouge */}
           <polygon
             points={recipePts}
             fill="none"
@@ -138,13 +128,13 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             strokeWidth={3}
             strokeLinejoin="round"
           />
-          {/* Points recette */}
+
           {axes.map((a, i) => {
             const score = normalize(a.value, a.min, a.max) / 100
             const p = polar(cx, cy, maxR * score, i, n)
             return (
               <circle
-                key={a.key}
+                key={"pt-" + a.key}
                 cx={p.x}
                 cy={p.y}
                 r={5}
@@ -159,13 +149,11 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             )
           })}
 
-          {/* Labels */}
-               {/* Labels */}
           {axes.map((a, i) => {
-            const p = polar(cx, cy, maxR + 28, i, n)
+            const p = polar(cx, cy, maxR + 30, i, n)
             return (
               <text
-                key={a.key + "-label"}
+                key={"lbl-" + a.key}
                 x={p.x}
                 y={p.y}
                 textAnchor="middle"
@@ -210,7 +198,7 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
           .filter((a) => a.subLabel)
           .map((a) => (
             <button
-              key={a.key}
+              key={"btn-" + a.key}
               type="button"
               onClick={() => setSelected(a.key === selected ? null : a.key)}
               style={{
@@ -250,16 +238,12 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
               : "-"}
             {selectedAxis.subUnit ? ` ${selectedAxis.subUnit}` : ""}
           </div>
-                    {selectedAxis.subMin != null && selectedAxis.subMax != null ? (
+          {selectedAxis.subMin != null && selectedAxis.subMax != null ? (
             <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
               Limites : {selectedAxis.subMin} – {selectedAxis.subMax}
               {selectedAxis.subUnit ? ` ${selectedAxis.subUnit}` : ""}
             </div>
-          ) : (
-            <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>
-              (pas de limites definies pour ce sous-parametre)
-            </div>
-          )}
+          ) : null}
         </div>
       )}
     </div>
