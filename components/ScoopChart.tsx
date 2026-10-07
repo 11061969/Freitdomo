@@ -97,21 +97,19 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
             />
           ))}
           {/* Axes */}
-              {axes.map((a, i) => {
-            const p = polar(cx, cy, maxR + 28, i, n)
+               {/* Axes */}
+          {axes.map((_, i) => {
+            const p = polar(cx, cy, maxR, i, n)
             return (
-              <text
-                key={a.key + "-label"}
-                x={p.x}
-                y={p.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#6b3a44"
-                fontSize={9}
-                fontWeight={600}
-              >
-                {a.label}
-              </text>
+              <line
+                key={i}
+                x1={cx}
+                y1={cy}
+                x2={p.x}
+                y2={p.y}
+                stroke="rgba(180,90,110,0.25)"
+                strokeWidth={1}
+              />
             )
           })}
 
@@ -162,8 +160,9 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
           })}
 
           {/* Labels */}
+               {/* Labels */}
           {axes.map((a, i) => {
-            const p = polar(cx, cy, maxR + 22, i, n)
+            const p = polar(cx, cy, maxR + 28, i, n)
             return (
               <text
                 key={a.key + "-label"}
@@ -172,7 +171,7 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="#6b3a44"
-                fontSize={11}
+                fontSize={9}
                 fontWeight={600}
               >
                 {a.label}
