@@ -650,7 +650,7 @@ export default function RecipeDetailPage() {
 
             axes.push({
               key: "totalSolids",
-              label: "Solides",
+              label: "Solides totaux",
               value: calcs.totalSolids,
               min: L.totalSolids?.min,
               max: L.totalSolids?.max,
@@ -686,7 +686,7 @@ export default function RecipeDetailPage() {
 
             axes.push({
               key: "molarMassStabi",
-              label: "Viscosite",
+              label: "Indice de Viscosite",
               value: calcs.molarMassStabi,
               min: L.molarMassStabi?.min,
               max: L.molarMassStabi?.max,
@@ -710,7 +710,7 @@ export default function RecipeDetailPage() {
             if (isSorbet || isVegan) {
               axes.push({
                 key: "saturation",
-                label: "Saturation",
+                label: "Saturation solution",
                 value: calcs.saturation,
                 min: L.saturation?.min,
                 max: L.saturation?.max,
@@ -719,7 +719,7 @@ export default function RecipeDetailPage() {
 
             axes.push({
               key: "sweetness",
-              label: "Sucrant",
+              label: "Taux sucrant",
               value: calcs.sweetness ?? 0,
               min: L.sweetness?.min,
               max: L.sweetness?.max,
@@ -727,7 +727,7 @@ export default function RecipeDetailPage() {
 
             axes.push({
               key: "iceFraction",
-              label: "Frac. glace",
+              label: "Fraction de glace",
               value: calcs.iceFraction,
               min: L.iceFraction?.min,
               max: L.iceFraction?.max,
