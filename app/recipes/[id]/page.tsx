@@ -223,6 +223,7 @@ export default function RecipeDetailPage() {
     let mineralsMix = 0, alcoholMix = 0, saturatedFatMix = 0
     let fatIncl = 0, proteinIncl = 0, sugarIncl = 0, fiberIncl = 0
     let mineralsIncl = 0, alcoholIncl = 0, saturatedFatIncl = 0
+        let parfumMass = 0
 
     for (const line of lines) {
       const q = line.quantity || 0
@@ -244,11 +245,20 @@ export default function RecipeDetailPage() {
         nameLow.includes("lait d’amande") ||
         nameLow.includes("lait amande") ||
         nameLow.includes("lait soja")
+            const isParfumCat =
+        cat.includes("infusion") ||
+        cat.includes("alcool") ||
+        cat.includes("alcohol") ||
+        cat.includes("aromat") ||
+        cat.includes("parfum") ||
+        cat.includes("fruit") ||
+        (cat.includes("vegan") && Number(ing.fat || 0) < 99.5)
           const isInfusion = cat.includes("infusion")
       const isInclusion = cat.includes("inclusion")
 
-      if (isInfusion) {
+            if (isInfusion) {
         cost += q * (ing.cost || 0)
+        if (isParfumCat) parfumMass += q
         continue
       }
 
@@ -282,6 +292,9 @@ export default function RecipeDetailPage() {
       calcium += (q * (ing.calcium || 0)) / 100
       cost += q * (ing.cost || 0)
       sweetness += ((q * (ing.sugar || 0)) / 100) * (ing.sweetness_factor || 1)
+            if (isParfumCat) {
+        parfumMass += q
+      }
 
       // ESDL : laitiers uniquement
       if (cat.includes("lait")) {
@@ -440,7 +453,8 @@ export default function RecipeDetailPage() {
     }
 
     const saturation = waterFraction > 0 ? (sugarPct / waterFraction) * 100 : 0
-
+    const parfumPct = totalQty > 0 ? (parfumMass / totalQty) * 100 : 0
+    
     setCalcs({
          totalSolids,
       fat: fatPct,
@@ -449,6 +463,8 @@ export default function RecipeDetailPage() {
       fiber: fiberPct,
       minerals: mineralsPct,
       alcohol: alcoholPct,
+      parfum: parfumPct,
+      emulsifier: emulsifierPct,
       stabilizer: stabilizerPct,
       saturatedFat: saturatedFatPct,
       saturation: saturationPct,
@@ -457,6 +473,7 @@ export default function RecipeDetailPage() {
       cost: cost / totalQty,
       sweetness: (sweetness / totalQty) * 100,
       creaminess: onctuosite,
+          
       density,
       esdl: esdlPct,
       esdlVsSolvent,
