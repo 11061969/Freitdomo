@@ -36,7 +36,7 @@ type Limit = { min: number; max: number }
 function getLimits(category: string, temp: string): Record<string, Limit> {
   const composition: Record<string, Limit> = {
     fat: { min: 6, max: 14 },
-    protein: { min: 2, max: 7 },
+    protein: { min: 1, max: 7 },
     sugar: { min: 20, max: 26 },
     fiber: { min: 0, max: 3 },
     stabilizer: { min: 0.15, max: 0.25 },
@@ -69,8 +69,8 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
         esdlVsSolvent: { min: 10, max: 17 },
     freezingPoint: { min: -3.3, max: -2.3 },
     iceFraction: { min: 87.7, max: 88.1 },
-    molarMassStabi: { min: 170000, max: 210000 },
-    emulsifierVsFat: { min: 1.25, max: 2.5 },
+    molarMassStabi: { min: 170000, max: 220000 },
+    emulsifierVsFat: { min: 1, max: 2.5 },
     mgSolide: { min: 45, max: 75 },
     saturation: { min: 0, max: 100 },
     sweetness: { min: 12, max: 22 }
@@ -79,7 +79,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
   if (category === "sorbet") {
     structure.totalSolids = { min: 27, max: 33 }
     structure.iceFraction = { min: 87.8, max: 88.1 }
-    structure.molarMassStabi = { min: 175000, max: 220000 }
+    structure.molarMassStabi = { min: 175000, max: 225000 }
     structure.sweetness = { min: 20, max: 26 }
   }
 
@@ -520,9 +520,9 @@ export default function RecipeDetailPage() {
   }
 
   function renderCard(label: string, value: number, unit: string, limitKey?: string, digits = 2) {
-        const limit =
-      limitKey === "emulsifierVsFat" && calcs
-        ? emulsifierVsFatLimits(calcs.fat)
+           const limit =
+      limitKey === "emulsifierVsFat"
+        ? { min: 0, max: 4 }
         : limitKey
           ? limits[limitKey]
           : undefined
@@ -768,7 +768,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
                 {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", "sweetness", 1)}
-                {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+                {renderCard("Saturation", calcs.saturation, "%", "saturation", 0)}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
@@ -800,7 +800,7 @@ export default function RecipeDetailPage() {
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-                {renderCard("Onctuosite", calcs.creaminess, "%", "creaminess", 0)}
+                {renderCard("Onctuosite", calcs.creaminess, "", "creaminess", 0)}
                 {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
                 {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", "sweetness", 1)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
@@ -809,7 +809,7 @@ export default function RecipeDetailPage() {
                 {renderCard("Densite", calcs.density, "", "density", 3)}
                 {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
                 {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
-                {renderCard("Saturation", calcs.saturation, "%", "saturation", 1)}
+                {renderCard("Saturation", calcs.saturation, "%", "saturation", 0)}
                 {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
               </div>
             </>
@@ -837,7 +837,7 @@ export default function RecipeDetailPage() {
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
-                {renderCard("Onctuosite", calcs.creaminess, "%", "creaminess", 0)}
+                {renderCard("Onctuosite", calcs.creaminess, "", "creaminess", 0)}
                 {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
                 {renderCard("ESDL", calcs.esdl ?? 0, "%", "esdl", 1)}
                 {renderCard("ESDL vs solvant", calcs.esdlVsSolvent ?? 0, "%", "esdlVsSolvent", 1)}
