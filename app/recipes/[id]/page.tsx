@@ -545,9 +545,10 @@ export default function RecipeDetailPage() {
             : "-"}
           {unit ? " " + unit : ""}
         </div>
-        {limit && (
+               {limit && (
           <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
-            Min {limit.min} - Max {limit.max}
+            Min {Number(limit.min).toFixed(digits)} - Max{" "}
+            {Number(limit.max).toFixed(digits)}
           </div>
         )}
       </div>
