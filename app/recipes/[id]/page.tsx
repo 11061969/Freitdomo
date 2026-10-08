@@ -611,67 +611,6 @@ export default function RecipeDetailPage() {
 
     router.push("/recipes")
   }
-  async function applyScale() {
-    const target = Number(scaleTarget)
-    if (!target || target <= 0 || currentTotal <= 0) {
-      alert("Indique un total desire valide.")
-      return
-    }
-    if (
-      !confirm(
-        `Passer la recette de ${currentTotal.toFixed(2)} a ${target} ?\nLes quantites seront enregistrees.`
-      )
-    ) {
-      return
-    }
-  function updateQuantity(index: number, value: string) {
-    const n = value === "" ? 0 : Number(value)
-    if (Number.isNaN(n) || n < 0) return
-    setLines((prev) =>
-      prev.map((line, i) =>
-        i === index ? { ...line, quantity: n } : line
-      )
-    )
-    setDirty(true)
-  }
-
-  async function saveQuantities() {
-    if (!recipe?.id) return
-    setSaving(true)
-    for (const line of lines) {
-      if (!line.id) continue
-      await supabase
-        .from("recipe_ingredients")
-        .update({ quantity: line.quantity })
-        .eq("id", line.id)
-    }
-    setDirty(false)
-    setSaving(false)
-  }
-
-  async function deleteRecipe() {
-    if (!recipe?.id) return
-    if (
-      !confirm(
-        `Supprimer definitivement la recette « ${recipe.name} » ?\nCette action est irreversible.`
-      )
-    ) {
-      return
-    }
-    await supabase
-      .from("recipe_ingredients")
-      .delete()
-      .eq("recipe_id", recipe.id)
-    const { error: delError } = await supabase
-      .from("recipes")
-      .delete()
-      .eq("id", recipe.id)
-    if (delError) {
-      alert("Erreur lors de la suppression : " + delError.message)
-      return
-    }
-    router.push("/recipes")
-  }
 
   async function applyScale() {
     const target = Number(scaleTarget)
