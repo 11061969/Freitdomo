@@ -560,7 +560,30 @@ export default function RecipeDetailPage() {
     )
   }
   const currentTotal = lines.reduce((s, l) => s + (l.quantity || 0), 0)
+  function updateQuantity(index: number, value: string) {
+    const n = value === "" ? 0 : Number(value)
+    if (Number.isNaN(n) || n < 0) return
+    setLines((prev) =>
+      prev.map((line, i) =>
+        i === index ? { ...line, quantity: n } : line
+      )
+    )
+    setDirty(true)
+  }
 
+  async function saveQuantities() {
+    if (!recipe?.id) return
+    setSaving(true)
+    for (const line of lines) {
+      if (!line.id) continue
+      await supabase
+        .from("recipe_ingredients")
+        .update({ quantity: line.quantity })
+        .eq("id", line.id)
+    }
+    setDirty(false)
+    setSaving(false)
+  }
   async function applyScale() {
     const target = Number(scaleTarget)
     if (!target || target <= 0 || currentTotal <= 0) {
