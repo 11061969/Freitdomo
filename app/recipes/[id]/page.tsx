@@ -82,6 +82,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     structure.iceFraction = { min: 87.8, max: 88.1 }
     structure.molarMassStabi = { min: 175000, max: 225000 }
     structure.sweetness = { min: 20, max: 26 }
+    structure.foisonnement = { min: 25, max: 45 }
   }
 
   if (temp === "gelato") {
@@ -479,6 +480,7 @@ export default function RecipeDetailPage() {
       esdl: esdlPct,
       esdlVsSolvent,
       esdlOptimized: (17 * (100 - totalSolids)) / 117,
+            foisonnement: fatPctStruct + proteinPctStruct + totalSolids,
       freezingPoint,
       iceFraction,
       molarMassStabi: totalQty > 0 ? (stabiMassSum * 100) / totalQty : 0,
@@ -717,7 +719,15 @@ export default function RecipeDetailPage() {
                 max: L.saturation?.max,
               })
             }
-
+            if (isSorbet) {
+              axes.push({
+                key: "foisonnement",
+                label: "Foisonnement",
+                value: calcs.foisonnement ?? 0,
+                min: L.foisonnement?.min,
+                max: L.foisonnement?.max,
+              })
+            }
             axes.push({
               key: "sweetness",
               label: "Taux sucrant",
@@ -774,6 +784,7 @@ export default function RecipeDetailPage() {
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
                 {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
+                {renderCard("Foisonnement", calcs.foisonnement ?? 0, "%", "foisonnement", 0)}
                 {renderCard("Point de congelation", calcs.freezingPoint, "C", "freezingPoint", 2)}
               </div>
             </>
