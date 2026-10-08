@@ -157,7 +157,9 @@ export default function RecipeDetailPage() {
   const [error, setError] = useState("")
   const [scaleTarget, setScaleTarget] = useState("")
   const [scaling, setScaling] = useState(false)
-
+  const [dirty, setDirty] = useState(false)
+  const [saving, setSaving] = useState(false)
+  
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
@@ -572,7 +574,30 @@ export default function RecipeDetailPage() {
     ) {
       return
     }
+  function updateQuantity(index: number, value: string) {
+    const n = value === "" ? 0 : Number(value)
+    if (Number.isNaN(n) || n < 0) return
+    setLines((prev) =>
+      prev.map((line, i) =>
+        i === index ? { ...line, quantity: n } : line
+      )
+    )
+    setDirty(true)
+  }
 
+  async function saveQuantities() {
+    if (!recipe?.id) return
+    setSaving(true)
+    for (const line of lines) {
+      if (!line.id) continue
+      await supabase
+        .from("recipe_ingredients")
+        .update({ quantity: line.quantity })
+        .eq("id", line.id)
+    }
+    setDirty(false)
+    setSaving(false)
+  }
     setScaling(true)
     const factor = target / currentTotal
 
@@ -627,12 +652,51 @@ export default function RecipeDetailPage() {
               <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
               <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
               <td style={{ padding: 8 }}>
-          {line.quantity != null ? Number(line.quantity).toFixed(2) : "-"}
+                        <td style={{ padding: 8 }}>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={line.quantity ?? 0}
+                  onChange={(e) => updateQuantity(i, e.target.value)}
+                  style={{
+                    width: 100,
+                    padding: "6px 8px",
+                    border: "1px solid #ccc",
+                    borderRadius: 6,
+                    fontSize: 14,
+                  }}
+                />
+              </td>
        </td>
             </tr>
           ))}
-        </tbody>
+             </tbody>
       </table>
+
+      <div style={{ marginBottom: 24, display: "flex", gap: 12, alignItems: "center" }}>
+        <button
+          type="button"
+          onClick={saveQuantities}
+          disabled={!dirty || saving}
+          style={{
+            padding: "10px 18px",
+            borderRadius: 8,
+            border: "none",
+            background: dirty ? "#9b1b33" : "#ccc",
+            color: "#fff",
+            cursor: dirty ? "pointer" : "default",
+            fontWeight: 600,
+          }}
+        >
+          {saving ? "Enregistrement..." : "Enregistrer les quantites"}
+        </button>
+        {dirty && (
+          <span style={{ fontSize: 13, color: "#9b1b33" }}>
+            Modifications non enregistrees
+          </span>
+        )}
+      </div>
 
                    {calcs && (
         <div>
