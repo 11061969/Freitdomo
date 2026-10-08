@@ -49,7 +49,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
 
   if (category === "sorbet") {
     composition.fat = { min: 0, max: 1 }
-    composition.protein = { min: 0, max: 1 }
+    composition.protein = { min: 0, max: 5 }
     composition.sugar = { min: 23, max: 33 }
     composition.stabilizer = { min: 0.15, max: 0.3 }
   }
