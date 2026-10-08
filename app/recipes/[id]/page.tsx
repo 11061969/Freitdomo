@@ -759,8 +759,8 @@ export default function RecipeDetailPage() {
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 0)}
                 {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
-                {renderCard("Cout", calcs.cost, "", undefined, 2)}
                 {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
+                {renderCard("Cout", calcs.cost, "", undefined, 2)}
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
@@ -791,10 +791,10 @@ export default function RecipeDetailPage() {
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
-                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
-                {renderCard("Cout", calcs.cost, "", undefined, 2)}
-                {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
                 {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", undefined, 2)}
+                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}  
+                {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
+                {renderCard("Cout", calcs.cost, "", undefined, 2)}
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
@@ -828,10 +828,10 @@ export default function RecipeDetailPage() {
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
-                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
-                {renderCard("Cout", calcs.cost, "", undefined, 2)}
-               {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
                 {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", undefined, 2)}
+                {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
+               {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
+                {renderCard("Cout", calcs.cost, "", undefined, 2)}
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
