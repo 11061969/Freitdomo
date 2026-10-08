@@ -106,7 +106,11 @@ export default function RecipesPage() {
               >
                 <td style={{ padding: 10, fontWeight: 500 }}>{r.name}</td>
                 <td style={{ padding: 10 }}>{categoryLabel[r.category] || r.category}</td>
-                <td style={{ padding: 10 }}>{r.total_quantity ?? "—"}</td>
+                <td style={{ padding: 10 }}>
+                   {r.total_quantity != null
+                     ? Number(r.total_quantity).toFixed(2)
+                   : "—"}
+</td>
                 <td style={{ padding: 10 }}>{new Date(r.updated_at).toLocaleDateString("fr-FR")}</td>
               </tr>
             ))}
