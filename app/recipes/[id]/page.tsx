@@ -792,7 +792,7 @@ export default function RecipeDetailPage() {
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
-                {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", undefined, 2)}
+                {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", "emulsifier", 2)}
                 {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}  
                 {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
                 {renderCard("Cout", calcs.cost, "", undefined, 2)}
@@ -829,7 +829,7 @@ export default function RecipeDetailPage() {
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
-                {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", undefined, 2)}
+                {renderCard("Emulsifiant", calcs.emulsifier ?? 0, "%", "emulsifier", 2)}
                 {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
                {renderCard("Parfum", calcs.parfum ?? 0, "%", undefined, 1)}
                 {renderCard("Cout", calcs.cost, "", undefined, 2)}
