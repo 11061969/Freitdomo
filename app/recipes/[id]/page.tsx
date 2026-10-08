@@ -584,6 +584,33 @@ export default function RecipeDetailPage() {
     setDirty(false)
     setSaving(false)
   }
+    async function deleteRecipe() {
+    if (!recipe?.id) return
+    if (
+      !confirm(
+        `Supprimer definitivement la recette « ${recipe.name} » ?\nCette action est irreversible.`
+      )
+    ) {
+      return
+    }
+
+    await supabase
+      .from("recipe_ingredients")
+      .delete()
+      .eq("recipe_id", recipe.id)
+
+    const { error: delError } = await supabase
+      .from("recipes")
+      .delete()
+      .eq("id", recipe.id)
+
+    if (delError) {
+      alert("Erreur lors de la suppression : " + delError.message)
+      return
+    }
+
+    router.push("/recipes")
+  }
   async function applyScale() {
     const target = Number(scaleTarget)
     if (!target || target <= 0 || currentTotal <= 0) {
@@ -720,6 +747,21 @@ export default function RecipeDetailPage() {
           </span>
         )}
       </div>
+            <button
+        type="button"
+        onClick={deleteRecipe}
+        style={{
+          padding: "10px 18px",
+          borderRadius: 8,
+          border: "1px solid #c62828",
+          background: "#fff",
+          color: "#c62828",
+          cursor: "pointer",
+          fontWeight: 600,
+        }}
+      >
+        Supprimer la recette
+      </button>
 
                    {calcs && (
         <div>
