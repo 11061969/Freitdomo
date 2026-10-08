@@ -44,6 +44,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
     saturatedFat: { min: 3, max: 8 },
     minerals: { min: 0, max: 2 },
     alcohol: { min: 0, max: 3 },
+    emulsifier: { min: 0.05, max: 0.25 },
   }
 
 
