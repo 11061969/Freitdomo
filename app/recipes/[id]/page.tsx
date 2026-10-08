@@ -648,9 +648,46 @@ export default function RecipeDetailPage() {
     setDirty(false)
     setSaving(false)
   }
+
+  async function deleteRecipe() {
+    if (!recipe?.id) return
+    if (
+      !confirm(
+        `Supprimer definitivement la recette « ${recipe.name} » ?\nCette action est irreversible.`
+      )
+    ) {
+      return
+    }
+    await supabase
+      .from("recipe_ingredients")
+      .delete()
+      .eq("recipe_id", recipe.id)
+    const { error: delError } = await supabase
+      .from("recipes")
+      .delete()
+      .eq("id", recipe.id)
+    if (delError) {
+      alert("Erreur lors de la suppression : " + delError.message)
+      return
+    }
+    router.push("/recipes")
+  }
+
+  async function applyScale() {
+    const target = Number(scaleTarget)
+    if (!target || target <= 0 || currentTotal <= 0) {
+      alert("Indique un total desire valide.")
+      return
+    }
+    if (
+      !confirm(
+        `Passer la recette de ${currentTotal.toFixed(2)} a ${target} ?\nLes quantites seront enregistrees.`
+      )
+    ) {
+      return
+    }
     setScaling(true)
     const factor = target / currentTotal
-
     for (const line of lines) {
       const newQty = Math.round((line.quantity || 0) * factor * 10000) / 10000
       await supabase
@@ -658,14 +695,12 @@ export default function RecipeDetailPage() {
         .update({ quantity: newQty })
         .eq("id", line.id)
     }
-
     const { data } = await supabase
       .from("recipe_ingredients")
       .select(
         "id, quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)"
       )
       .eq("recipe_id", recipe.id)
-
     setLines((data as unknown as RecipeLine[]) || [])
     setScaleTarget("")
     setScaling(false)
