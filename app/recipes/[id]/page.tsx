@@ -626,7 +626,9 @@ export default function RecipeDetailPage() {
             <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
               <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
               <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
-              <td style={{ padding: 8 }}>{line.quantity}</td>
+              <td style={{ padding: 8 }}>
+          {line.quantity != null ? Number(line.quantity).toFixed(2) : "-"}
+       </td>
             </tr>
           ))}
         </tbody>
