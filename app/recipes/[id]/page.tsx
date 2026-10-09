@@ -761,12 +761,6 @@ export default function RecipeDetailPage() {
         {tempLabel[servingTemp] || servingTemp}
       </p>
 
-            <p style={{ color: "#555", marginTop: 8 }}>
-        {categoryLabel[recipe.category] || recipe.category}
-        {" · "}
-        {tempLabel[servingTemp] || servingTemp}
-      </p>
-
       <div
         className="recipe-layout"
         style={{
