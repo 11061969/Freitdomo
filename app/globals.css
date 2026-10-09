@@ -15,3 +15,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
+@media (max-width: 800px) {
+  .recipe-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
