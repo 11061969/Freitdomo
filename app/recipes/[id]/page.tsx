@@ -755,142 +755,17 @@ export default function RecipeDetailPage() {
           </button>
         </h1>
       )}
-
-      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingredients</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
-        <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-            <th style={{ padding: 8 }}>Ingredient</th>
-            <th style={{ padding: 8 }}>Categorie</th>
-            <th style={{ padding: 8 }}>Quantite</th>
-            <th style={{ padding: 8 }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lines.map((line, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
-              <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
-                            <td style={{ padding: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => line.id && removeIngredient(line.id, i)}
-                  style={{ color: "#c62828", border: "none", background: "none", cursor: "pointer" }}
-                >
-                  Retirer
-                </button>
-              </td>
-              <td style={{ padding: 8 }}>
-                        <td style={{ padding: 8 }}>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={line.quantity ?? 0}
-                  onChange={(e) => updateQuantity(i, e.target.value)}
-                  style={{
-                    width: 100,
-                    padding: "6px 8px",
-                    border: "1px solid #ccc",
-                    borderRadius: 6,
-                    fontSize: 14,
-                  }}
-                />
-              </td>
-       </td>
-            </tr>
-          ))}
-             </tbody>
-      </table>
-      <div
+            <div
+        className="recipe-layout"
         style={{
-          marginBottom: 16,
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 16,
-          alignItems: "center",
+          display: "grid",
+          gridTemplateColumns: "minmax(260px, 1fr) minmax(280px, 420px)",
+          gap: 24,
+          alignItems: "start",
+          marginBottom: 28,
         }}
       >
-        <div style={{ fontSize: 15, fontWeight: 600 }}>
-          Total actuel : {currentTotal.toFixed(2)}
-        </div>
-        <label style={{ fontSize: 14 }}>
-          Total desire :{" "}
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            value={scaleTarget}
-            onChange={(e) => setScaleTarget(e.target.value)}
-            style={{
-              width: 100,
-              padding: "6px 8px",
-              border: "1px solid #ccc",
-              borderRadius: 6,
-              marginLeft: 6,
-            }}
-          />
-        </label>
-        <button
-          type="button"
-          onClick={applyScale}
-          disabled={scaling || !scaleTarget}
-          style={{
-            padding: "8px 14px",
-            borderRadius: 8,
-            border: "1px solid #333",
-            background: "#fff",
-            cursor: scaling ? "default" : "pointer",
-            fontWeight: 600,
-          }}
-        >
-          {scaling ? "Calcul..." : "Appliquer le total"}
-        </button>
-      </div>
-      <div style={{ marginBottom: 24, display: "flex", gap: 12, alignItems: "center" }}>
-        <button
-          type="button"
-          onClick={saveQuantities}
-          disabled={!dirty || saving}
-          style={{
-            padding: "10px 18px",
-            borderRadius: 8,
-            border: "none",
-            background: dirty ? "#9b1b33" : "#ccc",
-            color: "#fff",
-            cursor: dirty ? "pointer" : "default",
-            fontWeight: 600,
-          }}
-        >
-          {saving ? "Enregistrement..." : "Enregistrer les quantites"}
-        </button>
-        {dirty && (
-          <span style={{ fontSize: 13, color: "#9b1b33" }}>
-            Modifications non enregistrees
-          </span>
-        )}
-      </div>
-            <button
-        type="button"
-        onClick={deleteRecipe}
-        style={{
-          padding: "10px 18px",
-          borderRadius: 8,
-          border: "1px solid #c62828",
-          background: "#fff",
-          color: "#c62828",
-          cursor: "pointer",
-          fontWeight: 600,
-        }}
-      >
-        Supprimer la recette
-      </button>
-
-                   {calcs && (
         <div>
-          <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
-            Vert = dans les limites · Rouge = hors limites
-          </p>          {(() => {
             const L = limits
                       const axes: {
               key: string
@@ -1010,6 +885,142 @@ export default function RecipeDetailPage() {
               </>
             )
           })()}
+          <h3 style={{ marginTop: 0, marginBottom: 12 }}>Ingredients</h3>
+
+      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingredients</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
+               <thead>
+          <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
+            <th style={{ padding: 8 }}>Ingredient</th>
+            <th style={{ padding: 8, width: 110 }}>Quantite</th>
+            <th style={{ padding: 8, width: 80 }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lines.map((line, i) => (
+            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+              <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
+               <td style={{ padding: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => line.id && removeIngredient(line.id, i)}
+                  style={{ color: "#c62828", border: "none", background: "none", cursor: "pointer" }}
+                >
+                  Retirer
+                </button>
+              </td>
+              <td style={{ padding: 8 }}>
+                        <td style={{ padding: 8 }}>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={line.quantity ?? 0}
+                  onChange={(e) => updateQuantity(i, e.target.value)}
+                  style={{
+                    width: 100,
+                    padding: "6px 8px",
+                    border: "1px solid #ccc",
+                    borderRadius: 6,
+                    fontSize: 14,
+                  }}
+                />
+              </td>
+       </td>
+            </tr>
+          ))}
+             </tbody>
+      </table>
+      <div
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 16,
+          alignItems: "center",
+        }}
+      >
+        <div style={{ fontSize: 15, fontWeight: 600 }}>
+          Total actuel : {currentTotal.toFixed(2)}
+        </div>
+        <label style={{ fontSize: 14 }}>
+          Total desire :{" "}
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            value={scaleTarget}
+            onChange={(e) => setScaleTarget(e.target.value)}
+            style={{
+              width: 100,
+              padding: "6px 8px",
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              marginLeft: 6,
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          onClick={applyScale}
+          disabled={scaling || !scaleTarget}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 8,
+            border: "1px solid #333",
+            background: "#fff",
+            cursor: scaling ? "default" : "pointer",
+            fontWeight: 600,
+          }}
+        >
+          {scaling ? "Calcul..." : "Appliquer le total"}
+        </button>
+      </div>
+      <div style={{ marginBottom: 24, display: "flex", gap: 12, alignItems: "center" }}>
+        <button
+          type="button"
+          onClick={saveQuantities}
+          disabled={!dirty || saving}
+          style={{
+            padding: "10px 18px",
+            borderRadius: 8,
+            border: "none",
+            background: dirty ? "#9b1b33" : "#ccc",
+            color: "#fff",
+            cursor: dirty ? "pointer" : "default",
+            fontWeight: 600,
+          }}
+        >
+          {saving ? "Enregistrement..." : "Enregistrer les quantites"}
+        </button>
+        {dirty && (
+          <span style={{ fontSize: 13, color: "#9b1b33" }}>
+            Modifications non enregistrees
+          </span>
+        )}
+      </div>
+            <button
+        type="button"
+        onClick={deleteRecipe}
+        style={{
+          padding: "10px 18px",
+          borderRadius: 8,
+          border: "1px solid #c62828",
+          background: "#fff",
+          color: "#c62828",
+          cursor: "pointer",
+          fontWeight: 600,
+        }}
+      >
+        Supprimer la recette
+      </button>
+
+                   {calcs && (
+        <div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
+            Vert = dans les limites · Rouge = hors limites
+          </p>          {(() => {
+          
           {isSorbet ? (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
