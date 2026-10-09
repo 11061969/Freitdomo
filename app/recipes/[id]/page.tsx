@@ -159,6 +159,8 @@ export default function RecipeDetailPage() {
   const [scaling, setScaling] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
+    const [editingName, setEditingName] = useState(false)
+  const [nameDraft, setNameDraft] = useState("")
   
   useEffect(() => {
     async function load() {
@@ -191,7 +193,7 @@ export default function RecipeDetailPage() {
       }
 
       setRecipe(recipeData)
-
+      setNameDraft(recipeData.name || "")
       const { data: linesData } = await supabase
         .from("recipe_ingredients")
         .select(
@@ -570,7 +572,19 @@ export default function RecipeDetailPage() {
     )
     setDirty(true)
   }
-
+  async function saveName() {
+    if (!recipe?.id || !nameDraft.trim()) return
+    const { error } = await supabase
+      .from("recipes")
+      .update({ name: nameDraft.trim() })
+      .eq("id", recipe.id)
+    if (error) {
+      alert(error.message)
+      return
+    }
+    setRecipe({ ...recipe, name: nameDraft.trim() })
+    setEditingName(false)
+  }
   async function saveQuantities() {
     if (!recipe?.id) return
     setSaving(true)
@@ -654,12 +668,30 @@ export default function RecipeDetailPage() {
         <Link href="/recipes">Mes recettes</Link>
       </p>
 
-      <h1>{recipe.name}</h1>
-      <p style={{ color: "#555", marginTop: 8 }}>
-        {categoryLabel[recipe.category] || recipe.category}
-        {" · "}
-        {tempLabel[servingTemp] || servingTemp}
-      </p>
+            {editingName ? (
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
+          <input
+            value={nameDraft}
+            onChange={(e) => setNameDraft(e.target.value)}
+            style={{ fontSize: 24, fontWeight: 700, padding: "6px 10px", flex: 1 }}
+          />
+          <button type="button" onClick={saveName}>OK</button>
+          <button type="button" onClick={() => { setEditingName(false); setNameDraft(recipe.name) }}>
+            Annuler
+          </button>
+        </div>
+      ) : (
+        <h1 style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {recipe.name}
+          <button
+            type="button"
+            onClick={() => setEditingName(true)}
+            style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
+          >
+            Renommer
+          </button>
+        </h1>
+      )}
 
       <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingredients</h3>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
