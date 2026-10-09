@@ -697,7 +697,51 @@ export default function RecipeDetailPage() {
           ))}
              </tbody>
       </table>
-
+      <div
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 16,
+          alignItems: "center",
+        }}
+      >
+        <div style={{ fontSize: 15, fontWeight: 600 }}>
+          Total actuel : {currentTotal.toFixed(2)}
+        </div>
+        <label style={{ fontSize: 14 }}>
+          Total desire :{" "}
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            value={scaleTarget}
+            onChange={(e) => setScaleTarget(e.target.value)}
+            style={{
+              width: 100,
+              padding: "6px 8px",
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              marginLeft: 6,
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          onClick={applyScale}
+          disabled={scaling || !scaleTarget}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 8,
+            border: "1px solid #333",
+            background: "#fff",
+            cursor: scaling ? "default" : "pointer",
+            fontWeight: 600,
+          }}
+        >
+          {scaling ? "Calcul..." : "Appliquer le total"}
+        </button>
+      </div>
       <div style={{ marginBottom: 24, display: "flex", gap: 12, alignItems: "center" }}>
         <button
           type="button"
