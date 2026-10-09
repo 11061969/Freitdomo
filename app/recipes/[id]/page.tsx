@@ -795,38 +795,41 @@ export default function RecipeDetailPage() {
               </tr>
             </thead>
             <tbody>
-              {lines.map((line, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
-               <td style={{ padding: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => line.id && removeIngredient(line.id, i)}
-                  style={{ color: "#c62828", border: "none", background: "none", cursor: "pointer" }}
-                >
-                  Retirer
-                </button>
-              </td>
-              <td style={{ padding: 8 }}>
-                        <td style={{ padding: 8 }}>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={line.quantity ?? 0}
-                  onChange={(e) => updateQuantity(i, e.target.value)}
-                  style={{
-                    width: 100,
-                    padding: "6px 8px",
-                    border: "1px solid #ccc",
-                    borderRadius: 6,
-                    fontSize: 14,
-                  }}
-                />
-              </td>
-       </td>
-            </tr>
-          ))}
+                        {lines.map((line, i) => (
+                <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                  <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
+                  <td style={{ padding: 8 }}>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={line.quantity ?? 0}
+                      onChange={(e) => updateQuantity(i, e.target.value)}
+                      style={{
+                        width: 100,
+                        padding: "6px 8px",
+                        border: "1px solid #ccc",
+                        borderRadius: 6,
+                        fontSize: 14,
+                      }}
+                    />
+                  </td>
+                  <td style={{ padding: 8 }}>
+                    <button
+                      type="button"
+                      onClick={() => line.id && removeIngredient(line.id, i)}
+                      style={{
+                        color: "#c62828",
+                        border: "none",
+                        background: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Retirer
+                    </button>
+                  </td>
+                </tr>
+              ))}
              </tbody>
       </table>
       <div
@@ -910,15 +913,16 @@ export default function RecipeDetailPage() {
           fontWeight: 600,
         }}
       >
-        Supprimer la recette
+               Supprimer la recette
       </button>
         </div>
-                   {calcs && (
+      </div>
+
+      {calcs && (
         <div>
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
             Vert = dans les limites · Rouge = hors limites
-          </p>          {(() => {
-          
+          </p>
           {isSorbet ? (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
