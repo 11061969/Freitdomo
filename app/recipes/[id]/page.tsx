@@ -161,6 +161,9 @@ export default function RecipeDetailPage() {
   const [saving, setSaving] = useState(false)
     const [editingName, setEditingName] = useState(false)
   const [nameDraft, setNameDraft] = useState("")
+    const [allIngredients, setAllIngredients] = useState<any[]>([])
+  const [addIngId, setAddIngId] = useState("")
+  const [addQty, setAddQty] = useState("1")
   
   useEffect(() => {
     async function load() {
@@ -169,7 +172,11 @@ export default function RecipeDetailPage() {
         router.push("/login")
         return
       }
-
+      const { data: ings } = await supabase
+        .from("ingredients")
+        .select("id, name, category")
+        .order("name")
+      setAllIngredients(ings || [])
       const { data: userData } = await supabase
         .from("users")
         .select("client_id, clients(serving_temperature)")
@@ -585,6 +592,38 @@ export default function RecipeDetailPage() {
     setRecipe({ ...recipe, name: nameDraft.trim() })
     setEditingName(false)
   }
+    async function removeIngredient(lineId: string, index: number) {
+    if (!confirm("Retirer cet ingredient de la recette ?")) return
+    await supabase.from("recipe_ingredients").delete().eq("id", lineId)
+    setLines((prev) => prev.filter((_, i) => i !== index))
+  }
+    async function addIngredient() {
+    if (!recipe?.id || !addIngId) return
+    const qty = Number(addQty) || 0
+    if (qty <= 0) {
+      alert("Quantite invalide")
+      return
+    }
+    const { error } = await supabase.from("recipe_ingredients").insert({
+      recipe_id: recipe.id,
+      ingredient_id: addIngId,
+      quantity: qty,
+    })
+    if (error) {
+      alert(error.message)
+      return
+    }
+    // recharger les lignes
+    const { data } = await supabase
+      .from("recipe_ingredients")
+      .select(
+        "id, quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)"
+      )
+      .eq("recipe_id", recipe.id)
+    setLines((data as unknown as RecipeLine[]) || [])
+    setAddIngId("")
+    setAddQty("1")
+  }
   async function saveQuantities() {
     if (!recipe?.id) return
     setSaving(true)
@@ -667,7 +706,31 @@ export default function RecipeDetailPage() {
         {" · "}
         <Link href="/recipes">Mes recettes</Link>
       </p>
-
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 20, alignItems: "center" }}>
+        <select
+          value={addIngId}
+          onChange={(e) => setAddIngId(e.target.value)}
+          style={{ padding: 8, minWidth: 200 }}
+        >
+          <option value="">— Choisir un ingredient —</option>
+          {allIngredients.map((ing) => (
+            <option key={ing.id} value={ing.id}>
+              {ing.name} ({ing.category})
+            </option>
+          ))}
+        </select>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          value={addQty}
+          onChange={(e) => setAddQty(e.target.value)}
+          style={{ width: 90, padding: 8 }}
+        />
+        <button type="button" onClick={addIngredient} style={{ padding: "8px 14px", fontWeight: 600 }}>
+          Ajouter
+        </button>
+      </div>
             {editingName ? (
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <input
@@ -700,6 +763,7 @@ export default function RecipeDetailPage() {
             <th style={{ padding: 8 }}>Ingredient</th>
             <th style={{ padding: 8 }}>Categorie</th>
             <th style={{ padding: 8 }}>Quantite</th>
+            <th style={{ padding: 8 }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -707,6 +771,15 @@ export default function RecipeDetailPage() {
             <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
               <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
               <td style={{ padding: 8 }}>{line.ingredients?.category || "-"}</td>
+                            <td style={{ padding: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => line.id && removeIngredient(line.id, i)}
+                  style={{ color: "#c62828", border: "none", background: "none", cursor: "pointer" }}
+                >
+                  Retirer
+                </button>
+              </td>
               <td style={{ padding: 8 }}>
                         <td style={{ padding: 8 }}>
                 <input
