@@ -169,17 +169,33 @@ export default function ScoopChart({ axes }: { axes: AxisItem[] }) {
         </svg>
       </div>
 
-      <div
-        style={{
-          width: 0,
-          height: 0,
-          margin: "4px auto 0",
-          borderLeft: "28px solid transparent",
-          borderRight: "28px solid transparent",
-          borderTop: "36px solid #e8c39a",
-          filter: "drop-shadow(0 4px 6px rgba(120,80,40,0.2))",
-        }}
-      />
+           <svg
+        width="120"
+        height="90"
+        viewBox="0 0 120 90"
+        style={{ display: "block", margin: "2px auto 0" }}
+      >
+        <defs>
+          <linearGradient id="coneGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f0d4a8" />
+            <stop offset="100%" stopColor="#d4a574" />
+          </linearGradient>
+        </defs>
+        <polygon
+          points="8,0 112,0 60,88"
+          fill="url(#coneGrad)"
+          stroke="#c49a6c"
+          strokeWidth="1.5"
+        />
+        {/* lignes gaufrette */}
+        <line x1="30" y1="8" x2="48" y2="70" stroke="#c49a6c" strokeWidth="1" opacity="0.45" />
+        <line x1="50" y1="8" x2="56" y2="70" stroke="#c49a6c" strokeWidth="1" opacity="0.45" />
+        <line x1="70" y1="8" x2="64" y2="70" stroke="#c49a6c" strokeWidth="1" opacity="0.45" />
+        <line x1="90" y1="8" x2="72" y2="70" stroke="#c49a6c" strokeWidth="1" opacity="0.45" />
+        <line x1="20" y1="25" x2="100" y2="25" stroke="#c49a6c" strokeWidth="1" opacity="0.35" />
+        <line x1="28" y1="45" x2="92" y2="45" stroke="#c49a6c" strokeWidth="1" opacity="0.35" />
+        <line x1="38" y1="65" x2="82" y2="65" stroke="#c49a6c" strokeWidth="1" opacity="0.35" />
+      </svg>
 
       <p style={{ fontSize: 11, color: "#888", marginTop: 14 }}>
         Vert pointille = limites Min / Max · Rouge = recette
