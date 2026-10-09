@@ -755,7 +755,19 @@ export default function RecipeDetailPage() {
           </button>
         </h1>
       )}
-            <div
+                 <p style={{ color: "#555", marginTop: 8 }}>
+        {categoryLabel[recipe.category] || recipe.category}
+        {" · "}
+        {tempLabel[servingTemp] || servingTemp}
+      </p>
+
+            <p style={{ color: "#555", marginTop: 8 }}>
+        {categoryLabel[recipe.category] || recipe.category}
+        {" · "}
+        {tempLabel[servingTemp] || servingTemp}
+      </p>
+
+      <div
         className="recipe-layout"
         style={{
           display: "grid",
@@ -766,138 +778,24 @@ export default function RecipeDetailPage() {
         }}
       >
         <div>
-            const L = limits
-                      const axes: {
-              key: string
-              label: string
-              value: number
-              min?: number
-              max?: number
-              subLabel?: string
-              subValue?: number
-              subUnit?: string
-              subMin?: number
-              subMax?: number
-            }[] = []
-
-            axes.push({
-              key: "totalSolids",
-              label: "Solides totaux",
-              value: calcs.totalSolids,
-              min: L.totalSolids?.min,
-              max: L.totalSolids?.max,
-                            subLabel: "Densite",
-              subValue: calcs.density,
-              subUnit: "",
-              subMin: L.density?.min,
-              subMax: L.density?.max,
-            })
-
-            if (!isSorbet) {
-              axes.push({
-                key: "creaminess",
-                label: "Onctuosite",
-                value: calcs.creaminess,
-                min: L.creaminess?.min,
-                max: L.creaminess?.max,
-                                subLabel: "MG solide",
-                subValue: calcs.mgSolide,
-                subUnit: "%",
-                subMin: L.mgSolide?.min,
-                subMax: L.mgSolide?.max,
-              })
-                         const el = emulsifierVsFatLimits(calcs.fat)
-                    axes.push({
-                key: "emulsifierVsFat",
-                label: "Emulsif/MG",
-                value: calcs.emulsifierVsFat,
-                min: el.min,
-                max: el.max,
-              })
-            }
-
-            axes.push({
-              key: "molarMassStabi",
-              label: "Indice de Viscosite",
-              value: calcs.molarMassStabi,
-              min: L.molarMassStabi?.min,
-              max: L.molarMassStabi?.max,
-            })
-
-            if (!isSorbet && !isVegan) {
-              axes.push({
-                key: "esdl",
-                label: "ESDL",
-                value: calcs.esdl ?? 0,
-                min: L.esdl?.min,
-                max: L.esdl?.max,
-                               subLabel: "ESDL vs solvant",
-                subValue: calcs.esdlVsSolvent ?? 0,
-                subUnit: "%",
-                subMin: L.esdlVsSolvent?.min,
-                subMax: L.esdlVsSolvent?.max,
-              })
-            }
-
-            if (isSorbet || isVegan) {
-              axes.push({
-                key: "saturation",
-                label: "Saturation solution",
-                value: calcs.saturation,
-                min: L.saturation?.min,
-                max: L.saturation?.max,
-              })
-            }
-            if (isSorbet) {
-              axes.push({
-                key: "foisonnement",
-                label: "Foisonnement",
-                value: calcs.foisonnement ?? 0,
-                min: L.foisonnement?.min,
-                max: L.foisonnement?.max,
-              })
-            }
-            axes.push({
-              key: "sweetness",
-              label: "Taux sucrant",
-              value: calcs.sweetness ?? 0,
-              min: L.sweetness?.min,
-              max: L.sweetness?.max,
-            })
-
-            axes.push({
-              key: "iceFraction",
-              label: "Fraction de glace",
-              value: calcs.iceFraction,
-              min: L.iceFraction?.min,
-              max: L.iceFraction?.max,
-                            subLabel: "Point de congelation",
-              subValue: calcs.freezingPoint,
-              subUnit: "C",
-              subMin: L.freezingPoint?.min,
-              subMax: L.freezingPoint?.max,
-            })
-
-            return (
-              <>
-                <h2 style={{ fontSize: 20, marginBottom: 8 }}>Graphe de Structure & Texture</h2>
-                <ScoopChart axes={axes} />
-              </>
-            )
-          })()}
           <h3 style={{ marginTop: 0, marginBottom: 12 }}>Ingredients</h3>
-
-      <h3 style={{ marginTop: 28, marginBottom: 12 }}>Ingredients</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, marginBottom: 36 }}>
-               <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-            <th style={{ padding: 8 }}>Ingredient</th>
-            <th style={{ padding: 8, width: 110 }}>Quantite</th>
-            <th style={{ padding: 8, width: 80 }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lines.map((line, i) => (
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 14,
+              marginBottom: 16,
+            }}
+          >
+            <thead>
+              <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
+                <th style={{ padding: 8 }}>Ingredient</th>
+                <th style={{ padding: 8, width: 110 }}>Quantite</th>
+                <th style={{ padding: 8, width: 80 }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map((line, i) => (
             <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
               <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
                <td style={{ padding: 8 }}>
@@ -1014,7 +912,7 @@ export default function RecipeDetailPage() {
       >
         Supprimer la recette
       </button>
-
+        </div>
                    {calcs && (
         <div>
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
