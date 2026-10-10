@@ -189,7 +189,7 @@ export default function RecipeDetailPage() {
 
       const { data: recipeData, error: recipeError } = await supabase
         .from("recipes")
-        .select("id, name, category, total_quantity")
+        .select("id, name, category, total_quantity, updated_at")
         .eq("id", id)
         .single()
 
@@ -681,7 +681,7 @@ export default function RecipeDetailPage() {
     setScaling(true)
     const factor = target / currentTotal
     for (const line of lines) {
-      const newQty = Math.round((line.quantity || 0) * factor * 10000) / 10000
+      Math.round((line.quantity || 0) * factor * 10000) / 10000
       await supabase
         .from("recipe_ingredients")
         .update({ quantity: newQty })
@@ -755,10 +755,16 @@ export default function RecipeDetailPage() {
           </button>
         </h1>
       )}
-                 <p style={{ color: "#555", marginTop: 8 }}>
+                      <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
         {" · "}
         {tempLabel[servingTemp] || servingTemp}
+        {recipe.updated_at && (
+          <>
+            {" · "}
+            {new Date(recipe.updated_at).toLocaleDateString("fr-FR")}
+          </>
+        )}
       </p>
 
       <div
@@ -797,7 +803,11 @@ export default function RecipeDetailPage() {
                       type="number"
                       step="0.01"
                       min="0"
-                      value={line.quantity ?? 0}
+                                            value={
+                        line.quantity != null
+                          ? Number(line.quantity).toFixed(2)
+                          : "0.00"
+                      }
                       onChange={(e) => updateQuantity(i, e.target.value)}
                       style={{
                         width: 100,
