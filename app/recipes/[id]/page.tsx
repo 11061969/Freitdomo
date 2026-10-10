@@ -569,7 +569,8 @@ export default function RecipeDetailPage() {
       </div>
     )
   }
-  const currentTotal = lines.reduce((s, l) => s + (l.quantity || 0), 0)
+    const currentTotal = lines.reduce((s, l) => s + (l.quantity || 0), 0)
+
   function updateQuantity(index: number, value: string) {
     const n = value === "" ? 0 : Number(value)
     if (Number.isNaN(n) || n < 0) return
@@ -580,7 +581,8 @@ export default function RecipeDetailPage() {
     )
     setDirty(true)
   }
-         async function saveName() {
+
+  async function saveName() {
     if (!recipe?.id || !nameDraft.trim()) return
     const newName = nameDraft.trim()
     if (newName === recipe.name) {
@@ -629,58 +631,12 @@ export default function RecipeDetailPage() {
   }
 
   async function removeIngredient(lineId: string, index: number) {
-  async function removeIngredient
-      return
-    }
-
-    const { data: newRecipe, error: createError } = await supabase
-      .from("recipes")
-      .insert({
-        name: newName,
-        category: recipe.category,
-        total_quantity: recipe.total_quantity,
-      })
-      .select("id, name, category, total_quantity, updated_at")
-      .single()
-
-    if (createError || !newRecipe) {
-      alert("Erreur creation : " + (createError?.message || "inconnue"))
-      return
-    }
-
-    const { data: fullLines } = await supabase
-      .from("recipe_ingredients")
-      .select("ingredient_id, quantity")
-      .eq("recipe_id", recipe.id)
-
-    const copyRows = (fullLines || []).map((l) => ({
-      recipe_id: newRecipe.id,
-      ingredient_id: l.ingredient_id,
-      quantity: l.quantity,
-    }))
-
-    if (copyRows.length > 0) {
-      const { error: copyError } = await supabase
-        .from("recipe_ingredients")
-        .insert(copyRows)
-      if (copyError) {
-        alert("Erreur copie ingredients : " + copyError.message)
-        return
-      }
-    }
-
-    setEditingName(false)
-    router.push("/recipes/" + newRecipe.id)
-  }
-    setRecipe({ ...recipe, name: nameDraft.trim() })
-    setEditingName(false)
-  }
-    async function removeIngredient(lineId: string, index: number) {
     if (!confirm("Retirer cet ingredient de la recette ?")) return
     await supabase.from("recipe_ingredients").delete().eq("id", lineId)
     setLines((prev) => prev.filter((_, i) => i !== index))
   }
-    async function addIngredient() {
+
+  async function addIngredient() {
     if (!recipe?.id || !addIngId) return
     const qty = Number(addQty) || 0
     if (qty <= 0) {
@@ -696,7 +652,6 @@ export default function RecipeDetailPage() {
       alert(error.message)
       return
     }
-    // recharger les lignes
     const { data } = await supabase
       .from("recipe_ingredients")
       .select(
@@ -707,6 +662,7 @@ export default function RecipeDetailPage() {
     setAddIngId("")
     setAddQty("1")
   }
+
   async function saveQuantities() {
     if (!recipe?.id) return
     setSaving(true)
@@ -720,7 +676,8 @@ export default function RecipeDetailPage() {
     setDirty(false)
     setSaving(false)
   }
-    async function deleteRecipe() {
+
+  async function deleteRecipe() {
     if (!recipe?.id) return
     if (
       !confirm(
@@ -729,22 +686,18 @@ export default function RecipeDetailPage() {
     ) {
       return
     }
-
     await supabase
       .from("recipe_ingredients")
       .delete()
       .eq("recipe_id", recipe.id)
-
     const { error: delError } = await supabase
       .from("recipes")
       .delete()
       .eq("id", recipe.id)
-
     if (delError) {
       alert("Erreur lors de la suppression : " + delError.message)
       return
     }
-
     router.push("/recipes")
   }
 
@@ -763,7 +716,7 @@ export default function RecipeDetailPage() {
     }
     setScaling(true)
     const factor = target / currentTotal
-      for (const line of lines) {
+    for (const line of lines) {
       const newQty = Math.round((line.quantity || 0) * factor * 100) / 100
       await supabase
         .from("recipe_ingredients")
@@ -780,6 +733,9 @@ export default function RecipeDetailPage() {
     setScaleTarget("")
     setScaling(false)
   }
+
+  return (
+    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
 
 
   return (
