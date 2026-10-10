@@ -580,11 +580,11 @@ export default function RecipeDetailPage() {
     )
     setDirty(true)
   }
-   async function saveName() {
-    if (!recipe?.id || !nameDraft.trim()) return
-    const newName = nameDraft.trim()
-    if (newName === recipe.name) {
-      setEditingName(false)
+       setEditingName(false)
+    router.push("/recipes/" + newRecipe.id)
+  }
+
+  async function removeIngredient
       return
     }
 
