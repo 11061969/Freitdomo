@@ -580,16 +580,53 @@ export default function RecipeDetailPage() {
     )
     setDirty(true)
   }
-  async function saveName() {
+   async function saveName() {
     if (!recipe?.id || !nameDraft.trim()) return
-    const { error } = await supabase
-      .from("recipes")
-      .update({ name: nameDraft.trim() })
-      .eq("id", recipe.id)
-    if (error) {
-      alert(error.message)
+    const newName = nameDraft.trim()
+    if (newName === recipe.name) {
+      setEditingName(false)
       return
     }
+
+    const { data: newRecipe, error: createError } = await supabase
+      .from("recipes")
+      .insert({
+        name: newName,
+        category: recipe.category,
+        total_quantity: recipe.total_quantity,
+      })
+      .select("id, name, category, total_quantity, updated_at")
+      .single()
+
+    if (createError || !newRecipe) {
+      alert("Erreur creation : " + (createError?.message || "inconnue"))
+      return
+    }
+
+    const { data: fullLines } = await supabase
+      .from("recipe_ingredients")
+      .select("ingredient_id, quantity")
+      .eq("recipe_id", recipe.id)
+
+    const copyRows = (fullLines || []).map((l) => ({
+      recipe_id: newRecipe.id,
+      ingredient_id: l.ingredient_id,
+      quantity: l.quantity,
+    }))
+
+    if (copyRows.length > 0) {
+      const { error: copyError } = await supabase
+        .from("recipe_ingredients")
+        .insert(copyRows)
+      if (copyError) {
+        alert("Erreur copie ingredients : " + copyError.message)
+        return
+      }
+    }
+
+    setEditingName(false)
+    router.push("/recipes/" + newRecipe.id)
+  }
     setRecipe({ ...recipe, name: nameDraft.trim() })
     setEditingName(false)
   }
@@ -739,7 +776,7 @@ export default function RecipeDetailPage() {
             onChange={(e) => setNameDraft(e.target.value)}
             style={{ fontSize: 24, fontWeight: 700, padding: "6px 10px", flex: 1 }}
           />
-          <button type="button" onClick={saveName}>OK</button>
+                    <button type="button" onClick={saveName}>Creer</button>
           <button type="button" onClick={() => { setEditingName(false); setNameDraft(recipe.name) }}>
             Annuler
           </button>
@@ -752,7 +789,7 @@ export default function RecipeDetailPage() {
             onClick={() => setEditingName(true)}
             style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
           >
-            Renommer
+                        Nouvelle recette a partir de…
           </button>
         </h1>
       )}
