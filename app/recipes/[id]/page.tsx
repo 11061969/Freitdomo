@@ -583,7 +583,6 @@ export default function RecipeDetailPage() {
        setEditingName(false)
     router.push("/recipes/" + newRecipe.id)
   }
-
   async function removeIngredient
       return
     }
