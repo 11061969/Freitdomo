@@ -734,11 +734,7 @@ export default function RecipeDetailPage() {
     setScaling(false)
   }
 
-  return (
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
-
-
-  return (
+   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
       <p style={{ marginBottom: 12 }}>
         <Link href="/dashboard">Tableau de bord</Link>
