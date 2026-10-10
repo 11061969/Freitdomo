@@ -238,13 +238,7 @@ export default function RecipeDetailPage() {
     let mineralsIncl = 0, alcoholIncl = 0, saturatedFatIncl = 0
         let parfumMass = 0
 
-        for (const line of lines) {
-      const newQty = Math.round((line.quantity || 0) * factor * 100) / 100
-      await supabase
-        .from("recipe_ingredients")
-        .update({ quantity: newQty })
-        .eq("id", line.id)
-    }
+            for (const line of lines) {
       const q = line.quantity || 0
       const ing = line.ingredients
       if (!ing || q <= 0) continue
