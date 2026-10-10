@@ -189,7 +189,7 @@ export default function RecipeDetailPage() {
 
       const { data: recipeData, error: recipeError } = await supabase
         .from("recipes")
-        .select("id, name, category, total_quantity, updated_at")
+       .select("id, name, category, total_quantity, updated_at, client_id")
         .eq("id", id)
         .single()
 
@@ -592,10 +592,11 @@ export default function RecipeDetailPage() {
 
     const { data: newRecipe, error: createError } = await supabase
       .from("recipes")
-      .insert({
+          .insert({
         name: newName,
         category: recipe.category,
         total_quantity: recipe.total_quantity,
+        client_id: recipe.client_id,
       })
       .select("id, name, category, total_quantity, updated_at")
       .single()
