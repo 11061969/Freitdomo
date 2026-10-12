@@ -706,10 +706,6 @@ export default function RecipeDetailPage() {
     window.print()
   }
 
-  function exportPdf() {
-    window.print()
-  }
-
   async function applyScale() {
     const target = Number(scaleTarget)
     if (!target || target <= 0 || currentTotal <= 0) {
@@ -963,8 +959,22 @@ export default function RecipeDetailPage() {
         }}
       >
                        Supprimer la recette
-      </button>
+            </button>
+        <button
+          type="button"
+          onClick={exportPdf}
           className="no-print"
+          style={{
+            padding: "10px 18px",
+            borderRadius: 8,
+            border: "1px solid #333",
+            background: "#fff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          Exporter PDF
+        </button>
         </div>
 
         <div>
@@ -983,21 +993,7 @@ export default function RecipeDetailPage() {
                 subMin?: number
                 subMax?: number
               }[] = []
-                      <button
-          type="button"
-          onClick={exportPdf}
-          className="no-print"
-          style={{
-            padding: "10px 18px",
-            borderRadius: 8,
-            border: "1px solid #333",
-            background: "#fff",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          Exporter PDF
-        </button>
+                     
 
               axes.push({
                 key: "totalSolids",
