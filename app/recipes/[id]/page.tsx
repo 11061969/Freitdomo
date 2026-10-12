@@ -674,6 +674,12 @@ export default function RecipeDetailPage() {
         .update({ quantity: line.quantity })
         .eq("id", line.id)
     }
+    const total = lines.reduce((s, l) => s + (Number(l.quantity) || 0), 0)
+    await supabase
+      .from("recipes")
+      .update({ total_quantity: Math.round(total * 100) / 100 })
+      .eq("id", recipe.id)
+    setRecipe({ ...recipe, total_quantity: Math.round(total * 100) / 100 })
     setDirty(false)
     setSaving(false)
   }
@@ -711,6 +717,18 @@ export default function RecipeDetailPage() {
     if (!target || target <= 0 || currentTotal <= 0) {
       alert("Indique un total desire valide.")
       return
+          setLines((data as unknown as RecipeLine[]) || [])
+    const total = (data || []).reduce(
+      (s: number, l: any) => s + (Number(l.quantity) || 0),
+      0
+    )
+    await supabase
+      .from("recipes")
+      .update({ total_quantity: Math.round(total * 100) / 100 })
+      .eq("id", recipe.id)
+    setRecipe({ ...recipe, total_quantity: Math.round(total * 100) / 100 })
+    setScaleTarget("")
+    setScaling(false)
     }
     if (
       !confirm(
