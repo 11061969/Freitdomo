@@ -49,14 +49,24 @@ a {
     break-inside: avoid;
   }
 
-  /* Page 2 : une grille de 5 colonnes pour toutes les cases */
+  /* Page 2 : meme structure que l'ecran */
   .print-page-2 {
     break-before: page;
     page-break-before: always;
+  }
+
+  .print-page-2 > p,
+  .print-page-2 > h2 {
+    margin: 12px 0 8px !important;
+  }
+
+  /* Chaque ligne de cases = une grille de 5 colonnes (comme a l'ecran) */
+  .print-page-2 > div {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
-    align-items: start !important;
+    margin-bottom: 10px !important;
+    align-items: stretch !important;
   }
 
   /* Titres et legende sur toute la largeur */
