@@ -49,23 +49,25 @@ a {
     break-inside: avoid;
   }
 
-  /* Page 2 : Composition + Structure */
+  /* Page 2 : une grille de 5 colonnes pour toutes les cases */
   .print-page-2 {
     break-before: page;
     page-break-before: always;
-  }
-
-  /* Grille reguliere des cases */
-  .print-page-2 div[style*="flex"] {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
-    margin-bottom: 12px !important;
+    align-items: start !important;
   }
 
-  .print-page-2 h2 {
-    margin-top: 16px !important;
-    margin-bottom: 8px !important;
-    font-size: 16px !important;
+  /* Titres et legende sur toute la largeur */
+  .print-page-2 > p,
+  .print-page-2 > h2 {
+    grid-column: 1 / -1 !important;
+    margin: 12px 0 6px !important;
+  }
+
+  /* Les div flex intermediaires disparaissent : les cases s'enchainent */
+  .print-page-2 > div {
+    display: contents !important;
   }
 }
