@@ -741,27 +741,29 @@ export default function RecipeDetailPage() {
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
-      <p style={{ marginBottom: 12 }}>
+          <p style={{ marginBottom: 12 }} className="no-print">
         <Link href="/dashboard">Tableau de bord</Link>
         {" · "}
         <Link href="/recipes">Mes recettes</Link>
       </p>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 20, alignItems: "center" }}>
-        <select
-          value={addIngId}
-          onChange={(e) => setAddIngId(e.target.value)}
-          style={{ padding: 8, minWidth: 200 }}
-        >
-         
-            {editingName ? (
+
+      {editingName ? (
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <input
             value={nameDraft}
             onChange={(e) => setNameDraft(e.target.value)}
             style={{ fontSize: 24, fontWeight: 700, padding: "6px 10px", flex: 1 }}
           />
-                    <button type="button" onClick={saveName}>Creer</button>
-          <button type="button" onClick={() => { setEditingName(false); setNameDraft(recipe.name) }}>
+          <button type="button" onClick={saveName}>
+            Creer
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setEditingName(false)
+              setNameDraft(recipe.name)
+            }}
+          >
             Annuler
           </button>
         </div>
@@ -770,14 +772,16 @@ export default function RecipeDetailPage() {
           {recipe.name}
           <button
             type="button"
+            className="no-print"
             onClick={() => setEditingName(true)}
             style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
           >
-                        Nouvelle recette a partir de…
+            Nouvelle recette a partir de…
           </button>
         </h1>
       )}
-                      <p style={{ color: "#555", marginTop: 8 }}>
+
+      <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
         {" · "}
         {tempLabel[servingTemp] || servingTemp}
@@ -788,7 +792,24 @@ export default function RecipeDetailPage() {
           </>
         )}
       </p>
-           <option value="">— Choisir un ingredient —</option>
+
+      <div
+        className="no-print"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 10,
+          marginTop: 12,
+          marginBottom: 16,
+          alignItems: "center",
+        }}
+      >
+        <select
+          value={addIngId}
+          onChange={(e) => setAddIngId(e.target.value)}
+          style={{ padding: 8, minWidth: 200 }}
+        >
+          <option value="">— Choisir un ingredient —</option>
           {allIngredients.map((ing) => (
             <option key={ing.id} value={ing.id}>
               {ing.name} ({ing.category})
@@ -803,7 +824,11 @@ export default function RecipeDetailPage() {
           onChange={(e) => setAddQty(e.target.value)}
           style={{ width: 90, padding: 8 }}
         />
-        <button type="button" onClick={addIngredient} style={{ padding: "8px 14px", fontWeight: 600 }}>
+        <button
+          type="button"
+          onClick={addIngredient}
+          style={{ padding: "8px 14px", fontWeight: 600 }}
+        >
           Ajouter
         </button>
       </div>
