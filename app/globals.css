@@ -50,3 +50,11 @@ a {
     break-inside: avoid;
   }
 }
+  .print-page-2 {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .print-page-2 > * {
+    break-inside: avoid;
+  }
