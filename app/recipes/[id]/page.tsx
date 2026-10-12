@@ -948,7 +948,6 @@ export default function RecipeDetailPage() {
             <button
         type="button"
         onClick={deleteRecipe}
-              className="no-print"
         style={{
           padding: "10px 18px",
           borderRadius: 8,
@@ -976,7 +975,6 @@ export default function RecipeDetailPage() {
         >
           Exporter PDF
         </button>
-          className="no-print"
         </div>
 
         <div>
