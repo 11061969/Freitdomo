@@ -1126,7 +1126,10 @@ export default function RecipeDetailPage() {
                 {renderCard("Alcool", calcs.alcohol, "%", "alcohol", 1)}
                 {renderCard("Kcal / 100g", calcs.kcal ?? 0, "", undefined, 0)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Sodium", calcs.sodium, "mg", "sodium", 0)}
                 {renderCard("Calcium", calcs.calcium ?? 0, "mg", undefined, 0)}
