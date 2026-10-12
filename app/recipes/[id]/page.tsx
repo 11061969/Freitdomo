@@ -702,15 +702,16 @@ export default function RecipeDetailPage() {
     router.push("/recipes")
   }
 
+    function exportPdf() {
+    window.print()
+  }
+
   async function applyScale() {
     const target = Number(scaleTarget)
     if (!target || target <= 0 || currentTotal <= 0) {
       alert("Indique un total desire valide.")
       return
     }
-      function exportPdf() {
-    window.print()
-  }
     if (
       !confirm(
         `Passer la recette de ${currentTotal.toFixed(2)} a ${target} ?\nLes quantites seront enregistrees.`
