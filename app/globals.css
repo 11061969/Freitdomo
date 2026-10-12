@@ -20,3 +20,33 @@ a {
     grid-template-columns: 1fr !important;
   }
 }
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  body {
+    font-size: 11px;
+    background: white !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  .recipe-layout {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* evite de couper la boule au milieu d'une page */
+  .recipe-layout > div {
+    break-inside: avoid;
+  }
+}
