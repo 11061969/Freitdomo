@@ -49,7 +49,6 @@ a {
     break-inside: avoid;
   }
 
-  /* Page 2 : meme structure que l'ecran */
   .print-page-2 {
     break-before: page;
     page-break-before: always;
@@ -60,13 +59,19 @@ a {
     margin: 12px 0 8px !important;
   }
 
-  /* Chaque ligne de cases = une grille de 5 colonnes (comme a l'ecran) */
-  .print-page-2 > div {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
+  /* Une ligne = une rangee, meme ordre qu'a l'ecran */
+  .print-page-2 .cards-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
     gap: 8px !important;
     margin-bottom: 10px !important;
-    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .print-page-2 .cards-row > div {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: 20% !important; /* 5 cases max par ligne */
   }
 
   /* Titres et legende sur toute la largeur */
