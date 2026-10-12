@@ -708,6 +708,9 @@ export default function RecipeDetailPage() {
       alert("Indique un total desire valide.")
       return
     }
+      function exportPdf() {
+    window.print()
+  }
     if (
       !confirm(
         `Passer la recette de ${currentTotal.toFixed(2)} a ${target} ?\nLes quantites seront enregistrees.`
@@ -858,6 +861,7 @@ export default function RecipeDetailPage() {
                     <button
                       type="button"
                       onClick={() => line.id && removeIngredient(line.id, i)}
+                      className="no-print"
                       style={{
                         color: "#c62828",
                         border: "none",
@@ -955,6 +959,7 @@ export default function RecipeDetailPage() {
       >
                        Supprimer la recette
       </button>
+          className="no-print"
         </div>
 
         <div>
@@ -973,6 +978,21 @@ export default function RecipeDetailPage() {
                 subMin?: number
                 subMax?: number
               }[] = []
+                      <button
+          type="button"
+          onClick={exportPdf}
+          className="no-print"
+          style={{
+            padding: "10px 18px",
+            borderRadius: 8,
+            border: "1px solid #333",
+            background: "#fff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          Exporter PDF
+        </button>
 
               axes.push({
                 key: "totalSolids",
