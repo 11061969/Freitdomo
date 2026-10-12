@@ -1116,7 +1116,10 @@ export default function RecipeDetailPage() {
           {isSorbet ? (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+              <div
+             className="cards-row"
+             style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Glucides", calcs.sugar, "%", "sugar", 1)}
                 {renderCard("Proteines", calcs.protein, "%", "protein", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
@@ -1132,13 +1135,19 @@ export default function RecipeDetailPage() {
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+             <div
+                className="cards-row"
+               style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
                 {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", "sweetness", 1)}
                 {renderCard("Saturation", calcs.saturation, "%", "saturation", 0)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <div
+               className="cards-row"
+                style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
                 {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
                 {renderCard("Foisonnement", calcs.foisonnement ?? 0, "%", "foisonnement", 0)}
@@ -1148,7 +1157,10 @@ export default function RecipeDetailPage() {
           ) : isVegan ? (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+              <div
+                className="cards-row"
+                style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Matiere grasse", calcs.fat, "%", "fat", 1)}
                 {renderCard("Glucides", calcs.sugar, "%", "sugar", 1)}
                 {renderCard("Proteines", calcs.protein, "%", "protein", 1)}
@@ -1156,7 +1168,10 @@ export default function RecipeDetailPage() {
                 {renderCard("Alcool", calcs.alcohol, "%", "alcohol", 1)}
                 {renderCard("Kcal / 100g", calcs.kcal ?? 0, "", undefined, 0)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
@@ -1167,14 +1182,20 @@ export default function RecipeDetailPage() {
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
                 {renderCard("Onctuosite", calcs.creaminess, "", "creaminess", 0)}
                 {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
                 {renderCard("Taux sucrant", calcs.sweetness ?? 0, "%", "sweetness", 1)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
                 {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
                 {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
@@ -1185,7 +1206,10 @@ export default function RecipeDetailPage() {
           ) : (
             <>
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Composition</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Matiere grasse", calcs.fat, "%", "fat", 1)}
                 {renderCard("Glucides", calcs.sugar, "%", "sugar", 1)}
                 {renderCard("Proteines", calcs.protein, "%", "protein", 1)}
@@ -1193,7 +1217,10 @@ export default function RecipeDetailPage() {
                 {renderCard("Alcool", calcs.alcohol, "%", "alcohol", 1)}
                 {renderCard("Kcal / 100g", calcs.kcal ?? 0, "", undefined, 0)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("MG saturee", calcs.saturatedFat, "%", "saturatedFat", 1)}
                 {renderCard("Fibres", calcs.fiber, "%", "fiber", 1)}
                 {renderCard("Stabilisant", calcs.stabilizer, "%", "stabilizer", 2)}
@@ -1204,7 +1231,10 @@ export default function RecipeDetailPage() {
               </div>
 
               <h2 style={{ fontSize: 20, marginBottom: 12 }}>Structure et Texture</h2>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Solides totaux", calcs.totalSolids, "%", "totalSolids", 1)}
                 {renderCard("Onctuosite", calcs.creaminess, "", "creaminess", 0)}
                 {renderCard("Emulsifiant vs MG", calcs.emulsifierVsFat, "%", "emulsifierVsFat", 2)}
@@ -1212,7 +1242,10 @@ export default function RecipeDetailPage() {
                 {renderCard("ESDL vs solvant", calcs.esdlVsSolvent ?? 0, "%", "esdlVsSolvent", 1)}
                 {renderCard("Fraction de glace", calcs.iceFraction, "%", "iceFraction", 2)}
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <div
+  className="cards-row"
+  style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12 }}
+>
                 {renderCard("Densite", calcs.density, "", "density", 3)}
                 {renderCard("MG solide", calcs.mgSolide, "%", "mgSolide", 1)}
                 {renderCard("Masse molaire stabi", calcs.molarMassStabi, "", "molarMassStabi", 0)}
