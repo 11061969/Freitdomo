@@ -45,16 +45,27 @@ a {
     gap: 12px !important;
   }
 
-  /* evite de couper la boule au milieu d'une page */
   .recipe-layout > div {
     break-inside: avoid;
   }
-}
+
+  /* Page 2 : Composition + Structure */
   .print-page-2 {
     break-before: page;
     page-break-before: always;
   }
 
-  .print-page-2 > * {
-    break-inside: avoid;
+  /* Grille reguliere des cases */
+  .print-page-2 div[style*="flex"] {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
   }
+
+  .print-page-2 h2 {
+    margin-top: 16px !important;
+    margin-bottom: 8px !important;
+    font-size: 16px !important;
+  }
+}
