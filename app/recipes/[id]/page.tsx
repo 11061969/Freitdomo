@@ -1107,11 +1107,7 @@ export default function RecipeDetailPage() {
         </div>
       </div>
 
-      {calcs && (
-        <div>
-          <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
-            Vert = dans les limites · Rouge = hors limites
-          </p>
+     
                      {calcs && (
         <div className="print-page-2">
           <p style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
