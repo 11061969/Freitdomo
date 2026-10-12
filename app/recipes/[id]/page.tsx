@@ -752,25 +752,7 @@ export default function RecipeDetailPage() {
           onChange={(e) => setAddIngId(e.target.value)}
           style={{ padding: 8, minWidth: 200 }}
         >
-          <option value="">— Choisir un ingredient —</option>
-          {allIngredients.map((ing) => (
-            <option key={ing.id} value={ing.id}>
-              {ing.name} ({ing.category})
-            </option>
-          ))}
-        </select>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          value={addQty}
-          onChange={(e) => setAddQty(e.target.value)}
-          style={{ width: 90, padding: 8 }}
-        />
-        <button type="button" onClick={addIngredient} style={{ padding: "8px 14px", fontWeight: 600 }}>
-          Ajouter
-        </button>
-      </div>
+         
             {editingName ? (
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <input
@@ -806,6 +788,25 @@ export default function RecipeDetailPage() {
           </>
         )}
       </p>
+           <option value="">— Choisir un ingredient —</option>
+          {allIngredients.map((ing) => (
+            <option key={ing.id} value={ing.id}>
+              {ing.name} ({ing.category})
+            </option>
+          ))}
+        </select>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          value={addQty}
+          onChange={(e) => setAddQty(e.target.value)}
+          style={{ width: 90, padding: 8 }}
+        />
+        <button type="button" onClick={addIngredient} style={{ padding: "8px 14px", fontWeight: 600 }}>
+          Ajouter
+        </button>
+      </div>
 
       <div
         className="recipe-layout"
