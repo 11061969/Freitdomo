@@ -68,10 +68,10 @@ a {
     width: 100% !important;
   }
 
-  .print-page-2 .cards-row > div {
+   .print-page-2 .cards-row > div {
     flex: 1 1 0 !important;
     min-width: 0 !important;
-    max-width: 20% !important; /* 5 cases max par ligne */
+    /* plus de max-width: 20% */
   }
 
   /* Titres et legende sur toute la largeur */
