@@ -18,6 +18,8 @@ export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+    const [search, setSearch] = useState("")
+  const [filterCategory, setFilterCategory] = useState("")
 
   useEffect(() => {
     async function load() {
@@ -62,7 +64,15 @@ export default function RecipesPage() {
     sorbet: "Sorbet",
     vegan: "Vegan",
   }
-
+  const filtered = recipes.filter((r) => {
+    const nameOk =
+      !search.trim() ||
+      (r.name || "").toLowerCase().includes(search.trim().toLowerCase())
+    const catOk =
+      !filterCategory ||
+      (r.category || "").toLowerCase() === filterCategory.toLowerCase()
+    return nameOk && catOk
+  })
   if (loading) {
     return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   }
@@ -82,10 +92,47 @@ export default function RecipesPage() {
       <p style={{ marginBottom: 20 }}>
         <Link href="/dashboard">← Retour au tableau de bord</Link>
       </p>
-
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 12,
+          marginBottom: 20,
+          alignItems: "center",
+        }}
+      >
+        <input
+          type="search"
+          placeholder="Rechercher par nom / parfum…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{
+            flex: "1 1 200px",
+            padding: "10px 12px",
+            border: "1px solid #ccc",
+            borderRadius: 8,
+            fontSize: 14,
+          }}
+        />
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          style={{
+            padding: "10px 12px",
+            border: "1px solid #ccc",
+            borderRadius: 8,
+            fontSize: 14,
+          }}
+        >
+          <option value="">Toutes les categories</option>
+          <option value="ice_cream">Creme glacee</option>
+          <option value="sorbet">Sorbet</option>
+          <option value="vegan">Vegan</option>
+        </select>
+      </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {recipes.length === 0 ? (
+      {filtered.length === 0 ? (
         <p>Aucune recette pour le moment.</p>
       ) : (
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -98,7 +145,7 @@ export default function RecipesPage() {
             </tr>
           </thead>
           <tbody>
-            {recipes.map((r) => (
+            {filtered.map((r) => (
               <tr
                 key={r.id}
                 style={{ borderBottom: "1px solid #eee", cursor: "pointer" }}
