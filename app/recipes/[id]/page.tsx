@@ -706,6 +706,10 @@ export default function RecipeDetailPage() {
     window.print()
   }
 
+  function exportPdf() {
+    window.print()
+  }
+
   async function applyScale() {
     const target = Number(scaleTarget)
     if (!target || target <= 0 || currentTotal <= 0) {
@@ -738,6 +742,8 @@ export default function RecipeDetailPage() {
     setScaleTarget("")
     setScaling(false)
   }
+
+  return (
 
    return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
