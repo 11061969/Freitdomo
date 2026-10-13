@@ -164,6 +164,8 @@ export default function RecipeDetailPage() {
     const [allIngredients, setAllIngredients] = useState<any[]>([])
   const [addIngId, setAddIngId] = useState("")
   const [addQty, setAddQty] = useState("1")
+    const [dbLimits, setDbLimits] = useState<Record<string, Limit> | null>(null)
+  const [clientId, setClientId] = useState<string | null>(null)
   
   useEffect(() => {
     async function load() {
@@ -171,6 +173,32 @@ export default function RecipeDetailPage() {
       if (!user) {
         router.push("/login")
         return
+    useEffect(() => {
+    async function loadLimits() {
+      if (!clientId || !recipe) return
+      const cat = (recipe.category || "ice_cream").toLowerCase()
+      const { data, error } = await supabase
+        .from("client_limits")
+        .select("param_key, min_value, max_value")
+        .eq("client_id", clientId)
+        .eq("category", cat)
+        .eq("serving_temp", servingTemp)
+
+      if (error || !data || data.length === 0) {
+        setDbLimits(null)
+        return
+      }
+      const map: Record<string, Limit> = {}
+      for (const row of data) {
+        map[row.param_key] = {
+          min: Number(row.min_value),
+          max: Number(row.max_value),
+        }
+      }
+      setDbLimits(map)
+    }
+    loadLimits()
+  }, [clientId, recipe, servingTemp])
       }
       const { data: ings } = await supabase
         .from("ingredients")
@@ -182,7 +210,10 @@ export default function RecipeDetailPage() {
         .select("client_id, clients(serving_temperature)")
         .eq("id", user.id)
         .single()
-
+      
+      if (userData?.client_id) {
+        setClientId(userData.client_id)
+      }
       if (userData && (userData as any).clients?.serving_temperature) {
         setServingTemp((userData as any).clients.serving_temperature)
       }
@@ -518,7 +549,17 @@ export default function RecipeDetailPage() {
     )
   }
 
-  const limits = getLimits(recipe.category, servingTemp)
+    const limits =
+    dbLimits && Object.keys(dbLimits).length > 0
+      ? dbLimits
+      : getLimits(
+          (recipe.category || "").toLowerCase().includes("sorbet")
+            ? "sorbet"
+            : (recipe.category || "").toLowerCase().includes("vegan")
+              ? "vegan"
+              : "ice_cream",
+          servingTemp
+        )
   const isSorbet = (recipe.category || "").toLowerCase().includes("sorbet")
   const isVegan = (recipe.category || "").toLowerCase().includes("vegan")
 
