@@ -717,18 +717,6 @@ export default function RecipeDetailPage() {
     if (!target || target <= 0 || currentTotal <= 0) {
       alert("Indique un total desire valide.")
       return
-          setLines((data as unknown as RecipeLine[]) || [])
-    const total = (data || []).reduce(
-      (s: number, l: any) => s + (Number(l.quantity) || 0),
-      0
-    )
-    await supabase
-      .from("recipes")
-      .update({ total_quantity: Math.round(total * 100) / 100 })
-      .eq("id", recipe.id)
-    setRecipe({ ...recipe, total_quantity: Math.round(total * 100) / 100 })
-    setScaleTarget("")
-    setScaling(false)
     }
     if (
       !confirm(
@@ -752,7 +740,19 @@ export default function RecipeDetailPage() {
         "id, quantity, ingredients(name, category, fat, protein, sugar, fiber, minerals, alcohol, stabilizer, sweetness_factor, molar_mass, saturated_fat, sodium, calcium, cost, solubility)"
       )
       .eq("recipe_id", recipe.id)
+
     setLines((data as unknown as RecipeLine[]) || [])
+
+    const total = (data || []).reduce(
+      (s: number, l: any) => s + (Number(l.quantity) || 0),
+      0
+    )
+    await supabase
+      .from("recipes")
+      .update({ total_quantity: Math.round(total * 100) / 100 })
+      .eq("id", recipe.id)
+    setRecipe({ ...recipe, total_quantity: Math.round(total * 100) / 100 })
+
     setScaleTarget("")
     setScaling(false)
   }
