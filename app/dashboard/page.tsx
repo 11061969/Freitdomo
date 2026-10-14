@@ -68,6 +68,7 @@ export default function DashboardPage() {
         <a href="/recipes" style={btnStyle}>Mes recettes</a>
         <a href="/ingredients" style={btnStyle}>Base d’ingrédients</a>
          <a href="/limits" style={btnStyle}>Mes limites</a>
+         <a href="/aide" style={btnStyle}>Aide</a>
       </div>
 
       <button
