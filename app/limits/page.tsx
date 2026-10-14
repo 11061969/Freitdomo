@@ -14,29 +14,30 @@ type LimitRow = {
 
 const COMPOSITION_KEYS = [
   "fat",
-  "protein",
+  "saturatedFat",
   "sugar",
   "fiber",
+  "protein",
   "stabilizer",
-  "sodium",
-  "saturatedFat",
-  "alcohol",
   "emulsifier",
+  "sodium",
+  "alcohol",
+  
 ]
 
 const STRUCTURE_KEYS = [
   "totalSolids",
   "density",
   "creaminess",
-  "esdl",
-  "esdlVsSolvent",
-  "freezingPoint",
-  "iceFraction",
-  "molarMassStabi",
-  "emulsifierVsFat",
   "mgSolide",
+  "emulsifierVsFat",
+  "esdl",
+  "esdlVsSolvent", 
+  "molarMassStabi",
   "saturation",
   "sweetness",
+  "freezingPoint",
+  "iceFraction",
   "foisonnement",
 ]
 
