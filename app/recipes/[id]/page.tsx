@@ -1182,8 +1182,16 @@ export default function RecipeDetailPage() {
 
               return (
                 <>
-                                    <h2 style={{ fontSize: 18, marginBottom: 8, textAlign: "center" }}>
-                    Graphe de Structure & Texture
+                    <p style={{ marginBottom: 8 }}>
+                    <Link
+                      href="/aide/indicateurs"
+                      style={{ fontSize: 13, textDecoration: "underline" }}
+                    >
+            Comprendre les indicateurs
+                    </Link>
+                  </p>
+                   <h2 style={{ fontSize: 18, marginBottom: 8, textAlign: "center" }}>
+            Graphe de Structure & Texture
                   </h2>
                   <ScoopChart axes={axes} />
                 </>
