@@ -12,6 +12,34 @@ type LimitRow = {
   max_value: number
 }
 
+const COMPOSITION_KEYS = [
+  "fat",
+  "protein",
+  "sugar",
+  "fiber",
+  "stabilizer",
+  "sodium",
+  "saturatedFat",
+  "alcohol",
+  "emulsifier",
+]
+
+const STRUCTURE_KEYS = [
+  "totalSolids",
+  "density",
+  "creaminess",
+  "esdl",
+  "esdlVsSolvent",
+  "freezingPoint",
+  "iceFraction",
+  "molarMassStabi",
+  "emulsifierVsFat",
+  "mgSolide",
+  "saturation",
+  "sweetness",
+  "foisonnement",
+]
+
 const PARAM_LABELS: Record<string, string> = {
   fat: "Matiere grasse %",
   protein: "Proteines %",
@@ -196,48 +224,69 @@ export default function LimitsPage() {
         </p>
       ) : (
         <>
-          <table
-            style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}
-          >
-            <thead>
-              <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-                <th style={{ padding: 8 }}>Parametre</th>
-                <th style={{ padding: 8, width: 120 }}>Min</th>
-                <th style={{ padding: 8, width: 120 }}>Max</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} style={{ borderBottom: "1px solid #eee" }}>
-                  <td style={{ padding: 8 }}>
-                    {PARAM_LABELS[r.param_key] || r.param_key}
-                  </td>
-                  <td style={{ padding: 8 }}>
-                    <input
-                      type="number"
-                      step="any"
-                      value={r.min_value}
-                      onChange={(e) =>
-                        updateLocal(r.id, "min_value", e.target.value)
-                      }
-                      style={{ width: 100, padding: 6 }}
-                    />
-                  </td>
-                  <td style={{ padding: 8 }}>
-                    <input
-                      type="number"
-                      step="any"
-                      value={r.max_value}
-                      onChange={(e) =>
-                        updateLocal(r.id, "max_value", e.target.value)
-                      }
-                      style={{ width: 100, padding: 6 }}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                   {(["Composition", "Structure"] as const).map((section) => {
+            const keys = section === "Composition" ? COMPOSITION_KEYS : STRUCTURE_KEYS
+            const sectionRows = keys
+              .map((k) => rows.find((r) => r.param_key === k))
+              .filter(Boolean) as LimitRow[]
+            if (sectionRows.length === 0) return null
+            return (
+              <div key={section} style={{ marginBottom: 28 }}>
+                <h2 style={{ fontSize: 18, marginBottom: 10 }}>{section}</h2>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    fontSize: 14,
+                  }}
+                >
+                  <thead>
+                    <tr
+                      style={{
+                        borderBottom: "2px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      <th style={{ padding: 8 }}>Parametre</th>
+                      <th style={{ padding: 8, width: 120 }}>Min</th>
+                      <th style={{ padding: 8, width: 120 }}>Max</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sectionRows.map((r) => (
+                      <tr key={r.id} style={{ borderBottom: "1px solid #eee" }}>
+                        <td style={{ padding: 8 }}>
+                          {PARAM_LABELS[r.param_key] || r.param_key}
+                        </td>
+                        <td style={{ padding: 8 }}>
+                          <input
+                            type="number"
+                            step="any"
+                            value={r.min_value}
+                            onChange={(e) =>
+                              updateLocal(r.id, "min_value", e.target.value)
+                            }
+                            style={{ width: 100, padding: 6 }}
+                          />
+                        </td>
+                        <td style={{ padding: 8 }}>
+                          <input
+                            type="number"
+                            step="any"
+                            value={r.max_value}
+                            onChange={(e) =>
+                              updateLocal(r.id, "max_value", e.target.value)
+                            }
+                            style={{ width: 100, padding: 6 }}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          })}
 
           <button
             type="button"
