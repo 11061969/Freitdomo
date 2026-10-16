@@ -69,17 +69,19 @@ export default function SignupPage() {
       role: "admin",
       language: "fr",
     })
-    // 4. Copier le catalogue d'ingredients par defaut
+    // 4. Catalogue ingredients + limites par defaut
     const { error: catalogError } = await supabase.rpc("copy_default_ingredients", {
       p_client_id: clientData.id,
     })
     if (catalogError) {
       console.error("Catalogue ingredients:", catalogError.message)
     }
-    if (userError) {
-      setError("Erreur création utilisateur : " + userError.message)
-      setLoading(false)
-      return
+
+    const { error: limitsError } = await supabase.rpc("copy_default_limits", {
+      p_client_id: clientData.id,
+    })
+    if (limitsError) {
+      console.error("Catalogue limites:", limitsError.message)
     }
 
     setSuccess(true)
