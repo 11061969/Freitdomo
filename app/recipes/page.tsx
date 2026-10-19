@@ -1,5 +1,5 @@
 "use client"
-
+import BottomNav from "@/components/BottomNav"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
@@ -78,6 +78,7 @@ export default function RecipesPage() {
   }
 
   return (
+          <BottomNav />
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ margin: 0 }}>Mes recettes</h1>
