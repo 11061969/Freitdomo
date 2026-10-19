@@ -86,7 +86,8 @@ export default function IngredientsPage() {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
+    <>
+      <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ margin: 0 }}>Base d’ingrédients</h1>
         <Link 
@@ -155,6 +156,8 @@ export default function IngredientsPage() {
           </table>
         </div>
       )}
-    </main>
+       </main>
+      <BottomNav />
+    </>
   )
 }
