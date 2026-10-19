@@ -76,10 +76,9 @@ export default function RecipesPage() {
   if (loading) {
     return <main style={{ padding: 40, fontFamily: "sans-serif" }}>Chargement...</main>
   }
-
-  return (
-          <BottomNav />
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
+   return (
+    <>
+      <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ margin: 0 }}>Mes recettes</h1>
         <Link
@@ -165,6 +164,8 @@ export default function RecipesPage() {
           </tbody>
         </table>
       )}
-    </main>
+      </main>
+      <BottomNav />
+    </>
   )
 }
