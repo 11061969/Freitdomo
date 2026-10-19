@@ -1,5 +1,5 @@
 "use client"
-
+import BottomNav from "@/components/BottomNav"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
@@ -55,6 +55,7 @@ export default function DashboardPage() {
   }
 
   return (
+          <BottomNav />
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
       <h1>Tableau de bord – Freitdomo</h1>
 
