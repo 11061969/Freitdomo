@@ -54,31 +54,33 @@ export default function DashboardPage() {
     textDecoration: "none" as const,
   }
 
-  return (
-         
-    <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
-      <h1>Tableau de bord – Freitdomo</h1>
+   return (
+    <>
+      <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
+        <h1>Tableau de bord – Freitdomo</h1>
 
-      <div style={{ marginTop: 20, padding: 16, background: "#f5f5f5", borderRadius: 8 }}>
-        <p><strong>Entreprise :</strong> {companyName || "Non définie"}</p>
-        <p><strong>Email :</strong> {email}</p>
-      </div>
+        <div style={{ marginTop: 20, padding: 16, background: "#f5f5f5", borderRadius: 8 }}>
+          <p><strong>Entreprise :</strong> {companyName || "Non définie"}</p>
+          <p><strong>Email :</strong> {email}</p>
+        </div>
 
-      <div style={{ marginTop: 32, display: "flex", gap: 16, flexWrap: "wrap" }}>
-        <a href="/recipes/new" style={btnStyle}>Nouvelle recette</a>
-        <a href="/recipes" style={btnStyle}>Mes recettes</a>
-        <a href="/ingredients" style={btnStyle}>Base d’ingrédients</a>
-         <a href="/limits" style={btnStyle}>Mes limites</a>
-         <a href="/aide" style={btnStyle}>Aide</a>
-      </div>
+        <div style={{ marginTop: 32, display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <a href="/recipes/new" style={btnStyle}>Nouvelle recette</a>
+          <a href="/recipes" style={btnStyle}>Mes recettes</a>
+          <a href="/ingredients" style={btnStyle}>Base d’ingrédients</a>
+          <a href="/limits" style={btnStyle}>Mes limites</a>
+          <a href="/aide" style={btnStyle}>Aide</a>
+          <a href="/account" style={btnStyle}>Mon compte</a>
+        </div>
 
-      <button
-        onClick={handleLogout}
-        style={{ marginTop: 40, padding: "10px 16px", cursor: "pointer", background: "#eee" }}
-      >
-        Se déconnecter
-      </button>
-    </main>
-    <BottomNav />
+        <button
+          onClick={handleLogout}
+          style={{ marginTop: 40, padding: "10px 16px", cursor: "pointer", background: "#eee" }}
+        >
+          Se déconnecter
+        </button>
+      </main>
+      <BottomNav />
+    </>
   )
 }
