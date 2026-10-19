@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 import Link from "next/link"
-
+import BottomNav from "@/components/BottomNav"
 type Ingredient = {
   id: string
   name: string
