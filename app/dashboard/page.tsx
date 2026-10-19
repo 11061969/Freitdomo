@@ -55,7 +55,7 @@ export default function DashboardPage() {
   }
 
   return (
-          <BottomNav />
+         
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 800, margin: "0 auto" }}>
       <h1>Tableau de bord – Freitdomo</h1>
 
@@ -79,5 +79,6 @@ export default function DashboardPage() {
         Se déconnecter
       </button>
     </main>
+    <BottomNav />
   )
 }
