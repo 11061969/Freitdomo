@@ -378,9 +378,20 @@ export default function RecipeDetailPage() {
       const sol = Number(ing.solubility) || 0
       const sugarMass = (q * (ing.sugar || 0)) / 100
       const proteinMass = (q * (ing.protein || 0)) / 100
-      if (sol > 0 && !isFruit && !isEau) {
-        if (cat.includes("sucre") || cat.includes("glucid")) {
-          solventNeeded += sugarMass / sol
+       if (sol > 0 && !isFruit && !isEau) {
+        const isSucre =
+          cat.includes("sucre") ||
+          cat.includes("glucid") ||
+          cat.includes("carbohyd") ||
+          nameLow.includes("maltod") ||
+          nameLow.includes("dextro") ||
+          nameLow.includes("glucose") ||
+          nameLow.includes("sacchar") ||
+          nameLow.includes("fructose") ||
+          nameLow.includes("inverti") ||
+          nameLow.includes("sirop")
+        if (isSucre) {
+          solventNeeded += q / sol
         } else if (isEmulStabi) {
           if (stabiMass > 0) solventNeeded += stabiMass / sol
         } else if (cat.includes("lait")) {
