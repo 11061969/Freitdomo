@@ -370,33 +370,46 @@ export default function RecipeDetailPage() {
         }
       }
 
-      // Saturation
+        // Saturation (Excel : besoin / solvant disponible)
       const isPoudre = nameLow.includes("poudre") || nameLow.includes("powder")
-      const isEau = nameLow.includes("eau")
+      const isEau = nameLow.includes("eau") || nameLow === "water"
+      const isFruit = cat.includes("fruit")
+      const isSel = nameLow.includes("sel") || nameLow.includes("salt")
       const sol = Number(ing.solubility) || 0
-      if (sol > 0) {
-        if (cat.includes("sucre")) {
-          solventNeeded += q / sol
+      const sugarMass = (q * (ing.sugar || 0)) / 100
+      const proteinMass = (q * (ing.protein || 0)) / 100
+      if (sol > 0 && !isFruit && !isEau) {
+        if (cat.includes("sucre") || cat.includes("glucid")) {
+          solventNeeded += sugarMass / sol
         } else if (isEmulStabi) {
           if (stabiMass > 0) solventNeeded += stabiMass / sol
-        } else if (cat.includes("lait") && isPoudre) {
+        } else if (cat.includes("lait")) {
+          solventNeeded += (proteinMass + sugarMass) / sol
+        } else if (isSel) {
           solventNeeded += q / sol
         }
       }
       if (isEau) waterForSaturation += q
-      if (cat.includes("lait") && !isPoudre) dairyLiquidMass += q
-      if (
+      if (cat.includes("lait") && !isPoudre) {
+        const cream =
+          nameLow.includes("crème") ||
+          nameLow.includes("creme") ||
+          Number(ing.fat || 0) >= 30
+        dairyLiquidMass += q * (cream ? 0.3 : 0.9)
+      }
+      const isPlantMilk =
+        !isPoudre &&
         !isEau &&
-        (cat.includes("vegan") ||
-          cat.includes("vegetal") ||
+        (nameLow.includes("lait") || nameLow.includes("milk") || nameLow.includes("boisson")) &&
+        (nameLow.includes("soja") ||
+          nameLow.includes("soya") ||
           nameLow.includes("amande") ||
-          nameLow.includes("soja") ||
           nameLow.includes("avoine") ||
           nameLow.includes("riz") ||
-          nameLow.includes("coco"))
-      ) {
-        plantMilkMass += q
-      }
+          nameLow.includes("coco") ||
+          nameLow.includes("végé") ||
+          nameLow.includes("vege"))
+      if (isPlantMilk) plantMilkMass += q * 0.9
 
       // Molalite
       const mCarb = cat.includes("sucre") && ing.molar_mass ? ing.molar_mass : 342
