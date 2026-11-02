@@ -92,7 +92,7 @@ export default function NewIngredientPage() {
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 640, margin: "0 auto" }}>
-      <h1>Ajouter un ingredient</h1>
+      <h1>Composition de l'ingredient</h1>
       <p style={{ margin: "12px 0 24px" }}>
         <Link href="/ingredients">Retour a la liste</Link>
       </p>
