@@ -200,11 +200,7 @@ export default function RecipeDetailPage() {
     loadLimits()
   }, [clientId, recipe, servingTemp])
       }
-      const { data: ings } = await supabase
-        .from("ingredients")
-        .select("id, name, category")
-        .order("name")
-      setAllIngredients(ings || [])
+     
       const { data: userData } = await supabase
         .from("users")
         .select("client_id, clients(serving_temperature)")
@@ -217,7 +213,26 @@ export default function RecipeDetailPage() {
       if (userData && (userData as any).clients?.serving_temperature) {
         setServingTemp((userData as any).clients.serving_temperature)
       }
-
+      let ingQuery = supabase
+        .from("ingredients")
+        .select("id, name, category")
+        .eq("is_active", true)
+        .order("name")
+      if (userData?.client_id) {
+        ingQuery = ingQuery.eq("client_id", userData.client_id)
+      }
+      const { data: ings } = await ingQuery
+      const seen = new Set<string>()
+      const unique = (ings || []).filter((ing) => {
+        const key =
+          (ing.name || "").trim().toLowerCase() +
+          "|" +
+          (ing.category || "").trim().toLowerCase()
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+      setAllIngredients(unique)
       const { data: recipeData, error: recipeError } = await supabase
         .from("recipes")
        .select("id, name, category, total_quantity, updated_at, client_id")
