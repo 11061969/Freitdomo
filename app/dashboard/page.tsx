@@ -225,7 +225,7 @@ export default function DashboardPage() {
               borderTop: "1px solid var(--fd-border)",
             }}
           >
-            Mes limites →
+            Personnalisez les limites Min et Max de vos indicateurs →
           </Link>
         </div>
       </main>
