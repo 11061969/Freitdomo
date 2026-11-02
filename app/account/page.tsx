@@ -80,9 +80,9 @@ export default function AccountPage() {
   }
 
   const temps = [
-    { id: "soft", label: "Soft (-6 °C)" },
-    { id: "gelato", label: "Gelato (-11 °C)" },
-    { id: "hard", label: "Hard (-18 °C)" },
+   { id: "soft", label: "-6 °C" },
+   { id: "gelato", label: "-11 °C" },
+   { id: "hard", label: "-18 °C" },
   ]
 
   return (
