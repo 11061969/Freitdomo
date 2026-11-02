@@ -147,7 +147,7 @@ export default function AccountPage() {
           href="/limits"
           style={{ display: "block", padding: 12 }}
         >
-          Mes limites →
+          Personnalisez les limites Min et Max de vos indicateurs →
         </Link>
         <Link href="/aide" style={{ display: "block", padding: 12 }}>
           Aide / Manuel →
