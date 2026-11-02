@@ -24,7 +24,7 @@ export default function AidePage() {
           <li>Créez un compte et connectez-vous.</li>
           <li>Vos recettes, votre base d’ingrédients et vos limites sont privées : un autre compte ne les voit pas.</li>
           <li>
-            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre température de service, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la personnalisation des valeurs des limites.
+            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre température de service, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong></strong>personnalisation des valeurs limites Min et Max<strong></strong> retenues pour vos indicateurs.
           </li>
         </ul>
       </section>
@@ -52,7 +52,7 @@ export default function AidePage() {
             Le taux sucrant doit être précisé pour tous les ingrédients qui contiennent des glucides / sucres (les catégories sucre / fruit / vegan, etc.). Taux sucrant pour les laitiers = 0,14 (taux sucrant du lactose).
           </li>
           <li>
-            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données.
+            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données. Pour les parfums avec des inclusions (choco chips, tec...), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données
           </li>
           <li>Entrez votre coût ingrédient dans la même unité que vous entrez vos recettes (g ou kg).</li>
         </ul>
@@ -88,17 +88,17 @@ export default function AidePage() {
         </p>
         <p>Voir <strong>Comprendre les indicateurs</strong>, modifiez la recette si besoin est : les modifications apparaissent en temps réel sur le graphe.</p>
         <p>
-          NB : ne soyez pas surpris si des indicateurs sont hors limites lorsque vous rentrez vos recettes. En effet, ces limites, bien que standard, peuvent ne pas correspondre au cadre de votre produit. D’où l’intérêt de pouvoir les personnaliser en fonction de ce qui marche précisément dans le cas de chacun.
+          NB : ne soyez pas surpris si des indicateurs sont hors limites lorsque vous rentrez vos recettes. En effet, ces limites, bien que standard, peuvent ne pas correspondre au cadre de votre produit. D’où l’intérêt de pouvoir les parametrer en fonction de vos besoins.
         </p>
       </section>
 
       <section style={{ marginTop: 36 }}>
         <h2>5. Personnalisez les valeurs Min et Max des indicateurs</h2>
         <p>
-          Les « limites » font donc référence aux valeurs minimales et maximales des indicateurs et elles sont matérialisées sur le graphe par les lignes vertes en pointillés. Elles définissent la zone adéquate dans laquelle devrait se trouver la recette. Elles sont standards par défaut, mais elles sont personnalisables pour coller parfaitement aux caractéristiques que vous recherchez. C’est une fonctionnalité très utile car cette plus grande précision débouche sur un gain de temps et une économie de matières premières.
+          Ces « limites » font donc référence aux valeurs minimales et maximales des indicateurs et elles sont matérialisées sur le graphe par les lignes vertes en pointillés. Elles définissent la zone adéquate dans laquelle devrait se trouver la recette. Elles sont standards par défaut, mais elles sont personnalisables pour coller parfaitement aux caractéristiques que vous recherchez. C’est une fonctionnalité très utile car cette plus grande précision débouche sur un gain de temps et une économie de matières premières.
         </p>
         <p>
-          Comment procéder ? Saisissez quelques recettes de catégories différentes (crème glacée, sorbet, vegan) dont les caractéristiques sont idéales dans votre cas. Repérez ces valeurs optimales dans les cases, allez dans <strong>Mon compte</strong>, puis <strong>Mes limites</strong>, réglez les limites que vous souhaitez : faire en sorte que la valeur idéale pour l’indicateur en question soit à égale distance des limites min et max. Vous pouvez aussi « resserrer » les limites Min et Max pour une plus grande précision, puis <strong>enregistrez</strong>.
+          Comment procéder ? Saisissez quelques recettes de catégories différentes (crème glacée, sorbet, vegan) dont les caractéristiques sont idéales dans votre cas. Repérez ces valeurs optimales dans les cases, allez dans <strong>Mon compte</strong>, puis <strong>Personnalisez les limites Min et Max de vos indicateurs →</strong>, réglez les limites que vous souhaitez : faire en sorte que la valeur idéale pour l’indicateur en question soit à égale distance des limites min et max. Vous pouvez aussi « resserrer » les limites Min et Max pour une plus grande précision, puis <strong>enregistrez</strong>.
         </p>
       </section>
     </main>
