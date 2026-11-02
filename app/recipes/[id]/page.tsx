@@ -609,9 +609,9 @@ export default function RecipeDetailPage() {
   }
 
   const tempLabel: Record<string, string> = {
-    soft: "Soft (-6C)",
-    gelato: "Gelato (-11C)",
-    hard: "Hard (-18C)",
+   soft: "-6 °C",
+   gelato: "-11 °C",
+   hard: "-18 °C",
   }
 
   function renderCard(label: string, value: number, unit: string, limitKey?: string, digits = 2) {
