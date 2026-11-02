@@ -175,7 +175,7 @@ export default function LimitsPage() {
       <p style={{ marginBottom: 12 }}>
         <Link href="/dashboard">← Tableau de bord</Link>
       </p>
-      <h1>Mes limites</h1>
+      <h1>Personnalisez les limites Min et Max de vos indicateurs</h1>
       <p style={{ color: "#555", marginBottom: 20 }}>
         Ces valeurs definissent le vert / rouge sur la page d&apos;equilibrage et
         la boule. Elles sont propres a ton compte.
