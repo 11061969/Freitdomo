@@ -89,7 +89,7 @@ export default function IngredientsPage() {
     <>
       <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-        <h1 style={{ margin: 0 }}>Base d’ingrédients</h1>
+        <h1 style={{ margin: 0 }}>Mes Ingredients</h1>
         <Link 
           href="/ingredients/new"
           style={{ padding: "10px 18px", background: "#111", color: "white", borderRadius: 6, textDecoration: "none" }}
