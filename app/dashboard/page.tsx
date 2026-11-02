@@ -15,8 +15,8 @@ type Recipe = {
 
 const tempLabel: Record<string, string> = {
  soft: "-6 °C",
-gelato: "-11 °C",
-hard: "-18 °C",
+ gelato: "-11 °C",
+ hard: "-18 °C",
 }
 
 const categoryLabel: Record<string, string> = {
