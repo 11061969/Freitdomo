@@ -65,13 +65,13 @@ export default function AidePage() {
             Les recettes sont classées par ordre chronologique. Vous pouvez chercher un parfum dans la barre de recherche, ou cliquer sur le bouton <strong>Toutes les catégories</strong> (<strong>crème glacée</strong> / <strong>sorbet</strong> / <strong>vegan</strong>) pour trier les parfums par catégorie.
           </li>
           <li>Assurez-vous que tous les ingrédients que vous souhaitez utiliser sont disponibles dans la base de données, et que leur composition correspond à vos attentes.</li>
-          <li>Pour une nouvelle recette, cliquez sur <strong>Nouvelle recette</strong> ou sur le bouton <strong>+</strong>.Utilisez cette fonction pour modifier les recettes données en exemples. </li>
+          <li>Pour une nouvelle recette, cliquez sur <strong>Nouvelle recette</strong> ou sur le bouton <strong>+</strong>. </li>
           <li>Entrez votre recette avec la même unité pour tous les ingrédients (g ou kg).</li>
           <li>Appliquez le total désiré si besoin est, puis arrondissez vos recettes si vous le désirez.</li>
           <li><strong>Enregistrez</strong>.</li>
           <li>Vous pouvez modifier une recette existante : cliquez sur la recette, changez, ajoutez ou supprimez un ingrédient ou une quantité, <strong>enregistrez</strong>.</li>
           <li>
-            Vous pouvez aussi partir d’une recette existante qui marche bien dans votre cas pour créer une nouvelle recette avec ces mêmes caractéristiques (par exemple créer un parfum chocolat-cointreau à partir d’une recette de chocolat qui a déjà toutes les qualités désirées) : cliquez sur le bouton <strong>Nouvelle recette à partir de…</strong>, changez le nom de la recette, bouton <strong>Créer</strong>. Modifiez la recette. <strong>Enregistrez</strong>.
+            Vous pouvez aussi partir d’une recette existante qui marche bien dans votre cas pour créer une nouvelle recette avec ces mêmes caractéristiques (par exemple créer un parfum chocolat-cointreau à partir d’une recette de chocolat qui a déjà toutes les qualités désirées) : cliquez sur le bouton <strong>Nouvelle recette à partir de…</strong>, changez le nom de la recette, bouton <strong>Créer</strong>. Modifiez la recette. <strong>Enregistrez</strong>. Utilisez cette fonction pour modifier les recettes données en exemples.
           </li>
           <li>Bouton <strong>Exporter en PDF</strong> pour sauvegarder cette recette et son évaluation visuelle.</li>
           <li>Bouton <strong>Supprimer</strong> si vous ne désirez pas conserver une recette.</li>
