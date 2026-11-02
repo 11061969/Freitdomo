@@ -22,9 +22,9 @@ export default function AidePage() {
         <h2>1. Premiers pas</h2>
         <ul>
           <li>Créez un compte et connectez-vous.</li>
-          <li>Vos recettes, votre base d’ingrédients et vos limites sont privées : un autre compte ne les voit pas.</li>
+          <li>Vos recettes, votre base d’ingrédients et vos limites sont privées lorsque vous êtes abonnés.</li>
           <li>
-            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre <strong>température de service</strong>, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong>personnalisation des valeurs limites Min et Max</strong> retenues pour vos indicateurs.
+            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre <strong>température de service</strong>, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> de structure et de texture, et la <strong>personnalisation des valeurs limites Min et Max</strong> retenues pour vos indicateurs.
           </li>
         </ul>
       </section>
@@ -52,7 +52,7 @@ export default function AidePage() {
             Le taux sucrant doit être précisé pour tous les ingrédients qui contiennent des glucides / sucres (les catégories sucre / fruit / vegan, etc.). Taux sucrant pour les laitiers = 0,14 (taux sucrant du lactose).
           </li>
           <li>
-            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données. Pour les parfums avec des inclusions (choco chips, tec...), utilisez la catégorie Inclusions lorsque vous créez cet ingrédient dans la base de données
+            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie <strong>Infusion</strong> lorsque vous créez cet ingrédient dans la base de données. Pour les parfums avec des inclusions (choco chips, etc...), utilisez la catégorie <strong>Inclusions</strong> lorsque vous créez cet ingrédient dans la base de données
           </li>
           <li>Entrez votre coût ingrédient dans la même unité que vous entrez vos recettes (g ou kg).</li>
         </ul>
@@ -65,7 +65,7 @@ export default function AidePage() {
             Les recettes sont classées par ordre chronologique. Vous pouvez chercher un parfum dans la barre de recherche, ou cliquer sur le bouton <strong>Toutes les catégories</strong> (<strong>crème glacée</strong> / <strong>sorbet</strong> / <strong>vegan</strong>) pour trier les parfums par catégorie.
           </li>
           <li>Assurez-vous que tous les ingrédients que vous souhaitez utiliser sont disponibles dans la base de données, et que leur composition correspond à vos attentes.</li>
-          <li>Pour une nouvelle recette, cliquez sur <strong>Nouvelle recette</strong> ou sur le bouton <strong>+</strong>.</li>
+          <li>Pour une nouvelle recette, cliquez sur <strong>Nouvelle recette</strong> ou sur le bouton <strong>+</strong>.Utilisez cette fonction pour modifier les recettes données en exemples. </li>
           <li>Entrez votre recette avec la même unité pour tous les ingrédients (g ou kg).</li>
           <li>Appliquez le total désiré si besoin est, puis arrondissez vos recettes si vous le désirez.</li>
           <li><strong>Enregistrez</strong>.</li>
@@ -79,7 +79,7 @@ export default function AidePage() {
       </section>
 
       <section style={{ marginTop: 36 }}>
-        <h2>4. Équilibrage — lecture du graphe</h2>
+        <h2>4. Lecture du graphe</h2>
         <p>
           Observez le graphe. La ligne rouge continue représente la recette, et les lignes vertes en pointillés délimitent les valeurs minimales et maximales pour chaque indicateur.
         </p>
@@ -88,7 +88,7 @@ export default function AidePage() {
         </p>
         <p>Voir <strong>Comprendre les indicateurs</strong>, modifiez la recette si besoin est : les modifications apparaissent en temps réel sur le graphe.</p>
         <p>
-          NB : ne soyez pas surpris si des indicateurs sont hors limites lorsque vous rentrez vos recettes. En effet, ces limites, bien que standard, peuvent ne pas correspondre au cadre de votre produit. D’où l’intérêt de pouvoir les parametrer en fonction de vos besoins.
+          NB : ne soyez pas surpris si des indicateurs sont hors limites lorsque vous rentrez vos recettes. En effet, ces limites, bien que standard, peuvent ne pas correspondre au cadre de votre produit. D’où l’intérêt de pouvoir les paramétrer en fonction de vos besoins.
         </p>
       </section>
 
