@@ -24,7 +24,7 @@ export default function AidePage() {
           <li>Créez un compte et connectez-vous.</li>
           <li>Vos recettes, votre base d’ingrédients et vos limites sont privées : un autre compte ne les voit pas.</li>
           <li>
-            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre <strong>température de service<strong>, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong>personnalisation des valeurs limites Min et Max</strong> retenues pour vos indicateurs.
+            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre <strong>température de service</strong>strong>, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong>personnalisation des valeurs limites Min et Max</strong> retenues pour vos indicateurs.
           </li>
         </ul>
       </section>
