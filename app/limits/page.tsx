@@ -209,9 +209,9 @@ export default function LimitsPage() {
             onChange={(e) => setTemp(e.target.value)}
             style={{ padding: 8, marginLeft: 6 }}
           >
-            <option value="hard">Hard (-18C)</option>
-            <option value="gelato">Gelato (-11C)</option>
-            <option value="soft">Soft (-6C)</option>
+            <option value="hard">-18 °C</option>
+            <option value="gelato">-11 °C</option>
+            <option value="soft">-6 °C</option>
           </select>
         </label>
       </div>
