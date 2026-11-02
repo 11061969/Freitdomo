@@ -65,7 +65,7 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
   const structure: Record<string, Limit> = {
     totalSolids: { min: 34, max: 42 },
     density: { min: 1.08, max: 1.13 },
-    creaminess: { min: 5, max: 8 },
+    creaminess: { min: 4, max: 9 },
     esdl: { min: 6, max: 12 },
         esdlVsSolvent: { min: 10, max: 17 },
     freezingPoint: { min: -3.3, max: -2.3 },
