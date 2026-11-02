@@ -24,7 +24,7 @@ export default function AidePage() {
           <li>Créez un compte et connectez-vous.</li>
           <li>Vos recettes, votre base d’ingrédients et vos limites sont privées : un autre compte ne les voit pas.</li>
           <li>
-            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre température de service, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong></strong>personnalisation des valeurs limites Min et Max<strong></strong> retenues pour vos indicateurs.
+            Le tableau de bord comprend 3 boutons principaux : <strong>Mes ingrédients</strong> / <strong>Mes recettes</strong> / <strong>Mon compte</strong>. Dans ce dernier vous trouverez les informations utiles concernant votre compte : le paramétrage de votre <strong>température de service<strong>, le <strong>Manuel de l’utilisateur</strong>, la description des <strong>Indicateurs</strong> et la <strong>personnalisation des valeurs limites Min et Max</strong> retenues pour vos indicateurs.
           </li>
         </ul>
       </section>
@@ -52,7 +52,7 @@ export default function AidePage() {
             Le taux sucrant doit être précisé pour tous les ingrédients qui contiennent des glucides / sucres (les catégories sucre / fruit / vegan, etc.). Taux sucrant pour les laitiers = 0,14 (taux sucrant du lactose).
           </li>
           <li>
-            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données. Pour les parfums avec des inclusions (choco chips, tec...), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données
+            Pour les parfums infusés (gousses de vanille, menthe fraîche, cannelle, etc.), utilisez la catégorie Infusion lorsque vous créez cet ingrédient dans la base de données. Pour les parfums avec des inclusions (choco chips, tec...), utilisez la catégorie Inclusions lorsque vous créez cet ingrédient dans la base de données
           </li>
           <li>Entrez votre coût ingrédient dans la même unité que vous entrez vos recettes (g ou kg).</li>
         </ul>
