@@ -901,46 +901,7 @@ export default function RecipeDetailPage() {
       </p>
 
       <div
-        className="no-print"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 10,
-          marginTop: 12,
-          marginBottom: 16,
-          alignItems: "center",
-        }}
-      >
-        <select
-          value={addIngId}
-          onChange={(e) => setAddIngId(e.target.value)}
-          style={{ padding: 8, minWidth: 200 }}
-        >
-          <option value="">— Choisir un ingredient —</option>
-          {allIngredients.map((ing) => (
-            <option key={ing.id} value={ing.id}>
-              {ing.name} ({ing.category})
-            </option>
-          ))}
-        </select>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          value={addQty}
-          onChange={(e) => setAddQty(e.target.value)}
-          style={{ width: 90, padding: 8 }}
-        />
-        <button
-          type="button"
-          onClick={addIngredient}
-          style={{ padding: "8px 14px", fontWeight: 600 }}
-        >
-          Ajouter
-        </button>
-      </div>
-
-      <div
+              <div
         className="recipe-layout"
         style={{
           display: "grid",
@@ -952,6 +913,45 @@ export default function RecipeDetailPage() {
       >
         <div>
           <h3 style={{ marginTop: 0, marginBottom: 12 }}>Ingredients</h3>
+          <div
+            className="no-print"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+              marginTop: 0,
+              marginBottom: 16,
+              alignItems: "center",
+            }}
+          >
+            <select
+              value={addIngId}
+              onChange={(e) => setAddIngId(e.target.value)}
+              style={{ padding: 8, minWidth: 200 }}
+            >
+              <option value="">— Choisir un ingredient —</option>
+              {allIngredients.map((ing) => (
+                <option key={ing.id} value={ing.id}>
+                  {ing.name} ({ing.category})
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={addQty}
+              onChange={(e) => setAddQty(e.target.value)}
+              style={{ width: 90, padding: 8 }}
+            />
+            <button
+              type="button"
+              onClick={addIngredient}
+              style={{ padding: "8px 14px", fontWeight: 600 }}
+            >
+              Ajouter
+            </button>
+          </div>
           <table
             style={{
               width: "100%",
@@ -962,7 +962,7 @@ export default function RecipeDetailPage() {
           >
             <thead>
               <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-                <th style={{ padding: 8 }}>Ingredient</th>
+                <th style={{ padding: 8 }}></th>
                 <th style={{ padding: 8, width: 110 }}>Quantite</th>
                 <th style={{ padding: 8, width: 80 }}>Actions</th>
               </tr>
