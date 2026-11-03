@@ -900,7 +900,6 @@ export default function RecipeDetailPage() {
         )}
       </p>
 
-      <div
               <div
         className="recipe-layout"
         style={{
