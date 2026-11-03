@@ -845,37 +845,46 @@ export default function RecipeDetailPage() {
          
 
       {editingName ? (
-        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-          <input
-            value={nameDraft}
-            onChange={(e) => setNameDraft(e.target.value)}
-            style={{ fontSize: 24, fontWeight: 700, padding: "6px 10px", flex: 1 }}
-          />
-          <button type="button" onClick={saveName}>
-            Creer
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setEditingName(false)
-              setNameDraft(recipe.name)
-            }}
-          >
-            Annuler
-          </button>
-        </div>
-      ) : (
-        <h1 style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {recipe.name}
-          <button
-            type="button"
-            className="no-print"
-            onClick={() => setEditingName(true)}
-            style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
-          >
-            Nouvelle recette a partir de…
-          </button>
-        </h1>
+           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+        {editingName ? (
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, flex: 1 }}>
+            <input
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              style={{ fontSize: 24, fontWeight: 700, padding: "6px 10px", flex: 1 }}
+            />
+            <button type="button" onClick={saveName}>
+              Creer
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEditingName(false)
+                setNameDraft(recipe.name)
+              }}
+            >
+              Annuler
+            </button>
+          </div>
+        ) : (
+          <h1 style={{ display: "flex", alignItems: "center", gap: 12, margin: 0 }}>
+            {recipe.name}
+            <button
+              type="button"
+              className="no-print"
+              onClick={() => setEditingName(true)}
+              style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
+            >
+              Nouvelle recette a partir de…
+            </button>
+          </h1>
+        )}
+        <p style={{ margin: 0 }} className="no-print">
+          <Link href="/dashboard">Tableau de bord</Link>
+          {" · "}
+          <Link href="/recipes">Mes recettes</Link>
+        </p>
+      </div>
       )}
 
       <p style={{ color: "#555", marginTop: 8 }}>
@@ -1106,11 +1115,6 @@ export default function RecipeDetailPage() {
         </div>
 
                <div>
-          <p style={{ margin: "0 0 12px", textAlign: "center" }} className="no-print">
-            <Link href="/dashboard">Tableau de bord</Link>
-            {" · "}
-            <Link href="/recipes">Mes recettes</Link>
-          </p>
           {calcs &&
             (() => {
               const L = limits
