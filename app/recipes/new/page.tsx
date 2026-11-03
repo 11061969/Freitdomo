@@ -25,6 +25,7 @@ export default function NewRecipePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [servingTemp, setServingTemp] = useState("hard")
 
   useEffect(() => {
     async function load() {
@@ -116,6 +117,7 @@ export default function NewRecipePage() {
         name,
         category,
         total_quantity: total,
+        serving_temperature: servingTemp,
       })
       .select()
       .single()
@@ -181,7 +183,20 @@ export default function NewRecipePage() {
             <option value="vegan">Vegan</option>
           </select>
         </div>
-
+<div style={{ marginBottom: 24 }}>
+  <label style={{ display: "block", marginBottom: 4, fontSize: 14 }}>
+    Température de service *
+  </label>
+  <select
+    value={servingTemp}
+    onChange={(e) => setServingTemp(e.target.value)}
+    style={{ padding: 10, fontSize: 16 }}
+  >
+    <option value="soft">-6 °C</option>
+    <option value="gelato">-11 °C</option>
+    <option value="hard">-18 °C</option>
+  </select>
+</div>
         <h3 style={{ marginBottom: 12 }}>Ingrédients</h3>
 
         {lines.map((line, index) => (
