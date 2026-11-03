@@ -246,6 +246,9 @@ export default function RecipeDetailPage() {
       }
 
       setRecipe(recipeData)
+      if (recipeData.serving_temperature) {
+  setServingTemp(recipeData.serving_temperature)
+}
       setNameDraft(recipeData.name || "")
       const { data: linesData } = await supabase
         .from("recipe_ingredients")
@@ -882,11 +885,13 @@ export default function RecipeDetailPage() {
       <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
         {" · "}
-        {servingTemp.toLowerCase().includes("soft") || servingTemp.includes("-6")
-  ? "-6 °C"
-  : servingTemp.toLowerCase().includes("gelato") || servingTemp.includes("-11")
-    ? "-11 °C"
-    : "-18 °C"}
+        {(() => {
+  const t = String(recipe.serving_temperature || "").toLowerCase()
+  if (t.includes("soft") || t.includes("-6")) return "-6 °C"
+  if (t.includes("gelato") || t.includes("-11")) return "-11 °C"
+  if (t.includes("hard") || t.includes("-18")) return "-18 °C"
+  return ""
+})()}
         {recipe.updated_at && (
           <>
             {" · "}
