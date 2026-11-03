@@ -845,7 +845,7 @@ export default function RecipeDetailPage() {
          
 
       {editingName ? (
-           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
         {editingName ? (
           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, flex: 1 }}>
             <input
