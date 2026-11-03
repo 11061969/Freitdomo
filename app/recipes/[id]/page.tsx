@@ -842,11 +842,7 @@ export default function RecipeDetailPage() {
 
   return (
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
-          <p style={{ marginBottom: 12 }} className="no-print">
-        <Link href="/dashboard">Tableau de bord</Link>
-        {" · "}
-        <Link href="/recipes">Mes recettes</Link>
-      </p>
+         
 
       {editingName ? (
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
@@ -1109,7 +1105,12 @@ export default function RecipeDetailPage() {
         </button>
         </div>
 
-        <div>
+               <div>
+          <p style={{ margin: "0 0 12px", textAlign: "center" }} className="no-print">
+            <Link href="/dashboard">Tableau de bord</Link>
+            {" · "}
+            <Link href="/recipes">Mes recettes</Link>
+          </p>
           {calcs &&
             (() => {
               const L = limits
