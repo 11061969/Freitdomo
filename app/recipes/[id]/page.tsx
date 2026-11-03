@@ -86,15 +86,15 @@ function getLimits(category: string, temp: string): Record<string, Limit> {
   }
 
   if (temp === "gelato") {
-    structure.freezingPoint = { min: -2.8, max: -2.0 }
-    structure.iceFraction = { min: 85, max: 86 }
+    structure.freezingPoint = { min: -2.6, max: -1.8 }
+    structure.iceFraction = { min: 84, max: 86 }
   }
 
   if (temp === "soft") {
     structure.totalSolids = { min: 30, max: 38 }
     structure.creaminess = { min: 2, max: 6 }
-    structure.freezingPoint = { min: -2.6, max: -1.9 }
-    structure.iceFraction = { min: 74.5, max: 76.5 }
+    structure.freezingPoint = { min: -2.4, max: -1.7 }
+    structure.iceFraction = { min: 75.5, max: 77.5 }
     structure.mgSolide = { min: 35, max: 65 }
   }
 
