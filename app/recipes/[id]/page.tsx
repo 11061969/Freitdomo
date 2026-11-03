@@ -235,7 +235,7 @@ export default function RecipeDetailPage() {
       setAllIngredients(unique)
       const { data: recipeData, error: recipeError } = await supabase
         .from("recipes")
-       .select("id, name, category, total_quantity, updated_at, client_id")
+       .select("id, name, category, total_quantity, updated_at, client_id, serving_temperature")
         .eq("id", id)
         .single()
 
@@ -882,7 +882,11 @@ export default function RecipeDetailPage() {
       <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
         {" · "}
-        {tempLabel[servingTemp] || servingTemp}
+        {servingTemp.toLowerCase().includes("soft") || servingTemp.includes("-6")
+  ? "-6 °C"
+  : servingTemp.toLowerCase().includes("gelato") || servingTemp.includes("-11")
+    ? "-11 °C"
+    : "-18 °C"}
         {recipe.updated_at && (
           <>
             {" · "}
