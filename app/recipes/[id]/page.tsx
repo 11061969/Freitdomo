@@ -844,7 +844,7 @@ export default function RecipeDetailPage() {
     <main style={{ padding: 40, fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto" }}>
          
 
-      {editingName ? (
+  
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
         {editingName ? (
           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, flex: 1 }}>
@@ -885,7 +885,7 @@ export default function RecipeDetailPage() {
           <Link href="/recipes">Mes recettes</Link>
         </p>
       </div>
-      )}
+      
 
       <p style={{ color: "#555", marginTop: 8 }}>
         {categoryLabel[recipe.category] || recipe.category}
