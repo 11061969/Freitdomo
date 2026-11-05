@@ -170,35 +170,9 @@ export default function RecipeDetailPage() {
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
+         if (!user) {
         router.push("/login")
         return
-    useEffect(() => {
-    async function loadLimits() {
-      if (!clientId || !recipe) return
-      const cat = (recipe.category || "ice_cream").toLowerCase()
-      const { data, error } = await supabase
-        .from("client_limits")
-        .select("param_key, min_value, max_value")
-        .eq("client_id", clientId)
-        .eq("category", cat)
-        .eq("serving_temp", servingTemp)
-
-      if (error || !data || data.length === 0) {
-        setDbLimits(null)
-        return
-      }
-      const map: Record<string, Limit> = {}
-      for (const row of data) {
-        map[row.param_key] = {
-          min: Number(row.min_value),
-          max: Number(row.max_value),
-        }
-      }
-      setDbLimits(map)
-    }
-    loadLimits()
-  }, [clientId, recipe, servingTemp])
       }
      
       const { data: userData } = await supabase
@@ -262,6 +236,37 @@ export default function RecipeDetailPage() {
     }
     load()
   }, [id, router])
+    useEffect(() => {
+    async function loadLimits() {
+      if (!clientId || !recipe) return
+      const raw = (recipe.category || "").toLowerCase()
+      const cat = raw.includes("sorbet")
+        ? "sorbet"
+        : raw.includes("vegan")
+          ? "vegan"
+          : "ice_cream"
+      const { data, error } = await supabase
+        .from("client_limits")
+        .select("param_key, min_value, max_value")
+        .eq("client_id", clientId)
+        .eq("category", cat)
+        .eq("serving_temp", servingTemp)
+
+      if (error || !data || data.length === 0) {
+        setDbLimits(null)
+        return
+      }
+      const map: Record<string, Limit> = {}
+      for (const row of data) {
+        map[row.param_key] = {
+          min: Number(row.min_value),
+          max: Number(row.max_value),
+        }
+      }
+      setDbLimits(map)
+    }
+    loadLimits()
+  }, [clientId, recipe, servingTemp])
 
   useEffect(() => {
     if (lines.length === 0) {
