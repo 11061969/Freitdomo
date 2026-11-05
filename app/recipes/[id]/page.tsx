@@ -912,50 +912,12 @@ export default function RecipeDetailPage() {
           gridTemplateColumns: "minmax(260px, 1fr) minmax(280px, 420px)",
           gap: 24,
           alignItems: "start",
+          marginTop: 28,
           marginBottom: 28,
         }}
       >
         <div>
-          <h3 style={{ marginTop: 0, marginBottom: 12 }}>Ingredients</h3>
-          <div
-            className="no-print"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-              marginTop: 0,
-              marginBottom: 16,
-              alignItems: "center",
-            }}
-          >
-            <select
-              value={addIngId}
-              onChange={(e) => setAddIngId(e.target.value)}
-              style={{ padding: 8, minWidth: 200 }}
-            >
-              <option value="">— Choisir un ingredient —</option>
-              {allIngredients.map((ing) => (
-                <option key={ing.id} value={ing.id}>
-                  {ing.name} ({ing.category})
-                </option>
-              ))}
-            </select>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              value={addQty}
-              onChange={(e) => setAddQty(e.target.value)}
-              style={{ width: 90, padding: 8 }}
-            />
-            <button
-              type="button"
-              onClick={addIngredient}
-              style={{ padding: "8px 14px", fontWeight: 600 }}
-            >
-              Ajouter
-            </button>
-          </div>
+                   <h3 style={{ marginTop: 0, marginBottom: 12 }}>Ingredients</h3>
           <table
             style={{
               width: "100%",
@@ -972,6 +934,41 @@ export default function RecipeDetailPage() {
               </tr>
             </thead>
             <tbody>
+              <tr className="no-print">
+                <td style={{ padding: "8px 8px 12px 0" }}>
+                  <select
+                    value={addIngId}
+                    onChange={(e) => setAddIngId(e.target.value)}
+                    style={{ padding: 8, width: "100%" }}
+                  >
+                    <option value="">— Choisir un ingredient —</option>
+                    {allIngredients.map((ing) => (
+                      <option key={ing.id} value={ing.id}>
+                        {ing.name} ({ing.category})
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td style={{ padding: "8px 8px 12px" }}>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={addQty}
+                    onChange={(e) => setAddQty(e.target.value)}
+                    style={{ width: 90, padding: 8 }}
+                  />
+                </td>
+                <td style={{ padding: "8px 0 12px 8px" }}>
+                  <button
+                    type="button"
+                    onClick={addIngredient}
+                    style={{ padding: "8px 14px", fontWeight: 600 }}
+                  >
+                    Ajouter
+                  </button>
+                </td>
+              </tr>
                         {lines.map((line, i) => (
                 <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
                   <td style={{ padding: 8 }}>{line.ingredients?.name || "-"}</td>
