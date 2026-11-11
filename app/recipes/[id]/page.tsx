@@ -876,7 +876,7 @@ export default function RecipeDetailPage() {
             {recipe.name}
             <button
               type="button"
-              className=bg-red-500 "no-print"
+              className="no-print"
               onClick={() => setEditingName(true)}
               style={{ fontSize: 13, fontWeight: 500, cursor: "pointer" }}
             >
